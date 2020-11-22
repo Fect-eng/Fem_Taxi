@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Fem Taxi</string>
+
+    <string name="btnFoto">Abrir camera</string>
+    <string name="lblName">Estado Permiso</string>
+    <string name="lblCamera">Camara Selección</string>
+
+</resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#922595</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="TextoDriver">#FFFFFF</color>
+    <color name="ColorDriverBtn">#512da8</color>
+    <color name="Colorletras">#FFFFFF</color>
+    <color name="Colorletrasly">#000000</color>
+    <color name="ColorTolbar">#FFFFFF</color>
+   
+</resources>

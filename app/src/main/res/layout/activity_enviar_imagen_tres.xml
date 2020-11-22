@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
+    tools:context=".EnviarImagenTresActivity">
+
+    <include layout="@layout/action_bar_toolbar"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="367dp"
+        android:layout_height="200dp"
+
+        android:layout_gravity="center"
+        android:layout_margin="2dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/txtpenales"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="DNI Primera Cara"
+        android:layout_marginTop="20dp"
+        android:textSize="20dp"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"/>
+
+    <Button
+        android:id="@+id/btnsubipena"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="SUbir Imagen" />
+
+
+
+
+</LinearLayout>
