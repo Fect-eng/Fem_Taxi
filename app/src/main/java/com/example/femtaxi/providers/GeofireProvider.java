@@ -1,4 +1,4 @@
-package com.example.femtaxi;
+package com.example.femtaxi.providers;
 
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
@@ -17,20 +17,20 @@ public class GeofireProvider {
          mGeofire = new GeoFire(mDatabase);
     }
 
-    public void saveLocation(String idDriver, LatLng latLng){
+    public void saveLocation(String idDriver, LatLng latLng) {
         mGeofire.setLocation(idDriver, new GeoLocation(latLng.latitude, latLng.longitude));
     }
 
-    public void removeLocation(String idDriver){
+    public void removeLocation(String idDriver) {
 
         mGeofire.removeLocation(idDriver);
     }
 
 
     //luego vemos esto q esta bien
-    public GeoQuery getActiveDrivers(LatLng latLng){
+    public GeoQuery getActiveDrivers(LatLng latLng) {
         GeoQuery geoQuery = mGeofire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), 10);
         geoQuery.removeAllListeners();
-        return  geoQuery;
+        return geoQuery;
     }
 }

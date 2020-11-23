@@ -173,7 +173,7 @@ public class EnviarImagenActivity extends AppCompatActivity {
     private void verifiedPermision(int codeRequest) {
         GALLERY_INTENT_GLOBAL = codeRequest;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            boolean granted = hasPermissions(mPermission);//PermissionsUtils.hasPermissions(getActivity(), permissions);
+            boolean granted = hasPermissions(mPermission);
             if (granted) {
                 tmpUri = pickImageCamera(GALLERY_INTENT_GLOBAL);
             } else {
@@ -244,7 +244,6 @@ public class EnviarImagenActivity extends AppCompatActivity {
     public static File getAppMediaProfileFolder() {
         File folder = new File(Environment.getExternalStorageDirectory() + File.separator
                 + "TaxiFem/" + "Camera");
-        //noinspection ResultOfMethodCallIgnored
         folder.mkdirs();
         return folder;
     }
