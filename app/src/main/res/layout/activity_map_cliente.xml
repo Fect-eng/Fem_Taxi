@@ -20,7 +20,16 @@
         android:layout_width="400dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginTop="75dp">
+        android:layout_marginTop="65dp">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            app:cardCornerRadius="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="60dp"
+            >
     <fragment
             android:id="@+id/pleaceAutocompleteOrigin"
             android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
@@ -29,6 +38,33 @@
             android:layout_marginRight="40dp"
             android:layout_marginLeft="40dp"
             />
+
+        </androidx.cardview.widget.CardView>
+
+
+        <LinearLayout
+            android:layout_width="400dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_marginTop="25dp">
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            app:cardCornerRadius="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="60dp">
+
+                <fragment
+                    android:id="@+id/placeAutocompleteDestination"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+                    />
+
+        </androidx.cardview.widget.CardView>
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
