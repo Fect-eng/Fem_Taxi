@@ -20,37 +20,28 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btndriverDual = findViewById(R.id.btndriverDual); //hacemos uso de la primera variable
+        btndriverDual = findViewById(R.id.btndriverDual);
         btndriverDual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToSelectAuth(); //creamos el methodo para proseguir
+                goToSelectAuth();
             }
         });
-        //============================================================================================
-        //============================================================================================
-        btnncliente = findViewById(R.id.btnncliente); //hacemos uso de la primera variable
+        btnncliente = findViewById(R.id.btnncliente);
         btnncliente.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                goToSelectClient(); //creamos el methodo para proseguir
+                goToSelectClient();
             }
-        }); //finde de boton escucha
+        });
     }
-            //boton cliente
-    private void goToSelectClient() {   //ClientAuthentiActivity esta linea colocar
-        //cambiaremos mometaneamente por este layout MapClienteActivity   ====== GpsDriverActivity === ClienteOptionActivity
+    private void goToSelectClient() {
         Intent intent = new Intent(MainActivity.this, MapClienteActivity.class);
         startActivity(intent);
     }
 
-//==========================================================================================================
-//==========================================================================================================
-    private void goToSelectAuth() {   //Driver
-        //cambiaremos mometaneamente por este layout MapDriverActivity   ==== OpcionDualDriverActivity
-        //ConductorOptionDualActivity
-        //cambiaremos el this hacia MapDriverActivity  OpcionDualDriverActivity  ===========loginActivity
-        Intent intent = new Intent(  MainActivity.this, MapDriverActivity.class);
+    private void goToSelectAuth() {
+        Intent intent = new Intent(  MainActivity.this, OpcionDualDriverActivity.class);
         startActivity(intent);
     }
 }
