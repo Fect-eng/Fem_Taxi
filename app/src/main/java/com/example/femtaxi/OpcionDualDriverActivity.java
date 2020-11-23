@@ -35,7 +35,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     private Button bntMensajeB;   //intento de alertdialog salio exitoso
     private Button authenticarLog; //authenticacion log
 
-
+        //pruebas exitosas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

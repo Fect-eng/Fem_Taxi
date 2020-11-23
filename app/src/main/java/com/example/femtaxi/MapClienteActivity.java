@@ -430,6 +430,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
     //checkLocationPermissions final
+
     }
 
 
