@@ -244,7 +244,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     private void requesDriver() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
-            Intent intent = new Intent(MapClienteActivity.this); 
+            Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
+            intent.putExtra("origin_lat", mOriginLatLng.latitude);
+            intent.putExtra("origin_lng", mOriginLatLng.longitude);
         }
     }
 
