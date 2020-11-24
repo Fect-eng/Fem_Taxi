@@ -28,7 +28,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".pruebasAppActivity"></activity>
+        <activity android:name=".DetailRequestActivity"></activity>
+        <activity android:name=".pruebasAppActivity" />
 
         <meta-data
             android:name="com.google.android.actions"
