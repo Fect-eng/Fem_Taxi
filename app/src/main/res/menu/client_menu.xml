@@ -5,4 +5,8 @@
     <item android:id="@+id/action_logout"
         android:title="Cerrar Sesion"
         app:showAsAction="never"/>
+
+    <item android:id="@+id/action_logout2"
+        android:title="Adicional"
+        app:showAsAction="never"/>
 </menu>

@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void goToSelectClient() {
+    private void goToSelectClient() { // cliente
         Intent intent = new Intent(MainActivity.this, MapClienteActivity.class);
         startActivity(intent);
     }
 
-    private void goToSelectAuth() {
+    private void goToSelectAuth() { //OpcionDualDriverActivity ===     carro
         Intent intent = new Intent(  MainActivity.this, OpcionDualDriverActivity.class);
         startActivity(intent);
     }

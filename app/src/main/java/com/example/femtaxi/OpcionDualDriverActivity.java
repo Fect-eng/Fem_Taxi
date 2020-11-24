@@ -29,12 +29,13 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     private Button authenticarLog;
     private AuthProvider mAuthProvider;
 
+    Button mButonLogin;
         //pruebas exitosas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opcion_dual_driver);
-
+        mButonLogin = findViewById(R.id.btnlogearDriver);    //para 2 funciones
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Menu Principal");
@@ -80,6 +81,8 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     public void btnlogearDriver(View v) {
         if (txtUsuario.getText().toString().isEmpty()) {

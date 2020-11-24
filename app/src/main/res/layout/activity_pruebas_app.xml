@@ -6,9 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".pruebasAppActivity">
 
-    <fragment android:id="@+id/autocomplete_fragment"
+    <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-        />
+        android:id="@+id/edi_text"
+        android:hint="Ingresa dato"
+        android:padding="16dp"
+        android:drawablePadding="16dp"
+        android:drawableLeft="@drawable/ic_location"
+        android:gravity="center_vertical"
+        android:background="@android:drawable/editbox_background"/>
+
+    <TextView
+        android:id="@+id/text_view2"
+        android:layout_width="396dp"
+        android:layout_height="49dp"
+        android:gravity="center"
+        android:padding="12dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="77dp">
+
+    </TextView>
+
+    <TextView
+        android:id="@+id/text_view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="monospace"
+        android:padding="12dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        >
+
+    </TextView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

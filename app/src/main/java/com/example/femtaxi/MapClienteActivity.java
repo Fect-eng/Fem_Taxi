@@ -13,6 +13,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -95,6 +97,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private String mDestination;
     private LatLng mDestinationLatLng;
     //finde de boton para conexion
+    private GoogleMap.OnCameraIdleListener mCameraListener;
+    private Button mButtonRequestDriver;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -166,13 +170,24 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapaCliente);
         nMapFragment.getMapAsync(this);
         //Place Autocomplete
-
+        mButtonRequestDriver = findViewById(R.id.btnRequestDriver);
+        //=========================================
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
+            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_api_key));
         }
         mPlaces = Places.createClient(this);
+
+        //===================================================
+        mButtonRequestDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requesDriver();
+            }
+        });
+        //===================================================
+
         mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.pleaceAutocompleteOrigin);
-        mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG,Place.Field.NAME));
         mAutocomplete.setHint("Lugar de recogida");
         mAutocomplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
@@ -189,7 +204,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
             }
         });
-            mAutocompleteDestination = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeAutocompleteDestination);
+        mAutocompleteDestination = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.placeAutocompleteDestination);
         mAutocompleteDestination.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
         mAutocompleteDestination.setHint("Destino");
         mAutocompleteDestination.setOnPlaceSelectedListener(new PlaceSelectionListener() {
@@ -208,9 +223,32 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-
+            mCameraListener = new GoogleMap.OnCameraIdleListener() {
+                @Override
+                public void onCameraIdle() {
+                    try {
+                        Geocoder geocoder = new Geocoder(MapClienteActivity.this);
+                        mOriginLatLng = nMap.getCameraPosition().target;
+                        List<Address> addressList = geocoder.getFromLocation(mOriginLatLng.latitude, mOriginLatLng.longitude, 1);
+                        String city = addressList.get(0).getLocality();
+                        String country = addressList.get(0).getCountryName();
+                        String address = addressList.get(0).getAddressLine(0);
+                        mOrigin = address + " " + city;
+                        mAutocomplete.setText(address + " " + city);
+                    }catch (Exception e) {
+                        Log.d("error: ", "Mensaje Error: " + e.getMessage());
+                    }
+                }
+            };
     }
-        //metodo de locaclizacion geofire
+
+    private void requesDriver() {
+        if (mOriginLatLng != null && mDestinationLatLng != null) {
+            Intent intent = new Intent(MapClienteActivity.this); 
+        }
+    }
+
+    //metodo de locaclizacion geofire
         private void getActiveDrivers(){
         mGeofireProvider.getActiveDrivers(mCurrentLatLng).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
@@ -277,7 +315,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         nMap = googleMap;
         nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         nMap.getUiSettings().setZoomControlsEnabled(true);
-
+        nMap.setMyLocationEnabled(true);
+        nMap.setOnCameraIdleListener(mCameraListener);
         //habilita opciones de zoom
         //por ahora la aplicacion funciona a lo esperado solo que lo hace desded fake GPS
 
@@ -342,7 +381,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
             nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
         }
-        else{
+        else if(requestCode == SETTINGS_REQUEST_CODE && !gpsActived()){
             showAlertDialogNoGPS();    //mensaje DialogGPS
         }
     }
