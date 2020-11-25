@@ -22,10 +22,8 @@ public class GeofireProvider {
     }
 
     public void removeLocation(String idDriver) {
-
         mGeofire.removeLocation(idDriver);
     }
-
 
     //luego vemos esto q esta bien
     public GeoQuery getActiveDrivers(LatLng latLng) {
