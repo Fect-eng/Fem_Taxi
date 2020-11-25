@@ -60,8 +60,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MapClienteActivity extends AppCompatActivity implements OnMapReadyCallback {
-
+    Button mButtonDialog;
     //toolbar declarado
+
     Toolbar mToolbar;
     private LatLng mCurrentLatLng;
     private GoogleMap nMap;
@@ -116,8 +117,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     nMarker = nMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(),location.getLongitude())
                             )
-                                    .title("Posición Actual Cliente")  //pones el dedo y
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.clienttaxi))
+                                   // .title("Posición Actual Cliente")  //pones el dedo y
+                                   // .icon(BitmapDescriptorFactory.fromResource(R.drawable.clienttaxi))
                     ); //codigo probado y verificado de icono en mapa
                     //obtener ubicacion de usuario en tiempo real
                     nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
@@ -129,7 +130,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     if (mISFirstTime){
                         mISFirstTime = false;
                         getActiveDrivers();
-
                     }
                 }
             }
@@ -144,7 +144,12 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(R.layout.activity_map_cliente);
         mGeofireProvider = new GeofireProvider();
        // mAuthProvider = new AuthProvider(); esto es de firebase
-        //toolbar
+        // toolbar
+        mButtonDialog = findViewById(R.id.btnRequestDriver);   //dialog
+        //dialog inicio
+
+
+        //dialog fin
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
@@ -240,7 +245,13 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     }
                 }
             };
+    }//final de oncreate
+   //aun vemos este codigo la modificacion
+    private void goToSelectAuth() {
+        Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
+        startActivity(intent);
     }
+
 
     private void requesDriver() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
@@ -362,7 +373,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
                     if (gpsActived()){
                         mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
+                        nMap.setMyLocationEnabled(false); //personaliza el punto asignado en gps
                     }
                     else{
                         showAlertDialogNoGPS();    //mensaje DialogGPS
@@ -381,7 +392,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SETTINGS_REQUEST_CODE && gpsActived()){
             mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-            nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
+            nMap.setMyLocationEnabled(false); //personaliza el punto asignado en gps
         }
         else if(requestCode == SETTINGS_REQUEST_CODE && !gpsActived()){
             showAlertDialogNoGPS();    //mensaje DialogGPS
@@ -430,7 +441,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                   //  mButtonConnect.setText("DESCONECTARSE"); //valores asignados a conectarse
                   //  mIsconnect = true;  //valor asigando a conectarse
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
+                    nMap.setMyLocationEnabled(false); //personaliza el punto asignado en gps
                 }
                 else{
                     showAlertDialogNoGPS();   //mensaje DialogGPS
@@ -442,7 +453,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         } else {
             if (gpsActived()){
                 mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps revisar si pasa algun detalle
+                nMap.setMyLocationEnabled(false); //personaliza el punto asignado en gps revisar si pasa algun detalle
             }
             else{
                 showAlertDialogNoGPS();     //mensaje DialogGPS

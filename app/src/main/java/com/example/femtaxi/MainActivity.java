@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void goToSelectClient() { // cliente
+    private void goToSelectClient() { // cliente  MapClienteActivity   === ClienteOptionActivity
         Intent intent = new Intent(MainActivity.this, MapClienteActivity.class);
         startActivity(intent);
     }

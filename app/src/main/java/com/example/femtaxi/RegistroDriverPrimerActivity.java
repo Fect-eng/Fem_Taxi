@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 
@@ -78,9 +79,20 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity {
                 if (validacionCamposForm()) {
                     registroDriver1 = getRegisterDriver1();
                     createUserFirebase(registroDriver1.getEmail(), registroDriver1.getDni());
-                }
+                    //eliminacion de editet
+
+                } /*else {
+                    textoNombresCom.setText("");
+                    textoApe.setText("");
+                    textodni.setText("");
+                    textodireccion.setText("");
+                    textoFechaNac.setText("");
+                    textocelular.setText("");
+                    textemail.setText("");
+                }*/
             }
         });
+
 
         //========Fin de boton=============================================================================================================================================
         // textoDireccionActual=(TextInputEditText)findViewById(R.id.textoDireccionActual);             // Direccion actual
@@ -184,7 +196,7 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
-                        Toast.makeText(RegistroDriverPrimerActivity.this, "Resgistro exitoso", Toast.LENGTH_LONG).show();
+                        Toast.makeText(RegistroDriverPrimerActivity.this, "Registro exitoso", Toast.LENGTH_LONG).show();
                         goToSelectAuth();
                     }
                 })
@@ -204,6 +216,7 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity {
         sendFirebase.put("address", registroDriver1.getDireccion());
         sendFirebase.put("DNI", registroDriver1.getDni());
         sendFirebase.put("fech_nac", registroDriver1.getNacimiento());
+        sendFirebase.put("Telefono", registroDriver1.getCelular());
         sendFirebase.put("correo", registroDriver1.getEmail());
         return sendFirebase;
     }

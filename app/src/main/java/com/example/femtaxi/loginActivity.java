@@ -24,10 +24,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class loginActivity extends AppCompatActivity implements View.OnClickListener {
     Toolbar mToolbar;
-    Button mButtonDialog;   // Boton de dialog
+    Button mButtonDialog;   // Boton de dialog1212121
     private EditText mTextInpuEmail;
     private EditText mTextInputPassword;
-    Button registrar;   //boton destinado para un alrteDialog
+    Button registrar;   //boton destinado para un alrteDialog1212121212
     Button mButonLogin;
 
     @Override

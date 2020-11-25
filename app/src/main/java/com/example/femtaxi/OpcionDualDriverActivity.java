@@ -1,5 +1,6 @@
 package com.example.femtaxi;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -20,7 +22,7 @@ import com.google.firebase.auth.AuthResult;
 
 public class OpcionDualDriverActivity extends AppCompatActivity {
     String TAG = OpcionDualDriverActivity.class.getSimpleName();
-
+    Button mButtonDialog;
     Toolbar mToolbar;
     EditText txtUsuario, txtPassword;
     Button btnlogearDriver;
@@ -36,13 +38,47 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opcion_dual_driver);
         mButonLogin = findViewById(R.id.btnlogearDriver);    //para 2 funciones
+        mButtonDialog = findViewById(R.id.botonDualRegistro); //alertdialog
+
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Menu Principal");
+        getSupportActionBar().setTitle("Bienvenido Conductor");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuthProvider = new AuthProvider();
 
+       // botonDualRegistro = findViewById(R.id.botonDualRegistro);
+        mButtonDialog = (Button) findViewById(R.id.botonDualRegistro);
+        mButtonDialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alerta = new AlertDialog.Builder(OpcionDualDriverActivity.this);
+                alerta.setMessage("Bienvenido a Registrarse en Nuestra Empresa FemTaxi, los datos que se solicitara y posterior ingresar seran administrados en confidencialidad por vuestra Gerencia. Sea usted Bienvenido.")  //ver si se cambia esta Opcion
+                        .setCancelable(false) // true es para que se salte el no
+                        .setPositiveButton("Estoy de Acuerdo", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                botonDualRegistro.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        goToSelectAuth();
+                                    }
+                                });
+                            }
+                        });
+                // .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                //   @Override
+                // public void onClick(DialogInterface dialog, int which) {
+                //   dialog.cancel();
+                // }
+                //});
+                AlertDialog titulo = alerta.create();
+                titulo.setTitle("Compromiso Conductor");
+                titulo.show();
+            }
+        });
+
+        botonDualRegistro = findViewById(R.id.botonDualRegistro);  //instanciar objeto
 
         txtUsuario = findViewById(R.id.txtUsuario);
         txtPassword = findViewById(R.id.txtPassword);
@@ -74,15 +110,19 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         });
 
         botonDualRegistro = findViewById(R.id.botonDualRegistro);
-        botonDualRegistro.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToSelectAuth();
-            }
-        });
-    }
+      //  botonDualRegistro.setOnClickListener(new View.OnClickListener() {
+        //    @Override
+          //  public void onClick(View view) {
+            //    goToSelectAuth();
+           // }
+       // });
+    }//finaloncreate ====================================================================================
+/*
+    private void regeditDrimerPrimeraActividad() {  //boton de artdialog
+         Intent intent = new Intent(this, RegistroDriverPrimerActivity.class);
+        startActivity(intent);
 
-
+    }*/
 
     public void btnlogearDriver(View v) {
         if (txtUsuario.getText().toString().isEmpty()) {
@@ -94,6 +134,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         }
     }
 
+    //validamos nuestros campos
     public boolean validarCampos() {
         boolean retorno = true;
         if (txtPassword.getText().toString().isEmpty()) {

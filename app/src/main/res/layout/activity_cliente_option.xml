@@ -10,6 +10,7 @@
     >
 
     <include layout="@layout/action_bar_toolbar"></include>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -30,7 +31,7 @@
                 android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:text="Cliente Elegir Opcion:"
-                android:textColor="#000000"
+                android:textColor="#FFFFFF"
                 android:textSize="28dp"
                 android:textStyle="bold">
             </TextView>

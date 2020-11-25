@@ -20,7 +20,7 @@ public class ClienteOptionActivity extends AppCompatActivity {
         //toolbar
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("ANtes de este menu");
+        getSupportActionBar().setTitle("Autenticación Google");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         autenticarsebtn = findViewById(R.id.autenticarsebtn); //hacemos uso de la primera variable

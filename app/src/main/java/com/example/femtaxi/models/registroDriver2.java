@@ -42,6 +42,8 @@ public class registroDriver2 {
         this.modelocarro = modelocarro;
     }
 
+
+
     public String getTipocarro() {
         return tipocarro;
     }
@@ -49,6 +51,8 @@ public class registroDriver2 {
     public void setTipocarro(String tipocarro) {
         this.tipocarro = tipocarro;
     }
+
+
 
     public String getUserId() {
         return userId;

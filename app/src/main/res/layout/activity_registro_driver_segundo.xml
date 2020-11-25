@@ -55,7 +55,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Numero Placa"
-                        android:inputType="text|textCapCharacters"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="number"></com.google.android.material.textfield.TextInputEditText>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Numero Carro"
-                        android:inputType="text|textCapCharacters">
+                        android:inputType="number">
                     </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
