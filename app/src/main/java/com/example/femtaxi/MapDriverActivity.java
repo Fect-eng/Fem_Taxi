@@ -61,7 +61,6 @@ public class MapDriverActivity extends AppCompatActivity
     Toolbar mToolbar;
     private GoogleMap nMap;
     private SupportMapFragment nMapFragment;
-    Button btnConnect;
     private GeofireProvider mGeofireProvider;
     private AuthProvider mAuthProvider;
     private final static int LOCATION_REQUEST_CODE = 100;
@@ -79,23 +78,26 @@ public class MapDriverActivity extends AppCompatActivity
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
+                Log.d(TAG, "mLocationCallback location: " + location);
                 if (getApplicationContext() != null) {
+                    Log.d(TAG, "mLocationCallback getApplicationContext!=null: ");
                     mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     if (nMarker != null) {
                         nMarker.remove();
                     }
+                    Log.d(TAG, "mLocationCallback mCurrentLatLng: " + mCurrentLatLng);
                     nMarker = nMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude()))
                             .title("Posición Actual")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps))
-                    );
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
+
                     nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
-                                    .target(new LatLng(location.getLatitude(), location.getLongitude()))
+                                    .target(mCurrentLatLng)
                                     .zoom(16f)
-                                    .build()
-                    ));
-                    updateLocation();
+                                    .build()));
+                    if (mIsconnect)
+                        updateLocation();
                     Log.d(TAG, "mLocationCallback getLatitude: " + location.getLatitude() + ", getLongitude: " + location.getLongitude());
                 }
             }
@@ -121,7 +123,7 @@ public class MapDriverActivity extends AppCompatActivity
                 if (mIsconnect) {
                     disconnect();
                 } else {
-                    startLocation();  //tiempo real firestore
+                    startLocation();
                 }
                 mIsconnect = !mIsconnect;
                 mButtonConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
@@ -140,8 +142,8 @@ public class MapDriverActivity extends AppCompatActivity
         nMap.getUiSettings().setZoomControlsEnabled(true);
 
         mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(100);
-        mLocationRequest.setFastestInterval(100);
+        mLocationRequest.setInterval(1000);
+        mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         mLocationRequest.setSmallestDisplacement(5);
 
@@ -168,14 +170,13 @@ public class MapDriverActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                     if (gpsActived()) {
-                        mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
+                        startLocation();
                     } else {
                         showAlertDialogNoGPS();    //mensaje DialogGPS
                     }
-                else {
+                } else {
                     checkLocationPermissions();
                 }
             } else {
@@ -187,9 +188,12 @@ public class MapDriverActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SETTINGS_REQUEST_CODE && gpsActived()) {
-            mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-            nMap.setMyLocationEnabled(true);
+        if (requestCode == SETTINGS_REQUEST_CODE) {
+            if (gpsActived()) {
+                startLocation();
+            } else {
+                showAlertDialogNoGPS();
+            }
         } else {
             showAlertDialogNoGPS();
         }
@@ -240,6 +244,7 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     private void disconnect() {
+        Log.d(TAG, "disconnect");
         if (mFusedLocation != null) {
             mFusedLocation.removeLocationUpdates(mLocationCallback);
             if (mAuthProvider.existSession())
@@ -250,10 +255,14 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     private void startLocation() {
+        Log.d(TAG, "startLocation");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.d(TAG, "startLocation mayo a m");
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "startLocation permiso activado");
                 if (gpsActived()) {
+                    Log.d(TAG, "startLocation gps activado");
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     nMap.setMyLocationEnabled(true);
                 } else {
@@ -263,7 +272,9 @@ public class MapDriverActivity extends AppCompatActivity
                 checkLocationPermissions();
             }
         } else {
+            Log.d(TAG, "startLocation menor a M");
             if (gpsActived()) {
+                Log.d(TAG, "startLocation gps activado");
                 mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                 nMap.setMyLocationEnabled(true);
             } else {
@@ -274,6 +285,7 @@ public class MapDriverActivity extends AppCompatActivity
 
     private void updateLocation() {
         if (mIsconnect) {
+            Log.d(TAG, "updateLocation");
             if (mAuthProvider.existSession() && mCurrentLatLng != null) {
                 mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
             }
