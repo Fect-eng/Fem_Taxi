@@ -1,7 +1,6 @@
-package com.example.femtaxi;
+package com.example.femtaxi.driver;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,11 +26,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.example.femtaxi.MainActivity;
+import com.example.femtaxi.R;
+import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.AuthProvider;
+import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.GeofireProvider;
+import com.example.femtaxi.providers.TokenProvider;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -44,15 +47,9 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import java.util.HashMap;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
 public class MapDriverActivity extends AppCompatActivity
         implements OnMapReadyCallback {
@@ -62,6 +59,8 @@ public class MapDriverActivity extends AppCompatActivity
     private GoogleMap nMap;
     private SupportMapFragment nMapFragment;
     private GeofireProvider mGeofireProvider;
+    private ClientBookingProvider mClientBookingProvider;
+    private TokenProvider mTokenProvider;
     private AuthProvider mAuthProvider;
     private final static int LOCATION_REQUEST_CODE = 100;
     private final static int SETTINGS_REQUEST_CODE = 200;
@@ -73,6 +72,7 @@ public class MapDriverActivity extends AppCompatActivity
 
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocation;
+    private ValueEventListener mListener;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -108,8 +108,10 @@ public class MapDriverActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_driver);
-        mGeofireProvider = new GeofireProvider();
+        mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
         mAuthProvider = new AuthProvider();
+        mClientBookingProvider = new ClientBookingProvider();
+        mTokenProvider = new TokenProvider();
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("Mapa Conductor");
@@ -133,6 +135,15 @@ public class MapDriverActivity extends AppCompatActivity
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkLocationPermissions();
+        isDriverWorking();
+        generatedToken();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mListener != null)
+            mGeofireProvider.isDriverWorking(mAuthProvider.getId()).removeEventListener(mListener);
     }
 
     @Override
@@ -298,5 +309,25 @@ public class MapDriverActivity extends AppCompatActivity
         Intent intent = new Intent(MapDriverActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    private void isDriverWorking() {
+        mListener = mGeofireProvider.isDriverWorking(mAuthProvider.getId())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.exists())
+                            disconnect();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private void generatedToken() {
+        mTokenProvider.createdToken(mAuthProvider.getId());
     }
 }

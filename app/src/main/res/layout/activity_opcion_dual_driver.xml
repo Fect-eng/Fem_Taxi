@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
     android:background="@color/colorPrimary"
-    tools:context=".OpcionDualDriverActivity"
+    tools:context=".driver.OpcionDualDriverActivity"
     >
 <include layout="@layout/action_bar_toolbar"></include>
 

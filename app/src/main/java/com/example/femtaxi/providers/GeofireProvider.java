@@ -1,5 +1,6 @@
 package com.example.femtaxi.providers;
 
+import com.example.femtaxi.helpers.Constans;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -12,9 +13,9 @@ public class GeofireProvider {
     private DatabaseReference mDatabase;
     private GeoFire mGeofire;
 
-    public GeofireProvider() {
-         mDatabase = FirebaseDatabase.getInstance().getReference().child("conductores_activos");
-         mGeofire = new GeoFire(mDatabase);
+    public GeofireProvider(String nodo) {
+        mDatabase = FirebaseDatabase.getInstance().getReference().child(nodo);//conductores_activos
+        mGeofire = new GeoFire(mDatabase);
     }
 
     public void saveLocation(String idDriver, LatLng latLng) {
@@ -30,5 +31,9 @@ public class GeofireProvider {
         GeoQuery geoQuery = mGeofire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), 10);
         geoQuery.removeAllListeners();
         return geoQuery;
+    }
+
+    public DatabaseReference isDriverWorking(String idDriver) {
+        return FirebaseDatabase.getInstance().getReference().child(Constans.DRIVER_WORKING).child(idDriver);
     }
 }

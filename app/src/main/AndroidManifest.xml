@@ -53,15 +53,15 @@
             android:name=".ClienteOptionActivity"
             android:parentActivityName=".MainActivity" />
         <activity
-            android:name=".MapDriverActivity"
-            android:parentActivityName=".OpcionDualDriverActivity" />
+            android:name=".driver.MapDriverActivity"
+            android:parentActivityName=".driver.OpcionDualDriverActivity" />
         <activity android:name=".RegistroDriverImageActivity" />
         <activity android:name=".RegistroDriverSegundoActivity" />
         <activity
             android:name=".RegistroDriverPrimerActivity"
-            android:parentActivityName=".OpcionDualDriverActivity" />
+            android:parentActivityName=".driver.OpcionDualDriverActivity" />
         <activity
-            android:name=".OpcionDualDriverActivity"
+            android:name=".driver.OpcionDualDriverActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
@@ -84,6 +84,13 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <receiver
+            android:name=".broadcast.AcceptReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name=".broadcast.CancelReceiver"
+            android:enabled="true" />
     </application>
 
 </manifest>

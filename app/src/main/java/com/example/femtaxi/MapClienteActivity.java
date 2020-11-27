@@ -27,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryDataEventListener;
@@ -142,7 +143,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_cliente);
-        mGeofireProvider = new GeofireProvider();
+        mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
        // mAuthProvider = new AuthProvider(); esto es de firebase
         //toolbar
         mToolbar = findViewById(R.id.toolbar);

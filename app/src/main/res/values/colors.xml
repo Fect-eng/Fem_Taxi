@@ -8,5 +8,6 @@
     <color name="Colorletras">#FFFFFF</color>
     <color name="Colorletrasly">#000000</color>
     <color name="ColorTolbar">#FFFFFF</color>
-   
+    <color name="white">#FFFFFF</color>
+
 </resources>
