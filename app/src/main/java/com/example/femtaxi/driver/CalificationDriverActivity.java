@@ -18,9 +18,7 @@ import com.example.femtaxi.providers.HistoryBookingProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class CalificationDriverActivity extends AppCompatActivity {
 

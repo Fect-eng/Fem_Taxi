@@ -23,8 +23,7 @@ public class ElegantDataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_elegant_data);
-       // btnbacking = findViewById(R.id.btnbacking);
-
+       //btnbacking = findViewById(R.id.btnbacking);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -37,7 +36,9 @@ public class ElegantDataActivity extends AppCompatActivity {
                 startActivity(llamar);
             }
         });
-    }
+      }
+
+
     }
 
 

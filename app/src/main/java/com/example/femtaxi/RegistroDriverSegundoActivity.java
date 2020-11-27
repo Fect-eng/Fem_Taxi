@@ -100,6 +100,7 @@ public class RegistroDriverSegundoActivity extends AppCompatActivity {
                 numerocarro.getText().toString(),
                 modelocarro.getText().toString(),
                 tipocarro.getText().toString(),
+
                 mRegistroDriver1.getId());
     }
 
@@ -130,9 +131,10 @@ public class RegistroDriverSegundoActivity extends AppCompatActivity {
 
     private HashMap<String, Object> dataFirebase() {
         HashMap<String, Object> sendFirebase = new HashMap<>();
-        sendFirebase.put("placa", registroDriver2.getNumeroplaca());
-        sendFirebase.put("modelo", registroDriver2.getModelocarro());
-        sendFirebase.put("tipo", registroDriver2.getTipocarro());
+        sendFirebase.put("Numero_Placa", registroDriver2.getNumeroplaca());
+        sendFirebase.put("Modelo_carro", registroDriver2.getModelocarro());
+        sendFirebase.put("Tipo_Carro", registroDriver2.getTipocarro());
+        sendFirebase.put("Numero_Carro", registroDriver2.getNumerocarro());   //adicional
         sendFirebase.put("user_id", mRegistroDriver1.getId());
         return sendFirebase;
     }

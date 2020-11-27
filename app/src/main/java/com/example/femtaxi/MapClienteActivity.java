@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -26,7 +27,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
+import com.example.femtaxi.client.DetailRequestActivity;
 import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.firebase.geofire.GeoLocation;
@@ -49,10 +52,12 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseError;
+import com.google.maps.android.SphericalUtil;
 
 import java.security.AuthProvider;
 import java.sql.Array;
@@ -89,9 +94,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private boolean mISFirstTime = true;
 
     //place
-    private PlacesClient mPlaces;
     private AutocompleteSupportFragment mAutocomplete;
     private AutocompleteSupportFragment mAutocompleteDestination;
+    private PlacesClient mPlaces;
 
     private String mOrigin;
     private LatLng mOriginLatLng;
@@ -107,19 +112,21 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             for (Location location : locationResult.getLocations()) {
                 if (getApplicationContext() != null) {
                     //validacion para que no duplique la imagen
-                    if (nMarker != null){
+                   /* if (nMarker != null){
                         nMarker.remove();
-                    }
+                    }*/
                     mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());   //geofire
                     //Fin de validacion codigo probado ok
 
                     //nmarker hacemos referencia a colocar un icono en vuestro punto de referencia gps
+                   /*
                     nMarker = nMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(),location.getLongitude())
                             )
                                     .title("Posición Actual Cliente")  //pones el dedo y
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.clienttaxi))
-                    ); //codigo probado y verificado de icono en mapa
+                    );*/
+                    //codigo probado y verificado de icono en mapa
                     //obtener ubicacion de usuario en tiempo real
                     nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
@@ -127,9 +134,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                                     .zoom(16f) //es parque en el mapa inical se visualize  la ruta
                                     .build()
                     ));
-                    if (mISFirstTime){
+                    if (mISFirstTime) {
                         mISFirstTime = false;
                         getActiveDrivers();
+                        limitSearch();  //para que se ejecute una sola vez el metodo de limite de ciudad;
 
                     }
                 }
@@ -144,7 +152,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_cliente);
         mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
-       // mAuthProvider = new AuthProvider(); esto es de firebase
+        // mAuthProvider = new AuthProvider(); esto es de firebase
         //toolbar
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -153,43 +161,21 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         //============================================================================================
         //segunda variable instanciada de gps
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
-        //=======================================================
-       // mButtonConnect = findViewById(R.id.btnConnect);
-        //mButtonConnect.setOnClickListener(new View.OnClickListener() {  //manda error
-          /*  @Override
-            public void onClick(View v) {
-                //aun falta asiganr codigo
-                if (mIsconnect) {
-                    disconnect();
-                }
-                else{  NO borrar es para pruebas unicas
-                    startLocation(); //activa la localizacion
-                }
-            }*/
-      //  });
+        //codigo de prueba
+        mButtonRequestDriver = findViewById(R.id.btnRequestDriver);   //relaciona a boton de envio datos
+        // nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        // nMapFragment.getMapAsync(this);
 
-        nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapaCliente);
-        nMapFragment.getMapAsync(this);
-        //Place Autocomplete
-        mButtonRequestDriver = findViewById(R.id.btnRequestDriver);
-        //=========================================
+        //finde prueba
+        //places
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_api_key));
+            Places.initialize(getApplicationContext(), getResources().getString(R.string.google_api_key)); //colocamos nuestra api
         }
         mPlaces = Places.createClient(this);
-
-        //===================================================
-        mButtonRequestDriver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requesDriver();
-            }
-        });
-        //===================================================
-
         mAutocomplete = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.pleaceAutocompleteOrigin);
-        mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG,Place.Field.NAME));
-        mAutocomplete.setHint("Lugar de recogida");
+
+        mAutocomplete.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        // mAutocomplete.setHint("Ubicacion Actual");
         mAutocomplete.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(@NonNull Place place) {
@@ -224,42 +210,57 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-            mCameraListener = new GoogleMap.OnCameraIdleListener() {
-                @Override
-                public void onCameraIdle() {
-                    try {
-                        Geocoder geocoder = new Geocoder(MapClienteActivity.this);
-                        mOriginLatLng = nMap.getCameraPosition().target;
-                        List<Address> addressList = geocoder.getFromLocation(mOriginLatLng.latitude, mOriginLatLng.longitude, 1);
-                        String city = addressList.get(0).getLocality();
-                        String country = addressList.get(0).getCountryName();
-                        String address = addressList.get(0).getAddressLine(0);
-                        mOrigin = address + " " + city;
-                        mAutocomplete.setText(address + " " + city);
-                    }catch (Exception e) {
-                        Log.d("error: ", "Mensaje Error: " + e.getMessage());
-                    }
+        mCameraListener = new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                try {
+                    Geocoder geocoder = new Geocoder(MapClienteActivity.this);
+                    mOriginLatLng = nMap.getCameraPosition().target;
+                    List<Address> addressList = geocoder.getFromLocation(mOriginLatLng.latitude, mOriginLatLng.longitude, 1);
+                    String city = addressList.get(0).getLocality();
+                    String country = addressList.get(0).getCountryName();
+                    String address = addressList.get(0).getAddressLine(0);
+                    mOrigin = address + " " + city;
+                    mAutocomplete.setText(address + " " + city);
+                } catch (Exception e) {
+                    Log.d("error: ", "Mensaje Error: " + e.getMessage());
                 }
-            };
+            }
+        };
+
+        nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.mapaCliente);
+        nMapFragment.getMapAsync(this);
+
+        mButtonRequestDriver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                requestDriver();
+            }
+        });
     }
 
-    private void requesDriver() {
+    private void requestDriver() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
             Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
-            intent.putExtra("origin_lat", mOriginLatLng.latitude);
-            intent.putExtra("origin_lng", mOriginLatLng.longitude);
+            intent.putExtra("Origin_lat", mOriginLatLng.latitude);
+            intent.putExtra("Origin_lng", mOriginLatLng.longitude);
+            // intent.putExtra("destination_lng", mDestinationLatlng.longitude);
+            //  intent.putExtra("destination_lng_lng", mDestinationLatlng.longitude);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Debe Seleccionar el lugar de recogida y el destino", Toast.LENGTH_SHORT).show();
         }
     }
 
     //metodo de locaclizacion geofire
-        private void getActiveDrivers(){
+    private void getActiveDrivers() {
         mGeofireProvider.getActiveDrivers(mCurrentLatLng).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 //añadiremos marcadores de conductores que se conecten en app
-                for (Marker marker: mDriversMarkers){
-                    if (marker.getTag() != null){
-                        if (marker.getTag().equals(key)){
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
                             return;
                         }
                     }
@@ -274,9 +275,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onKeyExited(String key) {
                 //cuando se hayan desconectado
-                for (Marker marker: mDriversMarkers){
-                    if (marker.getTag() != null){
-                        if (marker.getTag().equals(key)){
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
                             marker.remove();
                             mDriversMarkers.remove(marker);
 
@@ -290,9 +291,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public void onKeyMoved(String key, GeoLocation location) {
                 //update posicion de dribver
-                for (Marker marker: mDriversMarkers){
-                    if (marker.getTag() != null){
-                        if (marker.getTag().equals(key)){
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
                             marker.setPosition(new LatLng(location.latitude, location.longitude));
                         }
                     }
@@ -310,7 +311,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
             }
         });
-        }
+    }
 
 
     @Override
@@ -318,7 +319,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         nMap = googleMap;
         nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         nMap.getUiSettings().setZoomControlsEnabled(true);
-        nMap.setMyLocationEnabled(true);
+        //nMap.setMyLocationEnabled(true);
         nMap.setOnCameraIdleListener(mCameraListener);
         //habilita opciones de zoom
         //por ahora la aplicacion funciona a lo esperado solo que lo hace desded fake GPS
@@ -334,19 +335,22 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         //termine de instanciar al user en time real
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.client_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_logout ){
+        if (item.getItemId() == R.id.action_logout) {
             logout();
         }
         return super.onOptionsItemSelected(item);
     }
-    void logout(){
+
+    void logout() {
         Intent intent = new Intent(MapClienteActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
@@ -361,30 +365,29 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         if (requestCode == LOCATION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    if (gpsActived()){
+                    if (gpsActived()) {
                         mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                         nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
-                    }
-                    else{
+                    } else {
                         showAlertDialogNoGPS();    //mensaje DialogGPS
                     }
-                else{
+                else {
                     checkLocationPermissions();
                 }
-            }
-            else{
+            } else {
                 checkLocationPermissions();
             }
         }
     }
+
+    @SuppressLint("MissingPermission")
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SETTINGS_REQUEST_CODE && gpsActived()){
+        if (requestCode == SETTINGS_REQUEST_CODE && gpsActived()) {
             mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
             nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
-        }
-        else if(requestCode == SETTINGS_REQUEST_CODE && !gpsActived()){
+        } else if (requestCode == SETTINGS_REQUEST_CODE && !gpsActived()) {
             showAlertDialogNoGPS();    //mensaje DialogGPS
         }
     }
@@ -392,7 +395,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     //==================================================================================================================
 
     //=================================================================================================================
-    private void showAlertDialogNoGPS(){
+    private void showAlertDialogNoGPS() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Por favor activa GPS para continuar")
                 .setPositiveButton("configuraciones", new DialogInterface.OnClickListener() {
@@ -402,60 +405,58 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     }
                 }).create().show();
     }
+
     //==========================================================================
     //metodo de validacion para verificar que gps este activado
     //hicimos pruebas si funciona
     private boolean gpsActived() {
         boolean isActive = false;
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             isActive = true;
         }//fin de if primero
         return isActive;
     }//fin de private void
     //Fin de metodo de activacion gps
 
-   /* private void disconnect(){
-        mButtonConnect.setText("CONECTARSE"); //valores asignados a conectarse
-        mIsconnect = false;  //valor asigando a conectarse
-        if (mFusedLocation != null){
-            mFusedLocation.removeLocationUpdates(mLocationCallback);
-            nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
-        }
-    }*/
+    /* private void disconnect(){
+         mButtonConnect.setText("CONECTARSE"); //valores asignados a conectarse
+         mIsconnect = false;  //valor asigando a conectarse
+         if (mFusedLocation != null){
+             mFusedLocation.removeLocationUpdates(mLocationCallback);
+             nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
+         }
+     }*/
     //escuchador
     private void startLocation() { //23 MARSMELLOWS
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-                if (gpsActived()){
-                  //  mButtonConnect.setText("DESCONECTARSE"); //valores asignados a conectarse
-                  //  mIsconnect = true;  //valor asigando a conectarse
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                if (gpsActived()) {
+                    //  mButtonConnect.setText("DESCONECTARSE"); //valores asignados a conectarse
+                    //  mIsconnect = true;  //valor asigando a conectarse
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps
-                }
-                else{
+                } else {
                     showAlertDialogNoGPS();   //mensaje DialogGPS
                 }
-            }
-            else{
+            } else {
                 checkLocationPermissions();
             }
         } else {
-            if (gpsActived()){
+            if (gpsActived()) {
                 mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                 nMap.setMyLocationEnabled(true); //personaliza el punto asignado en gps revisar si pasa algun detalle
-            }
-            else{
+            } else {
                 showAlertDialogNoGPS();     //mensaje DialogGPS
             }
         }
     }//start location
 
     //fraccion de codigo por si el user no acepta los permisos != si es diferente
-    private void checkLocationPermissions () {
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED);{
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)){
+    private void checkLocationPermissions() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                 new AlertDialog.Builder(this)
                         .setTitle("Proporciona los permisos nesesarios")
                         .setMessage("Esta Aplicacion requiere los permisos nesesarios para funcionar")
@@ -467,14 +468,20 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                         })
                         .create()
                         .show();
-            } else{
+            } else {
                 ActivityCompat.requestPermissions(MapClienteActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             }
         }
     }
+
     //checkLocationPermissions final
-
+    private void limitSearch() {  //metodo que limita el limite de bsuqyeda en la region verificar para la tarjeta
+        LatLng northSide = SphericalUtil.computeOffset(mCurrentLatLng, 5000, 0);
+        LatLng southSide = SphericalUtil.computeOffset(mCurrentLatLng, 5000, 180);
+        mAutocomplete.setCountry("PE");
+        mAutocomplete.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
+        mAutocompleteDestination.setCountry("PE");
+        mAutocompleteDestination.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
     }
-
-
+}
 

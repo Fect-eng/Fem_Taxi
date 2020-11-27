@@ -111,7 +111,7 @@ public class EnviarImagenActivity extends AppCompatActivity {
 
     private void sendPhoto() {
         for (Uri uri : uriArrayList) {
-            StorageReference filepath = mStorage.child(mRegistroDriver1.getId()).child(uri.getLastPathSegment());
+            StorageReference filepath = mStorage.child(mRegistroDriver1.getId()).child(uri.getLastPathSegment()); //storage
             filepath.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override

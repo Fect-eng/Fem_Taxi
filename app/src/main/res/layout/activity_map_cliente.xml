@@ -6,15 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".MapClienteActivity">
 
-    <include layout="@layout/action_bar_toolbar">
+    <include layout="@layout/action_bar_toolbar"></include>
 
-    </include>
     <fragment
         android:id="@+id/mapaCliente"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-       ></fragment>
+       >
+    </fragment>
 
     <LinearLayout
         android:layout_width="400dp"
@@ -28,70 +28,87 @@
             android:background="#FFFFFF"
             app:cardCornerRadius="20dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="60dp"
-            >
+            android:layout_marginRight="60dp">
     <fragment
             android:id="@+id/pleaceAutocompleteOrigin"
             android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            />
-
+            android:layout_marginLeft="10dp"/>
         </androidx.cardview.widget.CardView>
-
 
         <LinearLayout
             android:layout_width="400dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="25dp">
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            app:cardCornerRadius="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="60dp">
+            android:layout_marginTop="25dp"
+            android:orientation="vertical">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="60dp"
+                android:background="#FFFFFF"
+                app:cardCornerRadius="20dp">
 
                 <fragment
                     android:id="@+id/placeAutocompleteDestination"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                    />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </androidx.cardview.widget.CardView>
 
-        </androidx.cardview.widget.CardView>
-
-            <Button
-                android:id="@+id/btnRequestDriver"
-                android:layout_width="match_parent"
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginLeft="60dp"
-                android:layout_marginTop="370dp"
-                android:layout_marginRight="60dp"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:fontFamily="monospace"
-
-                android:text="SOLICITAR VIAJE"
-                android:textColor="#FFFFFF"
-                android:textSize="20dp" />
-
-            <ImageView
-                android:layout_width="79dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/navigaci"
-                android:layout_marginTop="-240dp"
-                android:layout_marginRight="15dp"
-                >
-
-            </ImageView>
+                android:layout_gravity="bottom|end"
+                android:layout_margin="@dimen/fab_margin"
+                app:srcCompat="@drawable/fonico" />
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="280dp"
+        android:gravity="center_horizontal"
+        tools:layout_editor_absoluteY="280dp">
+
+        <ImageView
+            android:layout_width="79dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="240dp"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/localizador">
+        </ImageView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginVertical="250dp"
+        android:layout_marginTop="100dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/btnRequestDriver"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="40dp"
+            android:layout_marginLeft="60dp"
+            android:background="@drawable/rounded_button"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:text="SOlicitar Servicio"
+            android:textColor="#FFFFFF"
+            android:textSize="19dp" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

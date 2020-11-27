@@ -111,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="DNI Nacional / Extranjero"
-                        android:inputType="text|textCapCharacters"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="number"></com.google.android.material.textfield.TextInputEditText>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -169,7 +169,7 @@
                         android:layout_weight="1"
                         android:ems="10"
                         android:hint="Fecha Nacimiento"
-                        android:inputType="date">
+                        android:inputType="datetime">
 
                     </com.google.android.material.textfield.TextInputEditText>
                 </com.google.android.material.textfield.TextInputLayout>
@@ -198,7 +198,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Número Telefonico"
-                        android:inputType="textPhonetic"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="number"></com.google.android.material.textfield.TextInputEditText>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
