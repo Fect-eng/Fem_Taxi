@@ -4,5 +4,7 @@
     <string name="btnFoto">Abrir camera</string>
     <string name="lblName">Estado Permiso</string>
     <string name="lblCamera">Camara Selección</string>
+    <string name="access_token" />
+    <string name="selected_place_info" />
 
 </resources>
