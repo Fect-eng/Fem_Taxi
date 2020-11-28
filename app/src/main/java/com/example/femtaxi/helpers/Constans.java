@@ -11,5 +11,9 @@ public class Constans {
 
     public class Extras {
         public static final String EXTRA_CLIENT_ID = "EXTRA_CLIENT_ID";
+        public static final String ORIGIN_LAT = "EXTRA_ORIGIN_LAT";
+        public static final String ORIGIN_LONG = "EXTRA_ORIGIN_LONG";
+        public static final String DESTINO_LAT = "EXTRA_DESTINO_LAT";
+        public static final String DESTINO_LONG = "EXTRA_DESTINO_LONG";
     }
 }
