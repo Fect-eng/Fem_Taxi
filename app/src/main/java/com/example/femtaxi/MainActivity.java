@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.femtaxi.client.MapClienteActivity;
 import com.example.femtaxi.driver.OpcionDualDriverActivity;
 
 public class MainActivity extends AppCompatActivity {

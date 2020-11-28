@@ -28,6 +28,8 @@ import androidx.core.content.ContextCompat;
 
 import com.example.femtaxi.MainActivity;
 import com.example.femtaxi.R;
+import com.example.femtaxi.databinding.ActivityMapClienteBinding;
+import com.example.femtaxi.databinding.ActivityMapDriverBinding;
 import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.ClientBookingProvider;
@@ -55,7 +57,8 @@ public class MapDriverActivity extends AppCompatActivity
         implements OnMapReadyCallback {
     String TAG = MapDriverActivity.class.getSimpleName();
 
-    Toolbar mToolbar;
+    private ActivityMapDriverBinding binding;
+
     private GoogleMap nMap;
     private SupportMapFragment nMapFragment;
     private GeofireProvider mGeofireProvider;
@@ -65,7 +68,6 @@ public class MapDriverActivity extends AppCompatActivity
     private final static int LOCATION_REQUEST_CODE = 100;
     private final static int SETTINGS_REQUEST_CODE = 200;
     private Marker nMarker;
-    private Button mButtonConnect;
     private boolean mIsconnect = false;
 
     private LatLng mCurrentLatLng;
@@ -107,18 +109,17 @@ public class MapDriverActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map_driver);
+        binding = ActivityMapDriverBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
         mAuthProvider = new AuthProvider();
         mClientBookingProvider = new ClientBookingProvider();
         mTokenProvider = new TokenProvider();
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Conductor");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
-        mButtonConnect = findViewById(R.id.btnConnect);
-        mButtonConnect.setOnClickListener(new View.OnClickListener() {
+        binding.btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //aun falta asiganr codigo
@@ -128,10 +129,10 @@ public class MapDriverActivity extends AppCompatActivity
                     startLocation();
                 }
                 mIsconnect = !mIsconnect;
-                mButtonConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
+                binding.btnConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
             }
         });
-        mButtonConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
+        binding.btnConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkLocationPermissions();

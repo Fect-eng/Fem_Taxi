@@ -6,7 +6,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class RetrofitUser {
 
-    Retrofit getClient(String url) {
+    public static Retrofit getClient(String url) {
         return new Retrofit.Builder()
                 .baseUrl(url)
                 .addConverterFactory(ScalarsConverterFactory.create())

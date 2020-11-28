@@ -5,65 +5,90 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.femtaxi.R;
+import com.example.femtaxi.databinding.ActivityDetailRequestBinding;
 import com.example.femtaxi.helpers.Constans;
-import com.google.android.gms.location.LocationRequest;
+import com.example.femtaxi.providers.GoogleApiProvider;
+import com.example.femtaxi.utils.DecodePoints;
+import com.example.femtaxi.utils.Utils;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.SquareCap;
 
-import android.content.Intent;
-import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class DetailRequestActivity extends AppCompatActivity implements OnMapReadyCallback {
+    String TAG = DetailRequestActivity.class.getSimpleName();
+
+    private ActivityDetailRequestBinding binding;
+
     private GoogleMap nMap;
     private SupportMapFragment nMapFragment;
-    Toolbar mToolbar;
 
     private double mExtraOriginLat;
     private double mExtraOriginLng;
-    private double mExtraDestinationLat;
-    private double mExtradestinationLng;
+    private double mExtraDestinoLat;
+    private double mExtradestinoLng;
 
     private LatLng mOriginLatLng;
     private LatLng mDestinationLatLng;
+    private GoogleApiProvider mGoogleApiProvider;
+    private List<LatLng> mPolyLinesList;
+    private PolylineOptions mPolylineOptions;
+    private LatLngBounds.Builder builder = LatLngBounds.builder();
+    private LatLngBounds bounds = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail_request);
+        binding = ActivityDetailRequestBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        nMapFragment.getMapAsync((OnMapReadyCallback) this);
+        nMapFragment.getMapAsync(this);
 
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Detalle Cliente");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mGoogleApiProvider = new GoogleApiProvider(this);
+
         mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LAT, 0);
         mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LONG, 0);
-        //   mExtraDestinationLat =  getIntent().getDoubleExtra("destination_lat", 0);
-        //  mExtradestinationLng =  getIntent().getDoubleExtra("destination_lng", 0);
+        mExtraDestinoLat = getIntent().getDoubleExtra(Constans.Extras.DESTINO_LAT, 0);
+        mExtradestinoLng = getIntent().getDoubleExtra(Constans.Extras.DESTINO_LONG, 0);
 
-        mOriginLatLng = new LatLng(mExtraDestinationLat, mExtradestinationLng);
-        // mDestinationLatLng = new LatLng(mExtraDestinationLat, mExtradestinationLng);
+        mOriginLatLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
+        mDestinationLatLng = new LatLng(mExtraDestinoLat, mExtradestinoLng);
+
+        String addressOrigin = Utils.getStreet(this, mExtraOriginLat, mExtraOriginLng);
+        String addressDestino = Utils.getStreet(this, mExtraDestinoLat, mExtradestinoLng);
+        binding.txtAddressOrigin.setText(addressOrigin);
+        binding.txtAddressDestino.setText(addressDestino);
 
     }
 
@@ -72,7 +97,10 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         nMap = googleMap;
         nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         nMap.getUiSettings().setZoomControlsEnabled(true);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -84,15 +112,57 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         }
         nMap.setMyLocationEnabled(true);
 
-        nMap.addMarker(new MarkerOptions().position(mOriginLatLng).title("Origen").icon(BitmapDescriptorFactory.fromResource(R.drawable.rojoiconomarker)));
-       // nMap.addMarker(new MarkerOptions().position(mDestinationLatLng).title("Destino").icon(BitmapDescriptorFactory.fromResource(R.drawable.azuliconomarker)));
+        nMap.addMarker(new MarkerOptions()
+                .position(mOriginLatLng)
+                .title("Origen")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.rojoiconomarker)));
+        nMap.addMarker(new MarkerOptions()
+                .position(mDestinationLatLng)
+                .title("Destino")
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.azuliconomarker)));
 
-        nMap.animateCamera(CameraUpdateFactory.newCameraPosition(
-                new CameraPosition.Builder()
-                .target(mOriginLatLng)
-                .zoom(14f)
-                .build()
-        ));
+        builder.include(mOriginLatLng);
+        builder.include(mDestinationLatLng);
+        bounds = builder.build();
+        CameraUpdate camera = CameraUpdateFactory.newLatLngBounds(bounds, 100);
+        nMap.animateCamera(camera);
+        drawRoute();
+    }
+
+    private void drawRoute() {
+        mGoogleApiProvider.getDirections(mOriginLatLng, mDestinationLatLng)
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response.body());
+                            Log.d(TAG, "drawRoute jsonObject: " + jsonObject);
+                            JSONArray jsonArray = jsonObject.getJSONArray("routes");
+                            Log.d(TAG, "drawRoute jsonArray: " + jsonArray);
+                            JSONObject route = jsonArray.getJSONObject(0);
+                            Log.d(TAG, "drawRoute route: " + route);
+                            JSONObject polyLines = route.getJSONObject("overview_polilyne");
+                            Log.d(TAG, "drawRoute polyLines: " + polyLines);
+                            String points = polyLines.getString("point");
+                            Log.d(TAG, "drawRoute points: " + points);
+                            mPolyLinesList = DecodePoints.decodePoly(points);
+                            mPolylineOptions = new PolylineOptions();
+                            mPolylineOptions.color(Color.DKGRAY);
+                            mPolylineOptions.width(8f);
+                            mPolylineOptions.startCap(new SquareCap());
+                            mPolylineOptions.jointType(JointType.ROUND);
+                            mPolylineOptions.addAll(mPolyLinesList);
+                            nMap.addPolyline(mPolylineOptions);
+                        } catch (Exception e) {
+                            Log.d(TAG, "drawRoute Error: " + e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.d(TAG, "drawRoute onFailure Error: " + t.getMessage());
+                    }
+                });
     }
 }
 

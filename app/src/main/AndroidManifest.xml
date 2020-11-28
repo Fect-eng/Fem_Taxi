@@ -31,7 +31,7 @@
         <activity android:name=".MapBoxPlaceActivity"></activity>
         <activity
             android:name=".client.DetailRequestActivity"
-            android:parentActivityName=".MapClienteActivity" />
+            android:parentActivityName=".client.MapClienteActivity" />
         <activity android:name=".pruebasAppActivity" />
 
         <meta-data
@@ -49,7 +49,7 @@
         <activity android:name=".ElegantDataActivity" />
         <activity android:name=".GpsDriverActivity" />
         <activity
-            android:name=".MapClienteActivity"
+            android:name=".client.MapClienteActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".ClientAuthentiActivity" />
         <activity

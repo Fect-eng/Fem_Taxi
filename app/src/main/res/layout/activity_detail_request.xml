@@ -7,20 +7,31 @@
     android:fitsSystemWindows="true"
     tools:context=".client.DetailRequestActivity">
 
-    <include layout="@layout/action_bar_toolbar"></include>
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/action_bar_toolbar" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/container_map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include_toolbar" />
 
     <LinearLayout
+        android:id="@+id/container_map"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
-        android:orientation="vertical">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,51 +39,51 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewOrigin"
+                android:id="@+id/txt_address_origin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Origen"
                 android:textSize="20dp"
-                android:textStyle="bold"
-                />
-            
+                android:textStyle="bold" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/ColorDriverBtn"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"></View>
+                android:layout_marginRight="20dp"
+                android:background="@color/ColorDriverBtn" />
 
 
             <TextView
-                android:id="@+id/textViewDestination"
+                android:id="@+id/txt_address_destino"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Destino"
                 android:textSize="20dp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/ColorDriverBtn"
                 android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"></View>
+                android:layout_marginRight="20dp"
+                android:background="@color/ColorDriverBtn" />
+
             <TextView
                 android:id="@+id/textcarrera"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Carrera a cierto Lugar"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
         </LinearLayout>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Solicitar Ahora"
             android:background="@color/colorPrimaryDark"
-            android:textColor="#FFFFFF"/>
+            android:text="Solicitar Ahora"
+            android:textColor="#FFFFFF" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

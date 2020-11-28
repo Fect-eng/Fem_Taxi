@@ -6,28 +6,29 @@
     android:layout_height="match_parent"
     tools:context=".driver.MapDriverActivity">
 
-    <include layout="@layout/action_bar_toolbar"/>
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/action_bar_toolbar" />
 
     <fragment
         android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:name="com.google.android.gms.maps.SupportMapFragment">
+        android:layout_height="match_parent">
 
     </fragment>
-<!-- boton asignado para conexion en booleano -->
+    <!-- boton asignado para conexion en booleano -->
     <Button
-     android:id="@+id/btnConnect"
+        android:id="@+id/btnConnect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="CONECTARSE"
         android:layout_gravity="bottom"
         android:layout_margin="30dp"
         android:layout_marginLeft="50dp"
-
-        android:textColor="#FFFFFF"
-        android:backgroundTint="@color/colorPrimaryDark"
         android:background="@drawable/rounded_button"
-        android:textSize="25dp"
-        />
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="CONECTARSE"
+        android:textColor="#FFFFFF"
+        android:textSize="25dp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
