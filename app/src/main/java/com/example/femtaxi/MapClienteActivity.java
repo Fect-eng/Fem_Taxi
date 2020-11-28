@@ -240,7 +240,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void requestDriver() {
-        if (mOriginLatLng != null && mDestinationLatLng != null) {
+        if (mOriginLatLng != null /*&& mDestinationLatLng != null*/) {
             Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
             intent.putExtra("Origin_lat", mOriginLatLng.latitude);
             intent.putExtra("Origin_lng", mOriginLatLng.longitude);
@@ -267,7 +267,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
                 }
                 LatLng driverLatlng = new LatLng(location.latitude, location.longitude);
-                Marker marker = nMap.addMarker(new MarkerOptions().position(driverLatlng).title("Conductor Disponible").icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
+                Marker marker = nMap.addMarker(new MarkerOptions()
+                        .position(driverLatlng)
+                        .title("Conductor Disponible")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
                 marker.setTag(key);
                 mDriversMarkers.add(marker);
             }

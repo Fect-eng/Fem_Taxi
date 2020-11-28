@@ -14,7 +14,7 @@ public class GeofireProvider {
     private GeoFire mGeofire;
 
     public GeofireProvider(String nodo) {
-        mDatabase = FirebaseDatabase.getInstance().getReference().child(nodo);//conductores_activos
+        mDatabase = FirebaseDatabase.getInstance().getReference().child(nodo);
         mGeofire = new GeoFire(mDatabase);
     }
 
