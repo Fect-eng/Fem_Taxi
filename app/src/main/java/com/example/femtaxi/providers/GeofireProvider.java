@@ -18,6 +18,10 @@ public class GeofireProvider {
         mGeofire = new GeoFire(mDatabase);
     }
 
+    public GeofireProvider() {
+        //creado desde requestDriveractivity
+    }
+
     public void saveLocation(String idDriver, LatLng latLng) {
         mGeofire.setLocation(idDriver, new GeoLocation(latLng.latitude, latLng.longitude));
     }
