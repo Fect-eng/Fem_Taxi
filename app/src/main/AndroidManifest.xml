@@ -28,7 +28,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MapBoxPlaceActivity"></activity>
+        <activity android:name=".driver.RequestDriverActivity"></activity>
+        <activity android:name=".llmadasDiariasActivity" />
+        <activity android:name=".MapBoxPlaceActivity" />
         <activity
             android:name=".client.DetailRequestActivity"
             android:parentActivityName=".client.MapClienteActivity" />

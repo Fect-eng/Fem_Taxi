@@ -27,8 +27,8 @@ public class GeofireProvider {
     }
 
     //luego vemos esto q esta bien
-    public GeoQuery getActiveDrivers(LatLng latLng) {
-        GeoQuery geoQuery = mGeofire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), 10);
+    public GeoQuery getActiveDrivers(LatLng latLng, double radius) {   //agregamos radius
+        GeoQuery geoQuery = mGeofire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), radius);
         geoQuery.removeAllListeners();
         return geoQuery;
     }

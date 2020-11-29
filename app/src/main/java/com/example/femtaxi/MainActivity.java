@@ -9,6 +9,7 @@ import android.widget.Button;
 
 import com.example.femtaxi.client.MapClienteActivity;
 import com.example.femtaxi.driver.OpcionDualDriverActivity;
+import com.example.femtaxi.driver.RequestDriverActivity;
 
 public class MainActivity extends AppCompatActivity {
     Button btnncliente;   //cliente boton
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void goToSelectClient() { // cliente  MapClienteActivity   === ClienteOptionActivity
-        Intent intent = new Intent(MainActivity.this, MapClienteActivity.class);
+        Intent intent = new Intent(MainActivity.this, RequestDriverActivity.class);
         startActivity(intent);
     }
 

@@ -32,6 +32,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.femtaxi.MainActivity;
 import com.example.femtaxi.R;
+
 import com.example.femtaxi.databinding.ActivityMapClienteBinding;
 import com.example.femtaxi.driver.MapDriverActivity;
 import com.example.femtaxi.helpers.Constans;
@@ -274,7 +275,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void getActiveDrivers() {
-        mGeofireProvider.getActiveDrivers(mCurrentLatLng).addGeoQueryEventListener(new GeoQueryEventListener() {
+        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
                 //añadiremos marcadores de conductores que se conecten en app

@@ -89,7 +89,6 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         String addressDestino = Utils.getStreet(this, mExtraDestinoLat, mExtradestinoLng);
         binding.txtAddressOrigin.setText(addressOrigin);
         binding.txtAddressDestino.setText(addressDestino);
-
     }
 
     @Override
