@@ -1,4 +1,4 @@
-package com.example.femtaxi;
+package com.example.femtaxi.models;
 
 public class ubicacionDriver {
 

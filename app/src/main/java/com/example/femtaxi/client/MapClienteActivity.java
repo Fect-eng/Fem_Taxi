@@ -159,8 +159,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
                                 .limit(10)
                                 .country("PE")
-                                /*.addInjectedFeature(home)
-                                .addInjectedFeature(work)*/
                                 .build(PlaceOptions.MODE_CARDS))
                         .build(MapClienteActivity.this);
                 startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE_ORIGIN);
@@ -176,8 +174,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
                                 .limit(10)
                                 .country("PE")
-                                /*.addInjectedFeature(home)
-                                .addInjectedFeature(work)*/
                                 .build(PlaceOptions.MODE_CARDS))
                         .build(MapClienteActivity.this);
                 startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE_DESTINO);
@@ -250,7 +246,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                         mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                         nMap.setMyLocationEnabled(true);
                     } else {
-                        showAlertDialogNoGPS();    //mensaje DialogGPS
+                        showAlertDialogNoGPS();
                     }
                 else {
                     checkLocationPermissions();
@@ -278,7 +274,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10).addGeoQueryEventListener(new GeoQueryEventListener() {
             @Override
             public void onKeyEntered(String key, GeoLocation location) {
-                //añadiremos marcadores de conductores que se conecten en app
                 for (Marker marker : mDriversMarkers) {
                     if (marker.getTag() != null) {
                         if (marker.getTag().equals(key)) {
@@ -352,8 +347,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             mOrigin = Utils.getStreet(this,
                     ((Point) selectedCarmenFeature.geometry()).latitude(),
                     ((Point) selectedCarmenFeature.geometry()).longitude());
-            Log.d(TAG, "mOriginLatLng: " + mOriginLatLng);
-            Log.d(TAG, "mOrigin: " + mOrigin);
             binding.txtOrigin.setText(mOrigin);
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE_DESTINO) {
             CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
@@ -362,8 +355,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             mDestination = Utils.getStreet(this,
                     ((Point) selectedCarmenFeature.geometry()).latitude(),
                     ((Point) selectedCarmenFeature.geometry()).longitude());
-            Log.d(TAG, "mDestinationLatLng: " + mDestinationLatLng);
-            Log.d(TAG, "mDestination: " + mOrigin);
             binding.txtDestino.setText(mDestination);
         }
     }
@@ -392,12 +383,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (gpsActived()) {
-                    //  mButtonConnect.setText("DESCONECTARSE"); //valores asignados a conectarse
-                    //  mIsconnect = true;  //valor asigando a conectarse
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     nMap.setMyLocationEnabled(true);
                 } else {
-                    showAlertDialogNoGPS();   //mensaje DialogGPS
+                    showAlertDialogNoGPS();
                 }
             } else {
                 checkLocationPermissions();
