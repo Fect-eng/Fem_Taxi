@@ -1,16 +1,20 @@
 package com.example.femtaxi.client;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.example.femtaxi.R;
 import com.example.femtaxi.databinding.ActivityDetailRequestBinding;
+import com.example.femtaxi.driver.RequestDriverActivity;
 import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.GoogleApiProvider;
 import com.example.femtaxi.utils.DecodePoints;
@@ -39,7 +43,7 @@ import retrofit2.Response;
 
 public class DetailRequestActivity extends AppCompatActivity implements OnMapReadyCallback {
     String TAG = DetailRequestActivity.class.getSimpleName();
-
+    private Button mButtonRequest;
     private ActivityDetailRequestBinding binding;
 
     private GoogleMap nMap;
@@ -63,6 +67,17 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         super.onCreate(savedInstanceState);
         binding = ActivityDetailRequestBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        //button
+       // btnRequestNow
+        mButtonRequest = findViewById(R.id.btnRequestNow);
+        mButtonRequest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToRequestDriver();
+            }
+        });
+        //button
+
 
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
@@ -83,8 +98,17 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
 
         String addressOrigin = Utils.getStreet(this, mExtraOriginLat, mExtraOriginLng);
         String addressDestino = Utils.getStreet(this, mExtraDestinoLat, mExtradestinoLng);
-        binding.txtAddressOrigin.setText(addressOrigin);
-        binding.txtAddressDestino.setText(addressDestino);
+        binding.textViewOrigin.setText(addressOrigin);        //cambio de variable
+        binding.textViewDestination.setText(addressDestino);  //cambio de variable
+
+    }
+
+    private void goToRequestDriver() {
+        Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
+        intent.putExtra("origin_lat", mOriginLatLng.latitude);
+        intent.putExtra("origin_lng", mOriginLatLng.longitude);
+        startActivity(intent);
+        finish();
     }
 
     @Override
