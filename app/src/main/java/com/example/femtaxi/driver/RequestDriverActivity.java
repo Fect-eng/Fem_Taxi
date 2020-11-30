@@ -47,6 +47,7 @@ public class RequestDriverActivity extends AppCompatActivity {
 
     mExtraOriginLat = getIntent().getDoubleExtra("Origin_lat", 0);
     mExtraOriginLng = getIntent().getDoubleExtra("origin_lng", 0);
+
   //  mOriginLatLng = new LatLng(),(mExtraOriginLat, mExtraOriginLng);
 
     }

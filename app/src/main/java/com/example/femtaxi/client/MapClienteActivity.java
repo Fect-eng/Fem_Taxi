@@ -202,7 +202,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                             mOriginLatLng.longitude);
                     Log.d(TAG, "mOriginLatLng: " + mOriginLatLng);
                     Log.d(TAG, "mOrigin: " + mOrigin);
+                    Log.d(TAG, "mDestinationLng: " + mDestinationLatLng);   //agregado new
+                    Log.d(TAG, "mDestination: "  + mDestination);           //agregado new
                     binding.txtOrigin.setText(mOrigin);
+                    binding.txtDestino.setText((mDestination));                 //new
                 } catch (Exception e) {
                     Log.d(TAG, "error: " + e.getMessage());
                 }
@@ -268,6 +271,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             intent.putExtra(Constans.Extras.ORIGIN_LONG, mOriginLatLng.longitude);
             intent.putExtra(Constans.Extras.DESTINO_LAT, mDestinationLatLng.latitude);
             intent.putExtra(Constans.Extras.DESTINO_LONG, mDestinationLatLng.longitude);
+            //
             startActivity(intent);
         } else {
             Toast.makeText(this, "Debe Seleccionar el lugar de recogida y el destino", Toast.LENGTH_SHORT).show();
@@ -303,7 +307,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                         if (marker.getTag().equals(key)) {
                             marker.remove();
                             mDriversMarkers.remove(marker);
-
                             return;
                         }
                     }
@@ -355,6 +358,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             Log.d(TAG, "mOriginLatLng: " + mOriginLatLng);
             Log.d(TAG, "mOrigin: " + mOrigin);
             binding.txtOrigin.setText(mOrigin);
+
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE_DESTINO) {
             CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
             mDestinationLatLng = new LatLng(((Point) selectedCarmenFeature.geometry()).latitude(),
