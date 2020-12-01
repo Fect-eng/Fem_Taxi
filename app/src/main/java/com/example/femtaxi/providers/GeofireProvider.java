@@ -14,12 +14,17 @@ public class GeofireProvider {
     private GeoFire mGeofire;
 
     public GeofireProvider(String nodo) {
-        mDatabase = FirebaseDatabase.getInstance().getReference().child(nodo);
-        mGeofire = new GeoFire(mDatabase);
+        getGeoFire(nodo);
     }
 
-    public GeofireProvider() {
-
+    private GeoFire getGeoFire(String nodo) {
+        if (mGeofire == null) {
+            mDatabase = FirebaseDatabase.getInstance()
+                    .getReference()
+                    .child(nodo);
+            mGeofire = new GeoFire(mDatabase);
+        }
+        return mGeofire;
     }
 
     public void saveLocation(String idDriver, LatLng latLng) {
@@ -30,6 +35,9 @@ public class GeofireProvider {
         mGeofire.removeLocation(idDriver);
     }
 
+    public DatabaseReference isDriverWorking(String idDriver) {
+        return FirebaseDatabase.getInstance().getReference().child(Constans.DRIVER_WORKING).child(idDriver);
+    }
 
     public GeoQuery getActiveDrivers(LatLng latLng, double radius) {
         GeoQuery geoQuery = mGeofire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), radius);
@@ -37,7 +45,4 @@ public class GeofireProvider {
         return geoQuery;
     }
 
-    public DatabaseReference isDriverWorking(String idDriver) {
-        return FirebaseDatabase.getInstance().getReference().child(Constans.DRIVER_WORKING).child(idDriver);
-    }
 }

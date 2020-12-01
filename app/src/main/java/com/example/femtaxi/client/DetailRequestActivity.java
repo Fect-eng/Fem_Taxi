@@ -82,6 +82,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(View v) {
                 goToRequestDriver();
+
             }
         });
         //button
@@ -126,10 +127,10 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
         intent.putExtra(Constans.Extras.ORIGIN_LAT, mOriginLatLng.latitude);
         intent.putExtra(Constans.Extras.ORIGIN_LONG, mOriginLatLng.longitude);
-        intent.putExtra("origin_lat", mOriginLatLng.latitude);
+        /*intent.putExtra("origin_lat", mOriginLatLng.latitude);
         intent.putExtra("origin_lng", mOriginLatLng.longitude);
         intent.putExtra("Destino_lat", mDestinationLatLng.latitude);
-        intent.putExtra("Destino_Lng", mDestinationLatLng.longitude);
+        intent.putExtra("Destino_Lng", mDestinationLatLng.longitude);*/
         startActivity(intent);
         finish();
     }

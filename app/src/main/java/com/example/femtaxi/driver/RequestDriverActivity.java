@@ -1,14 +1,19 @@
 package com.example.femtaxi.driver;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.femtaxi.R;
+import com.example.femtaxi.databinding.ActivityRegisterBinding;
+import com.example.femtaxi.databinding.ActivityRequestDriverBinding;
 import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.firebase.geofire.GeoLocation;
@@ -20,14 +25,13 @@ import com.google.firebase.database.DatabaseError;
 
 public class RequestDriverActivity extends AppCompatActivity {
 
-    private LottieAnimationView mAnimation;
-    private TextView mTextViewLookingFor;
-    private Button mButtonCancelRequest;
+    ActivityRequestDriverBinding binding;
+
     private GeofireProvider mGeofireProvider;
 
     private double mExtraOriginLat;
     private double mExtraOriginLng;
-    private LatLng mOriginLatLng;
+
     private double mRadius = 0.1;
     private boolean mDriverFound = false;
     private String mIdDriverFound = "";
@@ -36,25 +40,30 @@ public class RequestDriverActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_driver);
+        binding = ActivityRequestDriverBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
 
-        mAnimation = findViewById(R.id.animation);
-        mTextViewLookingFor = findViewById(R.id.textViewLookingFor);
-        mButtonCancelRequest = findViewById(R.id.btncancelRequest);
-
-        mAnimation.playAnimation();
-        mGeofireProvider = new GeofireProvider();
+        binding.animation.playAnimation();
+        mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
 
         mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LAT, 0);
         mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LONG, 0);
-        //  mOriginLatLng = new LatLng(),(mExtraOriginLat, mExtraOriginLng);
-        //getClosestDriver();
 
+        binding.btnCancelViaje.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //getClosestDriver();
+            }
+        });
+        LatLng latLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
+        if (latLng != null) {
+            getClosestDriver(latLng);
+        }
     }
 
-    private void getClosestDriver() {
-        mGeofireProvider.getActiveDrivers(mOriginLatLng, mRadius)
+    private void getClosestDriver(LatLng LatLng) {
+        mGeofireProvider.getActiveDrivers(LatLng, mRadius)
                 .addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoLocation location) {
@@ -63,7 +72,9 @@ public class RequestDriverActivity extends AppCompatActivity {
                             mDriverFound = true;
                             mIdDriverFound = key;
                             mDriverFoundLatLng = new LatLng(location.latitude, location.longitude);
-                            mTextViewLookingFor.setText("CONDUCTOR ENCONTRADO\nESPERANDO");
+                            binding.textViewLookingFor.setText("CONDUCTOR ENCONTRADO\nESPERANDO RESPUESTA");
+
+                            Log.d("DRIVER", "ID: " + mIdDriverFound);
                         }
 
                     }
@@ -80,15 +91,14 @@ public class RequestDriverActivity extends AppCompatActivity {
 
                     @Override
                     public void onGeoQueryReady() {
-                        //ingresa cunado termina la busqueda de conductor 0.1 KM
                         if (!mDriverFound) {
                             mRadius = mRadius + 0.1f;
-
                             if (mRadius > 5) {
-                                Toast.makeText(RequestDriverActivity.this, "NO SE ENCONTRO CONDUCTOR", Toast.LENGTH_SHORT).show();
+                                binding.textViewLookingFor.setText("NO SE ENCONTRO UN CONDUCTOR");
+                                Toast.makeText(RequestDriverActivity.this, "NO SE ENCONTRO UN CONDUCTOR", Toast.LENGTH_SHORT).show();
                                 return;
                             } else {
-                                getClosestDriver();
+                                getClosestDriver(LatLng);
                             }
                         }
                     }
@@ -98,7 +108,5 @@ public class RequestDriverActivity extends AppCompatActivity {
 
                     }
                 });
-
     }
-
 }

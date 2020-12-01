@@ -193,7 +193,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     Log.d(TAG, "mOriginLatLng: " + mOriginLatLng);
                     Log.d(TAG, "mOrigin: " + mOrigin);
                     Log.d(TAG, "mDestinationLng: " + mDestinationLatLng);
-                    Log.d(TAG, "mDestination: "  + mDestination);
+                    Log.d(TAG, "mDestination: " + mDestination);
                     binding.txtOrigin.setText(mOrigin);
                     binding.txtDestino.setText((mDestination));
                 } catch (Exception e) {
@@ -268,62 +268,62 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void getActiveDrivers() {
-        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10).addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                for (Marker marker : mDriversMarkers) {
-                    if (marker.getTag() != null) {
-                        if (marker.getTag().equals(key)) {
-                            return;
+        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10)
+                .addGeoQueryEventListener(new GeoQueryEventListener() {
+                    @Override
+                    public void onKeyEntered(String key, GeoLocation location) {
+                        for (Marker marker : mDriversMarkers) {
+                            if (marker.getTag() != null) {
+                                if (marker.getTag().equals(key)) {
+                                    return;
+                                }
+                            }
+
+                        }
+                        Marker marker = nMap.addMarker(new MarkerOptions()
+                                .position(new LatLng(location.latitude, location.longitude))
+                                .title("Conductor Disponible")
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
+                        marker.setTag(key);
+                        mDriversMarkers.add(marker);
+                    }
+
+                    @Override
+                    public void onKeyExited(String key) {
+                        for (Marker marker : mDriversMarkers) {
+                            if (marker.getTag() != null) {
+                                if (marker.getTag().equals(key)) {
+                                    marker.remove();
+                                    mDriversMarkers.remove(marker);
+                                    return;
+                                }
+                            }
+
                         }
                     }
 
-                }
-                LatLng driverLatlng = new LatLng(location.latitude, location.longitude);
-                Marker marker = nMap.addMarker(new MarkerOptions()
-                        .position(driverLatlng)
-                        .title("Conductor Disponible")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
-                marker.setTag(key);
-                mDriversMarkers.add(marker);
-            }
+                    @Override
+                    public void onKeyMoved(String key, GeoLocation location) {
+                        for (Marker marker : mDriversMarkers) {
+                            if (marker.getTag() != null) {
+                                if (marker.getTag().equals(key)) {
+                                    marker.setPosition(new LatLng(location.latitude, location.longitude));
+                                }
+                            }
 
-            @Override
-            public void onKeyExited(String key) {
-                for (Marker marker : mDriversMarkers) {
-                    if (marker.getTag() != null) {
-                        if (marker.getTag().equals(key)) {
-                            marker.remove();
-                            mDriversMarkers.remove(marker);
-                            return;
                         }
                     }
 
-                }
-            }
+                    @Override
+                    public void onGeoQueryReady() {
 
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                for (Marker marker : mDriversMarkers) {
-                    if (marker.getTag() != null) {
-                        if (marker.getTag().equals(key)) {
-                            marker.setPosition(new LatLng(location.latitude, location.longitude));
-                        }
                     }
 
-                }
-            }
+                    @Override
+                    public void onGeoQueryError(DatabaseError error) {
 
-            @Override
-            public void onGeoQueryReady() {
-
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-
-            }
-        });
+                    }
+                });
     }
 
     @SuppressLint("MissingPermission")

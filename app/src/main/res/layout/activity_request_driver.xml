@@ -11,7 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!--  app:lottie_filename="31815-city-driver-animation.json" -->
        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animation"
             android:layout_width="wrap_content"
@@ -34,6 +33,7 @@
             android:textSize="18sp"/>
 
         <LinearLayout
+            android:id="@+id/linearlala"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
@@ -41,7 +41,7 @@
             android:gravity="bottom">
 
             <Button
-                android:id="@+id/btncancelRequest"
+                android:id="@+id/btn_cancel_viaje"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="CANCELAR VIAJE"
