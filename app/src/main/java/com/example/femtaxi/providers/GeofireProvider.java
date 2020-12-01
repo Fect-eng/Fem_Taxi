@@ -19,7 +19,7 @@ public class GeofireProvider {
     }
 
     public GeofireProvider() {
-        //creado desde requestDriveractivity
+
     }
 
     public void saveLocation(String idDriver, LatLng latLng) {
@@ -30,8 +30,8 @@ public class GeofireProvider {
         mGeofire.removeLocation(idDriver);
     }
 
-    //luego vemos esto q esta bien
-    public GeoQuery getActiveDrivers(LatLng latLng, double radius) {   //agregamos radius
+
+    public GeoQuery getActiveDrivers(LatLng latLng, double radius) {
         GeoQuery geoQuery = mGeofire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), radius);
         geoQuery.removeAllListeners();
         return geoQuery;

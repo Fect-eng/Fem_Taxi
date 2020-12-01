@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.femtaxi.R;
+import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryDataEventListener;
@@ -38,64 +39,65 @@ public class RequestDriverActivity extends AppCompatActivity {
         setContentView(R.layout.activity_request_driver);
 
 
-    mAnimation = findViewById(R.id.animation);
-    mTextViewLookingFor = findViewById(R.id.textViewLookingFor);
-    mButtonCancelRequest = findViewById(R.id.btncancelRequest);
+        mAnimation = findViewById(R.id.animation);
+        mTextViewLookingFor = findViewById(R.id.textViewLookingFor);
+        mButtonCancelRequest = findViewById(R.id.btncancelRequest);
 
-    mAnimation.playAnimation();
-    mGeofireProvider = new GeofireProvider();
+        mAnimation.playAnimation();
+        mGeofireProvider = new GeofireProvider();
 
-    mExtraOriginLat = getIntent().getDoubleExtra("Origin_lat", 0);
-    mExtraOriginLng = getIntent().getDoubleExtra("origin_lng", 0);
-  //  mOriginLatLng = new LatLng(),(mExtraOriginLat, mExtraOriginLng);
+        mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LAT, 0);
+        mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LONG, 0);
+        //  mOriginLatLng = new LatLng(),(mExtraOriginLat, mExtraOriginLng);
+        //getClosestDriver();
 
     }
 
-    private void getClosestDriver(){
-       mGeofireProvider.getActiveDrivers(mOriginLatLng, mRadius).addGeoQueryEventListener(new GeoQueryEventListener() {
-           @Override
-           public void onKeyEntered(String key, GeoLocation location) {
+    private void getClosestDriver() {
+        mGeofireProvider.getActiveDrivers(mOriginLatLng, mRadius)
+                .addGeoQueryEventListener(new GeoQueryEventListener() {
+                    @Override
+                    public void onKeyEntered(String key, GeoLocation location) {
 
-               if (!mDriverFound) {
-                   mDriverFound = true;
-                   mIdDriverFound = key;
-                   mDriverFoundLatLng = new LatLng(location.latitude, location.longitude);
-                   mTextViewLookingFor.setText("CONDUCTOR ENCONTRADO\nESPERANDO");
-               }
+                        if (!mDriverFound) {
+                            mDriverFound = true;
+                            mIdDriverFound = key;
+                            mDriverFoundLatLng = new LatLng(location.latitude, location.longitude);
+                            mTextViewLookingFor.setText("CONDUCTOR ENCONTRADO\nESPERANDO");
+                        }
 
-           }
+                    }
 
-           @Override
-           public void onKeyExited(String key) {
+                    @Override
+                    public void onKeyExited(String key) {
 
-           }
+                    }
 
-           @Override
-           public void onKeyMoved(String key, GeoLocation location) {
+                    @Override
+                    public void onKeyMoved(String key, GeoLocation location) {
 
-           }
+                    }
 
-           @Override
-           public void onGeoQueryReady() {
-        //ingresa cunado termina la busqueda de conductor 0.1 KM
-               if (!mDriverFound) {
-                   mRadius = mRadius + 0.1f;
+                    @Override
+                    public void onGeoQueryReady() {
+                        //ingresa cunado termina la busqueda de conductor 0.1 KM
+                        if (!mDriverFound) {
+                            mRadius = mRadius + 0.1f;
 
-                   if (mRadius > 5){
-                       Toast.makeText(RequestDriverActivity.this, "NO SE ENCONTRO CONDUCTOR", Toast.LENGTH_SHORT).show();
-                       return;
-                   }
-                   else {
-                       getClosestDriver();
-                   }
-               }
-           }
+                            if (mRadius > 5) {
+                                Toast.makeText(RequestDriverActivity.this, "NO SE ENCONTRO CONDUCTOR", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else {
+                                getClosestDriver();
+                            }
+                        }
+                    }
 
-           @Override
-           public void onGeoQueryError(DatabaseError error) {
+                    @Override
+                    public void onGeoQueryError(DatabaseError error) {
 
-           }
-       });
+                    }
+                });
 
     }
 

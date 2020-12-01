@@ -105,8 +105,8 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
 
     private void goToRequestDriver() {
         Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
-        intent.putExtra("origin_lat", mOriginLatLng.latitude);
-        intent.putExtra("origin_lng", mOriginLatLng.longitude);
+        intent.putExtra(Constans.Extras.ORIGIN_LAT, mOriginLatLng.latitude);
+        intent.putExtra(Constans.Extras.ORIGIN_LONG, mOriginLatLng.longitude);
         startActivity(intent);
         finish();
     }

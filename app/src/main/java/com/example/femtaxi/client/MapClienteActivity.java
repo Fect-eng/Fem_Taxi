@@ -34,7 +34,6 @@ import com.example.femtaxi.MainActivity;
 import com.example.femtaxi.R;
 
 import com.example.femtaxi.databinding.ActivityMapClienteBinding;
-import com.example.femtaxi.driver.MapDriverActivity;
 import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.example.femtaxi.utils.Utils;
@@ -54,12 +53,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.firebase.database.DatabaseError;
-import com.google.maps.android.SphericalUtil;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -68,7 +62,6 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class MapClienteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -183,7 +176,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         binding.btnRequestDrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requestDriver();
+                moveToDetailRequestActivity();
             }
         });
 
@@ -257,7 +250,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void requestDriver() {
+    private void moveToDetailRequestActivity() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
             Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
             intent.putExtra(Constans.Extras.ORIGIN_LAT, mOriginLatLng.latitude);
@@ -271,64 +264,65 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void getActiveDrivers() {
-        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10).addGeoQueryEventListener(new GeoQueryEventListener() {
-            @Override
-            public void onKeyEntered(String key, GeoLocation location) {
-                for (Marker marker : mDriversMarkers) {
-                    if (marker.getTag() != null) {
-                        if (marker.getTag().equals(key)) {
-                            return;
+        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10)
+                .addGeoQueryEventListener(new GeoQueryEventListener() {
+                    @Override
+                    public void onKeyEntered(String key, GeoLocation location) {
+                        for (Marker marker : mDriversMarkers) {
+                            if (marker.getTag() != null) {
+                                if (marker.getTag().equals(key)) {
+                                    return;
+                                }
+                            }
+
+                        }
+                        LatLng driverLatlng = new LatLng(location.latitude, location.longitude);
+                        Marker marker = nMap.addMarker(new MarkerOptions()
+                                .position(driverLatlng)
+                                .title("Conductor Disponible")
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
+                        marker.setTag(key);
+                        mDriversMarkers.add(marker);
+                    }
+
+                    @Override
+                    public void onKeyExited(String key) {
+                        for (Marker marker : mDriversMarkers) {
+                            if (marker.getTag() != null) {
+                                if (marker.getTag().equals(key)) {
+                                    marker.remove();
+                                    mDriversMarkers.remove(marker);
+
+                                    return;
+                                }
+                            }
+
                         }
                     }
 
-                }
-                LatLng driverLatlng = new LatLng(location.latitude, location.longitude);
-                Marker marker = nMap.addMarker(new MarkerOptions()
-                        .position(driverLatlng)
-                        .title("Conductor Disponible")
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
-                marker.setTag(key);
-                mDriversMarkers.add(marker);
-            }
+                    @Override
+                    public void onKeyMoved(String key, GeoLocation location) {
+                        //update posicion de dribver
+                        for (Marker marker : mDriversMarkers) {
+                            if (marker.getTag() != null) {
+                                if (marker.getTag().equals(key)) {
+                                    marker.setPosition(new LatLng(location.latitude, location.longitude));
+                                }
+                            }
 
-            @Override
-            public void onKeyExited(String key) {
-                for (Marker marker : mDriversMarkers) {
-                    if (marker.getTag() != null) {
-                        if (marker.getTag().equals(key)) {
-                            marker.remove();
-                            mDriversMarkers.remove(marker);
-
-                            return;
                         }
                     }
 
-                }
-            }
+                    @Override
+                    public void onGeoQueryReady() {
 
-            @Override
-            public void onKeyMoved(String key, GeoLocation location) {
-                //update posicion de dribver
-                for (Marker marker : mDriversMarkers) {
-                    if (marker.getTag() != null) {
-                        if (marker.getTag().equals(key)) {
-                            marker.setPosition(new LatLng(location.latitude, location.longitude));
-                        }
                     }
 
-                }
-            }
+                    @Override
+                    public void onGeoQueryError(DatabaseError error) {
 
-            @Override
-            public void onGeoQueryReady() {
-
-            }
-
-            @Override
-            public void onGeoQueryError(DatabaseError error) {
-
-            }
-        });
+                    }
+                });
     }
 
     @SuppressLint("MissingPermission")
