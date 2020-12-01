@@ -34,11 +34,18 @@
             android:textSize="18sp"/>
 
         <LinearLayout
+            android:id="@+id/linearlala"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
             android:layout_weight="1"
             android:gravity="bottom">
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button" />
 
             <Button
                 android:id="@+id/btncancelRequest"

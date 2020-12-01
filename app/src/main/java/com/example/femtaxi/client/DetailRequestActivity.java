@@ -86,6 +86,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
             @Override
             public void onClick(View v) {
                 goToRequestDriver();
+
             }
         });
         //button
