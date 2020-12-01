@@ -72,7 +72,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private static final int REQUEST_CODE_AUTOCOMPLETE_ORIGIN = 100;
     private static final int REQUEST_CODE_AUTOCOMPLETE_DESTINO = 200;
 
-    Toolbar mToolbar;
     private LatLng mCurrentLatLng;
     private GoogleMap nMap;
     private SupportMapFragment nMapFragment;
@@ -152,6 +151,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
                                 .limit(10)
                                 .country("PE")
+                                /*.addInjectedFeature(home)
+                                .addInjectedFeature(work)*/
                                 .build(PlaceOptions.MODE_CARDS))
                         .build(MapClienteActivity.this);
                 startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE_ORIGIN);
@@ -176,7 +177,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         binding.btnRequestDrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                moveToDetailRequestActivity();
+                requestDriver();
             }
         });
 
@@ -191,7 +192,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                             mOriginLatLng.longitude);
                     Log.d(TAG, "mOriginLatLng: " + mOriginLatLng);
                     Log.d(TAG, "mOrigin: " + mOrigin);
+                    Log.d(TAG, "mDestinationLng: " + mDestinationLatLng);
+                    Log.d(TAG, "mDestination: "  + mDestination);
                     binding.txtOrigin.setText(mOrigin);
+                    binding.txtDestino.setText((mDestination));
                 } catch (Exception e) {
                     Log.d(TAG, "error: " + e.getMessage());
                 }
@@ -250,7 +254,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
-    private void moveToDetailRequestActivity() {
+    private void requestDriver() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
             Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
             intent.putExtra(Constans.Extras.ORIGIN_LAT, mOriginLatLng.latitude);
@@ -264,65 +268,62 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void getActiveDrivers() {
-        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10)
-                .addGeoQueryEventListener(new GeoQueryEventListener() {
-                    @Override
-                    public void onKeyEntered(String key, GeoLocation location) {
-                        for (Marker marker : mDriversMarkers) {
-                            if (marker.getTag() != null) {
-                                if (marker.getTag().equals(key)) {
-                                    return;
-                                }
-                            }
-
-                        }
-                        LatLng driverLatlng = new LatLng(location.latitude, location.longitude);
-                        Marker marker = nMap.addMarker(new MarkerOptions()
-                                .position(driverLatlng)
-                                .title("Conductor Disponible")
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
-                        marker.setTag(key);
-                        mDriversMarkers.add(marker);
-                    }
-
-                    @Override
-                    public void onKeyExited(String key) {
-                        for (Marker marker : mDriversMarkers) {
-                            if (marker.getTag() != null) {
-                                if (marker.getTag().equals(key)) {
-                                    marker.remove();
-                                    mDriversMarkers.remove(marker);
-
-                                    return;
-                                }
-                            }
-
+        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10).addGeoQueryEventListener(new GeoQueryEventListener() {
+            @Override
+            public void onKeyEntered(String key, GeoLocation location) {
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
+                            return;
                         }
                     }
 
-                    @Override
-                    public void onKeyMoved(String key, GeoLocation location) {
-                        //update posicion de dribver
-                        for (Marker marker : mDriversMarkers) {
-                            if (marker.getTag() != null) {
-                                if (marker.getTag().equals(key)) {
-                                    marker.setPosition(new LatLng(location.latitude, location.longitude));
-                                }
-                            }
+                }
+                LatLng driverLatlng = new LatLng(location.latitude, location.longitude);
+                Marker marker = nMap.addMarker(new MarkerOptions()
+                        .position(driverLatlng)
+                        .title("Conductor Disponible")
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
+                marker.setTag(key);
+                mDriversMarkers.add(marker);
+            }
 
+            @Override
+            public void onKeyExited(String key) {
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
+                            marker.remove();
+                            mDriversMarkers.remove(marker);
+                            return;
                         }
                     }
 
-                    @Override
-                    public void onGeoQueryReady() {
+                }
+            }
 
+            @Override
+            public void onKeyMoved(String key, GeoLocation location) {
+                for (Marker marker : mDriversMarkers) {
+                    if (marker.getTag() != null) {
+                        if (marker.getTag().equals(key)) {
+                            marker.setPosition(new LatLng(location.latitude, location.longitude));
+                        }
                     }
 
-                    @Override
-                    public void onGeoQueryError(DatabaseError error) {
+                }
+            }
 
-                    }
-                });
+            @Override
+            public void onGeoQueryReady() {
+
+            }
+
+            @Override
+            public void onGeoQueryError(DatabaseError error) {
+
+            }
+        });
     }
 
     @SuppressLint("MissingPermission")
@@ -333,7 +334,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
             nMap.setMyLocationEnabled(true);
         } else if (requestCode == SETTINGS_REQUEST_CODE && !gpsActived()) {
-            showAlertDialogNoGPS();    //mensaje DialogGPS
+            showAlertDialogNoGPS();
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE_ORIGIN) {
             CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
             mOriginLatLng = new LatLng(((Point) selectedCarmenFeature.geometry()).latitude(),
@@ -341,7 +342,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             mOrigin = Utils.getStreet(this,
                     ((Point) selectedCarmenFeature.geometry()).latitude(),
                     ((Point) selectedCarmenFeature.geometry()).longitude());
+            Log.d(TAG, "mOriginLatLng: " + mOriginLatLng);
+            Log.d(TAG, "mOrigin: " + mOrigin);
             binding.txtOrigin.setText(mOrigin);
+
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE_DESTINO) {
             CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
             mDestinationLatLng = new LatLng(((Point) selectedCarmenFeature.geometry()).latitude(),
@@ -349,6 +353,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             mDestination = Utils.getStreet(this,
                     ((Point) selectedCarmenFeature.geometry()).latitude(),
                     ((Point) selectedCarmenFeature.geometry()).longitude());
+            Log.d(TAG, "mDestinationLatLng: " + mDestinationLatLng);
+            Log.d(TAG, "mDestination: " + mOrigin);
             binding.txtDestino.setText(mDestination);
         }
     }
@@ -377,10 +383,12 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (gpsActived()) {
+                    //  mButtonConnect.setText("DESCONECTARSE"); //valores asignados a conectarse
+                    //  mIsconnect = true;  //valor asigando a conectarse
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     nMap.setMyLocationEnabled(true);
                 } else {
-                    showAlertDialogNoGPS();
+                    showAlertDialogNoGPS();   //mensaje DialogGPS
                 }
             } else {
                 checkLocationPermissions();
@@ -425,4 +433,3 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         finish();
     }
 }
-

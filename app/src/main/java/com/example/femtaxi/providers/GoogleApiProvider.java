@@ -22,7 +22,7 @@ public class GoogleApiProvider {
         String query = "/maps/api/directions/json?mode=driving&transit_routing_preferences=less_driving&"
                 + "origin=" + origin.latitude + "," + origin.longitude + "&"
                 + "destination=" + destino.latitude + "," + destino.longitude + "&"
-                + "key=" + context.getResources().getString(R.string.google_api_key);
+                + "key=" + context.getResources().getString(R.string.google_api_key);                                   //key
         return RetrofitUser.getClient(baseUrl).create(IGoogleApi.class).getDirections(baseUrl + query);
     }
 }
