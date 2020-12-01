@@ -1,14 +1,65 @@
 package com.example.femtaxi.service;
 
-import androidx.annotation.NonNull;
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+
+import com.example.femtaxi.channel.NotificationHelpers;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Map;
 
 public class MyFirebaseMessagingClient extends FirebaseMessagingService {
 
     @Override
+    public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
+    }
+
+    @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
+        RemoteMessage.Notification notidicacion = remoteMessage.getNotification();
+        Map<String, String> data =  remoteMessage.getData();
+        String title = data.get("title");
+        String body = data.get("body");
+
+        if (title != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                showNotificationApiOreo(title, body);
+            }
+            else {
+                showNotification(title, body);
+            }
+        }
     }
+
+    private void showNotification(String title, String body) {
+        PendingIntent intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(), PendingIntent.FLAG_ONE_SHOT );
+        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationHelpers notificationHelpers = new NotificationHelpers(getBaseContext());
+        NotificationCompat.Builder builder = notificationHelpers.getNotificationAllApi(title, body, intent, sound);
+        notificationHelpers.getManager().notify(1, builder.build());
+    }
+
+
+    @RequiresApi (api = Build.VERSION_CODES.O)
+    private void showNotificationApiOreo(String title, String body) {
+        PendingIntent intent = PendingIntent.getActivity(getBaseContext(), 0, new Intent(), PendingIntent.FLAG_ONE_SHOT );
+        Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationHelpers notificationHelpers = new NotificationHelpers(getBaseContext());
+        Notification.Builder builder = notificationHelpers.getNotification(title, body, intent, sound);
+        notificationHelpers.getManager().notify(1, builder.build());
+    }
+
+
 }

@@ -35,7 +35,9 @@ import com.example.femtaxi.R;
 
 import com.example.femtaxi.databinding.ActivityMapClienteBinding;
 import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.GeofireProvider;
+import com.example.femtaxi.providers.TokenProvider;
 import com.example.femtaxi.utils.Utils;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
@@ -71,7 +73,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     private static final int REQUEST_CODE_AUTOCOMPLETE_ORIGIN = 100;
     private static final int REQUEST_CODE_AUTOCOMPLETE_DESTINO = 200;
-
+    private AuthProvider mAuthProvider;
     private LatLng mCurrentLatLng;
     private GoogleMap nMap;
     private SupportMapFragment nMapFragment;
@@ -92,6 +94,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private String mDestination;
     private LatLng mDestinationLatLng;
     private GoogleMap.OnCameraIdleListener mCameraListener;
+    private TokenProvider mTokenProvider;     //acceso al token
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -131,8 +134,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         binding = ActivityMapClienteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        mAuthProvider = new AuthProvider();    //authprovider
         mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
-
+        mTokenProvider = new TokenProvider();    //instamcia
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -141,6 +145,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkLocationPermissions();
+
+        generateToken();
 
         binding.cardOrigin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -431,5 +437,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         Intent intent = new Intent(MapClienteActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    void generateToken(){
+                mTokenProvider.createdToken(mAuthProvider.getId());
     }
 }
