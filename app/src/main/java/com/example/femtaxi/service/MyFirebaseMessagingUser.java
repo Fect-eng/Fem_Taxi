@@ -2,10 +2,12 @@ package com.example.femtaxi.service;
 
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.os.PowerManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -15,6 +17,7 @@ import com.example.femtaxi.R;
 import com.example.femtaxi.broadcast.AcceptReceiver;
 import com.example.femtaxi.broadcast.CancelReceiver;
 import com.example.femtaxi.channel.NotificationHelpers;
+import com.example.femtaxi.driver.NotificationBookingActivity;
 import com.example.femtaxi.helpers.Constans;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -40,19 +43,48 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
         String title = data.get("title");
         String body = data.get("body");
         String idClient = data.get("idClient");
+        String origin = data.get("origin");
+        String destino = data.get("destination");
+        String minutos = data.get("min");
+        String distance = data.get("distance");
         if (title != null) {
             if (Build.VERSION.SDK_INT >= O) {
-                if (title.contains("SOLICITUD DE SERVICIO"))
+                if (title.contains("SOLICITUD DE SERVICIO")) {
                     showNotificacionApiOreoAction(title, body, idClient);
-                else
+                    showNotificationActivity(idClient, origin, destino, minutos, distance);
+                } else
                     showNotificacionApiOreo(title, body);
             } else {
-                if (title.contains("SOLICITUD DE SERVICIO"))
+                if (title.contains("SOLICITUD DE SERVICIO")) {
                     showNotificationAllApiAction(title, body, idClient);
-                else
+                    showNotificationActivity(idClient, origin, destino, minutos, distance);
+                } else
                     showNotificationAllApi(title, body);
             }
         }
+    }
+
+    private void showNotificationActivity(String idClient, String origin,
+                                          String destino, String minutos, String distance) {
+        PowerManager pm = (PowerManager) getBaseContext().getSystemService(Context.POWER_SERVICE);
+        boolean isScreenOn = pm.isScreenOn();
+        if (!isScreenOn) {
+            PowerManager.WakeLock wakeLock = pm.newWakeLock(
+                    PowerManager.PARTIAL_WAKE_LOCK |
+                            PowerManager.ACQUIRE_CAUSES_WAKEUP |
+                            PowerManager.ON_AFTER_RELEASE,
+                    "AppName:MyLock"
+            );
+            wakeLock.acquire(10000);
+        }
+        Intent intent = new Intent(getBaseContext(), NotificationBookingActivity.class);
+        intent.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
+        intent.putExtra(Constans.Extras.EXTRA_ADDRESS_ORIGIN, origin);
+        intent.putExtra(Constans.Extras.EXTRA_ADDRESS_DESTINO, destino);
+        intent.putExtra(Constans.Extras.EXTRA_MINUT, minutos);
+        intent.putExtra(Constans.Extras.EXTRA_KM, distance);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @RequiresApi(api = O)
@@ -154,4 +186,6 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
 
         notificationHelpers.getManager().notify(2, builder.build());
     }
+
+
 }

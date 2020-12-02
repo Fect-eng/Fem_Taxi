@@ -7,10 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.femtaxi.client.DetailRequestActivity;
 import com.example.femtaxi.client.MapClienteActivity;
 import com.example.femtaxi.driver.OpcionDualDriverActivity;
-import com.example.femtaxi.driver.RequestDriverActivity;
 
 public class MainActivity extends AppCompatActivity {
     Button btnncliente;   //cliente boton

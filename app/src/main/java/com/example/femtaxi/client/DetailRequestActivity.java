@@ -15,7 +15,6 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.femtaxi.R;
 import com.example.femtaxi.databinding.ActivityDetailRequestBinding;
-import com.example.femtaxi.driver.RequestDriverActivity;
 import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.GoogleApiProvider;
 import com.example.femtaxi.utils.DecodePoints;
@@ -107,10 +106,10 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         mTextViewdestination.setText(mExtraDestination);
         //finde instancias
 
-        mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LAT, 0);
-        mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LONG, 0);
-        mExtraDestinoLat = getIntent().getDoubleExtra(Constans.Extras.DESTINO_LAT, 0);
-        mExtradestinoLng = getIntent().getDoubleExtra(Constans.Extras.DESTINO_LONG, 0);
+        mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LAT, 0);
+        mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LONG, 0);
+        mExtraDestinoLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_DESTINO_LAT, 0);
+        mExtradestinoLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_DESTINO_LONG, 0);
         mExtraOrigin = getIntent().getStringExtra("origin");
         mExtraDestination = getIntent().getStringExtra("destination");
 
@@ -125,8 +124,8 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
 
     private void goToRequestDriver() {
         Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
-        intent.putExtra(Constans.Extras.ORIGIN_LAT, mOriginLatLng.latitude);
-        intent.putExtra(Constans.Extras.ORIGIN_LONG, mOriginLatLng.longitude);
+        intent.putExtra(Constans.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
+        intent.putExtra(Constans.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
         /*intent.putExtra("origin_lat", mOriginLatLng.latitude);
         intent.putExtra("origin_lng", mOriginLatLng.longitude);
         intent.putExtra("Destino_lat", mDestinationLatLng.latitude);

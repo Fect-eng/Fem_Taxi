@@ -36,7 +36,10 @@ public class GeofireProvider {
     }
 
     public DatabaseReference isDriverWorking(String idDriver) {
-        return FirebaseDatabase.getInstance().getReference().child(Constans.DRIVER_WORKING).child(idDriver);
+        return FirebaseDatabase.getInstance()
+                .getReference()
+                .child(Constans.DRIVER_WORKING)
+                .child(idDriver);
     }
 
     public GeoQuery getActiveDrivers(LatLng latLng, double radius) {

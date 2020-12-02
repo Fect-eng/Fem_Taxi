@@ -1,26 +1,18 @@
-package com.example.femtaxi.driver;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintSet;
+package com.example.femtaxi.client;
 
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.airbnb.lottie.LottieAnimationView;
-import com.example.femtaxi.R;
-import com.example.femtaxi.databinding.ActivityRegisterBinding;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.femtaxi.databinding.ActivityRequestDriverBinding;
 import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.firebase.geofire.GeoLocation;
-import com.firebase.geofire.GeoQueryDataEventListener;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
 public class RequestDriverActivity extends AppCompatActivity {
@@ -47,8 +39,8 @@ public class RequestDriverActivity extends AppCompatActivity {
         binding.animation.playAnimation();
         mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
 
-        mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LAT, 0);
-        mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.ORIGIN_LONG, 0);
+        mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LAT, 0);
+        mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LONG, 0);
 
         binding.btnCancelViaje.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -26,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -257,10 +256,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private void requestDriver() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
             Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
-            intent.putExtra(Constans.Extras.ORIGIN_LAT, mOriginLatLng.latitude);
-            intent.putExtra(Constans.Extras.ORIGIN_LONG, mOriginLatLng.longitude);
-            intent.putExtra(Constans.Extras.DESTINO_LAT, mDestinationLatLng.latitude);
-            intent.putExtra(Constans.Extras.DESTINO_LONG, mDestinationLatLng.longitude);
+            intent.putExtra(Constans.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
+            intent.putExtra(Constans.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
+            intent.putExtra(Constans.Extras.EXTRA_DESTINO_LAT, mDestinationLatLng.latitude);
+            intent.putExtra(Constans.Extras.EXTRA_DESTINO_LONG, mDestinationLatLng.longitude);
             startActivity(intent);
         } else {
             Toast.makeText(this, "Debe Seleccionar el lugar de recogida y el destino", Toast.LENGTH_SHORT).show();

@@ -23,7 +23,7 @@ public class CancelReceiver extends BroadcastReceiver {
         mClientBookingProvider = new ClientBookingProvider();
         mClientBookingProvider.getUpdateStatus(idClient, "Cancelado");
 
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(2);
         mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
         mGeofireProvider.removeLocation(mAuthProvider.getId());
