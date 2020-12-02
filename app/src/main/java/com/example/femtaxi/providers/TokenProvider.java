@@ -3,7 +3,8 @@ package com.example.femtaxi.providers;
 import com.example.femtaxi.helpers.Constans;
 import com.example.femtaxi.models.Token;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
@@ -13,12 +14,10 @@ import java.util.Map;
 
 public class TokenProvider {
 
-    FirebaseFirestore dbFireBase;
-
+    FirebaseFirestore firebaseFirestore;
     public TokenProvider() {
-        dbFireBase = FirebaseFirestore.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
     }
-
     public void createdToken(String idUser) {
         if (idUser.isEmpty())
             return;
@@ -31,15 +30,17 @@ public class TokenProvider {
                         Token token = new Token(instanceIdResult.getToken());
                         Map<String, Object> hashToken = new HashMap<>();
                         hashToken.put("token", token.getToken());
-                        dbFireBase.collection(Constans.TOKEN)
+                        firebaseFirestore.collection(Constans.TOKEN)
                                 .document(idUser)
                                 .set(hashToken);
                     }
                 });
     }
 
-    public DocumentReference getTokenUser(String idClient) {
-        return dbFireBase.collection(Constans.TOKEN)
-                .document(idClient);
+
+    public Task<DocumentSnapshot> getTokenUser(String idClient) {
+        return firebaseFirestore.collection(Constans.TOKEN)
+                .document(idClient)
+                .get();
     }
 }

@@ -28,7 +28,7 @@ public class AuthProvider {
         return mAuth.getCurrentUser().getUid();
     }
 
-    public boolean existSession() {    //esto deberi verse en mapDriver
+    public boolean existSession() {
         if (mAuth.getCurrentUser() != null)
             return true;
         return false;

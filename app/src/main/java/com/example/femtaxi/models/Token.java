@@ -1,7 +1,15 @@
 package com.example.femtaxi.models;
 
-public class Token {
+import androidx.annotation.Keep;
+
+import java.io.Serializable;
+
+@Keep
+public class Token implements Serializable {
     String token;
+
+    public Token() {
+    }
 
     public Token(String token) {
         this.token = token;

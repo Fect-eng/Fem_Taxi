@@ -14,7 +14,9 @@ public class ClientBooking {
     private String status;
     private String time;
 
-    public ClientBooking(String idHistory, String destination, String destinationLat, String destinationLong, String idClient, String idDriver, String km, String origin, String originLat, String originLong, String status, String time) {
+    public ClientBooking(String idHistory, String destination, String destinationLat,
+                         String destinationLong, String idClient, String idDriver, String km,
+                         String origin, String originLat, String originLong, String status, String time) {
         this.idHistory = idHistory;
         this.destination = destination;
         this.destinationLat = destinationLat;

@@ -9,13 +9,38 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.femtaxi.databinding.ActivityRequestDriverBinding;
 import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.models.ClientBooking;
+import com.example.femtaxi.models.FCMBody;
+import com.example.femtaxi.models.FCMResponse;
+import com.example.femtaxi.models.Token;
+import com.example.femtaxi.providers.AuthProvider;
+import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.GeofireProvider;
+import com.example.femtaxi.providers.GoogleApiProvider;
+import com.example.femtaxi.providers.NotificationProvider;
+import com.example.femtaxi.providers.TokenProvider;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RequestDriverActivity extends AppCompatActivity {
+    String TAG = RequestDriverActivity.class.getSimpleName();
 
     ActivityRequestDriverBinding binding;
 
@@ -23,11 +48,20 @@ public class RequestDriverActivity extends AppCompatActivity {
 
     private double mExtraOriginLat;
     private double mExtraOriginLng;
+    private double mExtraDestinoLat;
+    private double mExtradestinoLng;
+    private String mExtraOrigin;
+    private String mExtraDestination;
 
     private double mRadius = 0.1;
     private boolean mDriverFound = false;
     private String mIdDriverFound = "";
-    private LatLng mDriverFoundLatLng;
+    private NotificationProvider mNotificacionProvider;
+    private TokenProvider mTokenProvider;
+
+    private ClientBookingProvider mClientBookingProvider;
+    private AuthProvider mAuthProvider;
+    private GoogleApiProvider mGoogleApiProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,11 +75,18 @@ public class RequestDriverActivity extends AppCompatActivity {
 
         mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LAT, 0);
         mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LONG, 0);
-
+        mExtraDestinoLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_DESTINO_LAT, 0);
+        mExtradestinoLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_DESTINO_LONG, 0);
+        mExtraOrigin = getIntent().getStringExtra(Constans.Extras.EXTRA_ADDRESS_ORIGIN);
+        mExtraDestination = getIntent().getStringExtra(Constans.Extras.EXTRA_ADDRESS_DESTINO);
+        mTokenProvider = new TokenProvider();
+        mClientBookingProvider = new ClientBookingProvider();
+        mAuthProvider = new AuthProvider();
+        mGoogleApiProvider = new GoogleApiProvider(RequestDriverActivity.this);
+        mNotificacionProvider = new NotificationProvider();
         binding.btnCancelViaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //getClosestDriver();
             }
         });
         LatLng latLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
@@ -59,26 +100,23 @@ public class RequestDriverActivity extends AppCompatActivity {
                 .addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoLocation location) {
-
                         if (!mDriverFound) {
                             mDriverFound = true;
                             mIdDriverFound = key;
-                            mDriverFoundLatLng = new LatLng(location.latitude, location.longitude);
                             binding.textViewLookingFor.setText("CONDUCTOR ENCONTRADO\nESPERANDO RESPUESTA");
-
-                            Log.d("DRIVER", "ID: " + mIdDriverFound);
+                            Log.d(TAG, "getClosestDriver onKeyEntered: " + mIdDriverFound);
+                            createClientBooking();
                         }
-
                     }
 
                     @Override
                     public void onKeyExited(String key) {
-
+                        Log.d(TAG, "getClosestDriver onKeyExited: " + mIdDriverFound + ", key: " + key);
                     }
 
                     @Override
                     public void onKeyMoved(String key, GeoLocation location) {
-
+                        Log.d(TAG, "getClosestDriver onKeyMoved key: " + key);
                     }
 
                     @Override
@@ -98,6 +136,110 @@ public class RequestDriverActivity extends AppCompatActivity {
                     @Override
                     public void onGeoQueryError(DatabaseError error) {
 
+                    }
+                });
+    }
+
+    private void sendNotification(String time, String km) {
+        Log.i(TAG, "sendNotification");
+        mTokenProvider.getTokenUser(mIdDriverFound)
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Token token = documentSnapshot.toObject(Token.class);
+                            Log.d(TAG, "sendNotification onSuccess token: " + token);
+                            Map<String, String> map = new HashMap<>();
+                            map.put("title", "SOLICITUD DE SERVICIO A " + time + " DE TU POSICION");
+                            map.put("body", "Un cliente esta solicitando un servicio a una distancia de " + km + " KM");
+                            FCMBody fcmBody = new FCMBody(token.getToken(), "high", map);
+                            Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
+                            mNotificacionProvider.sendNotification(fcmBody)
+                                    .enqueue(new Callback<FCMResponse>() {
+                                        @Override
+                                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                                            Log.d(TAG, "sendNotification onResponse: " + response);
+                                            if (response.body() != null) {
+                                                if (response.body().getSuccess() == 1) {
+                                                    Toast.makeText(RequestDriverActivity.this, "Notificacion enviada con exito", Toast.LENGTH_SHORT).show();
+                                                    String idHistory = new SimpleDateFormat("HHmmssddmmyyyy").format(
+                                                            Calendar.getInstance(Locale.getDefault()).getTime());
+                                                    ClientBooking clientBooking = new ClientBooking(
+                                                            idHistory,
+                                                            mExtraDestination,
+                                                            String.valueOf(mExtraDestinoLat),
+                                                            String.valueOf(mExtradestinoLng),
+                                                            mAuthProvider.getId(),
+                                                            mIdDriverFound,
+                                                            km,
+                                                            mExtraOrigin,
+                                                            String.valueOf(mExtraOriginLat),
+                                                            String.valueOf(mExtraOriginLng),
+                                                            "create",
+                                                            time
+                                                    );
+                                                    mClientBookingProvider.create(clientBooking)
+                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                @Override
+                                                                public void onSuccess(Void aVoid) {
+                                                                    Toast.makeText(RequestDriverActivity.this, "Peticion creada con exito", Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+
+                                                } else {
+                                                    Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+                                            Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+    }
+
+    private void createClientBooking() {
+        Log.i(TAG, "createClientBooking");
+        mGoogleApiProvider.getDirections(new LatLng(mExtraOriginLat, mExtraOriginLng), new LatLng(mExtraDestinoLat, mExtradestinoLng))
+                .enqueue(new Callback<String>() {
+                    @Override
+                    public void onResponse(Call<String> call, Response<String> response) {
+                        /*try {
+                            JSONObject jsonObject = new JSONObject(response.body());
+                            Log.d(TAG, "createClientBooking jsonObject: " + jsonObject);
+                            JSONArray jsonArray = jsonObject.getJSONArray("routes");
+                            Log.d(TAG, "createClientBooking jsonArray: " + jsonArray);
+                            JSONObject route = jsonArray.getJSONObject(0);
+                            Log.d(TAG, "createClientBooking route: " + route);
+                            JSONObject polyLines = route.getJSONObject("overview_polilyne");
+                            Log.d(TAG, "createClientBooking polyLines: " + polyLines);
+                            String points = polyLines.getString("point");
+                            Log.d(TAG, "createClientBooking points: " + points);
+
+                            JSONArray legs = route.getJSONArray("legs");
+                            JSONObject leg = legs.getJSONObject(0);
+                            JSONObject distance = leg.getJSONObject("distance");
+                            JSONObject duration = leg.getJSONObject("duration");
+                            String distanceText = distance.getString("text");
+                            String durationText = duration.getString("text");*/
+
+                        //sendNotification(durationText, distanceText);
+                        sendNotification("5", " 20");
+                        /*} catch (Exception e) {
+                            Log.d(TAG, "createClientBooking Error: " + e.getMessage());
+                        }*/
+                    }
+
+                    @Override
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.d(TAG, "createClientBooking onFailure Error: " + t.getMessage());
                     }
                 });
     }
