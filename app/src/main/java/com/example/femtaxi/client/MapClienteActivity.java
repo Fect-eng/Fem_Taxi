@@ -136,9 +136,11 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         mAuthProvider = new AuthProvider();    //authprovider
         mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
         mTokenProvider = new TokenProvider();    //instamcia
+
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         Mapbox.getInstance(this, getResources().getString(R.string.access_token));
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);

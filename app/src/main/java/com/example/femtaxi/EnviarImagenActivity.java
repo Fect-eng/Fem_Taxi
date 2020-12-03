@@ -18,11 +18,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.femtaxi.databinding.ActivityMapClienteBinding;
 import com.example.femtaxi.models.registroDriver1;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,16 +41,23 @@ public class EnviarImagenActivity extends AppCompatActivity {
     private Button mUploadBtn;
     private StorageReference mStorage;
     private int GALLERY_INTENT_GLOBAL;
-    private int GALLERY_INTENT = 1;
-    private int GALLERY_INTENT1 = 2;
-    private int GALLERY_INTENT2 = 3;
-    private int GALLERY_INTENT3 = 4;
-    private int GALLERY_INTENT4 = 5;
+    private int GALLERY_INTENT = 1;         //antecedentes penales
+    private int GALLERY_INTENT1 = 2;        //Policiales
+    private int GALLERY_INTENT2 = 3;        //DNI
+    private int GALLERY_INTENT3 = 4;        //foto con vehiculo
+    private int GALLERY_INTENT4 = 5;        //foto con SOAT
+    //nuevos agregados
+    private int GALLERY_5 = 6;              //foto de tarjeta de propiedad
+    private int GALLERY_6 = 7;              //revision Tecnica (alternativo?)
+    private int GALLERY_7 = 8;              //setare (Alternativo)
+    private int GALLERY_8 = 9;              //foto conductora con el brevete
 
+    private ActivityMapClienteBinding binding;
     static final int PERMISSION_CAMERA = 1;
+    Toolbar mToolbar;
 
     private registroDriver1 mRegistroDriver1;
-    private ImageView photo, photo1, photo2, photo3, photo4;
+    private ImageView photo, photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8;
     private ArrayList<Uri> uriArrayList = new ArrayList<>();
 
     private String[] mPermission = {
@@ -62,6 +71,11 @@ public class EnviarImagenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviar_imagen);
+        binding = ActivityMapClienteBinding.inflate(getLayoutInflater());
+
+        setSupportActionBar(binding.includeToolbar.toolbar);
+        getSupportActionBar().setTitle("Mapa Cliente");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mStorage = FirebaseStorage.getInstance().getReference();
         mUploadBtn = (Button) findViewById(R.id.btnnextimg);
@@ -70,6 +84,8 @@ public class EnviarImagenActivity extends AppCompatActivity {
         photo2 = (ImageView) findViewById(R.id.iv_photo2);
         photo3 = (ImageView) findViewById(R.id.iv_photo3);
         photo4 = (ImageView) findViewById(R.id.iv_photo4);
+        //new agregate
+
         mRegistroDriver1 = (registroDriver1) getIntent().getSerializableExtra("Detalle_Driver");
         mUploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
