@@ -136,9 +136,11 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         mAuthProvider = new AuthProvider();    //authprovider
         mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
         mTokenProvider = new TokenProvider();    //instamcia
+
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         Mapbox.getInstance(this, getResources().getString(R.string.access_token));
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -156,8 +158,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                                 .backgroundColor(Color.parseColor("#EEEEEE"))
                                 .limit(10)
                                 .country("PE")
-                                /*.addInjectedFeature(home)
-                                .addInjectedFeature(work)*/
                                 .build(PlaceOptions.MODE_CARDS))
                         .build(MapClienteActivity.this);
                 startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE_ORIGIN);
@@ -195,10 +195,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     mOrigin = Utils.getStreet(MapClienteActivity.this,
                             mOriginLatLng.latitude,
                             mOriginLatLng.longitude);
-                    Log.d(TAG, "mOriginLatLng: " + mOriginLatLng);
-                    Log.d(TAG, "mOrigin: " + mOrigin);
-                    Log.d(TAG, "mDestinationLng: " + mDestinationLatLng);
-                    Log.d(TAG, "mDestination: " + mDestination);
                     binding.txtOrigin.setText(mOrigin);
                     binding.txtDestino.setText((mDestination));
                 } catch (Exception e) {

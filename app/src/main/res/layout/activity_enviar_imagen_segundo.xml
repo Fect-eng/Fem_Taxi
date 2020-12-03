@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EnviarImagenActivity">
-
+    tools:context=".EnviarImagenSegundoActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -23,7 +22,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="80dp">
 
             <ImageView
                 android:id="@+id/iv_photo"
@@ -60,6 +59,7 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
+                android:layout_marginTop="76dp"
                 android:adjustViewBounds="true"
                 android:padding="16dp"
                 android:scaleType="centerCrop"
@@ -83,20 +83,6 @@
                 app:layout_constraintTop_toTopOf="@+id/iv_photo2"
                 app:srcCompat="@android:drawable/sym_def_app_icon" />
 
-            <ImageView
-                android:id="@+id/iv_photo4"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_margin="2dp"
-                android:adjustViewBounds="true"
-                android:padding="8dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_photo2"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>
@@ -106,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="16dp"
-        android:text="Guardar Imagenes"
+        android:text="Enviar Imagenes"
         android:textColor="#FFFFFF"
         android:textSize="22dp"
         android:layout_marginLeft="40dp"
@@ -117,5 +103,4 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nested" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

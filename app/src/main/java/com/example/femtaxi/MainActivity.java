@@ -11,8 +11,8 @@ import com.example.femtaxi.client.MapClienteActivity;
 import com.example.femtaxi.driver.OpcionDualDriverActivity;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnncliente;   //cliente boton
-    Button btndriverDual; //driver boton
+    Button btnncliente; 
+    Button btndriverDual;
 
 
     @Override
@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void goToSelectClient() { // cliente  MapClienteActivity   === ClienteOptionActivity
-        Intent intent = new Intent(MainActivity.this, MapClienteActivity.class);
+    private void goToSelectClient() {
+        Intent intent = new Intent(MainActivity.this, EnviarImagenActivity.class);
         startActivity(intent);
     }
 
-    private void goToSelectAuth() { //OpcionDualDriverActivity ===     carro
+    private void goToSelectAuth() {
         Intent intent = new Intent(  MainActivity.this, OpcionDualDriverActivity.class);
         startActivity(intent);
     }
