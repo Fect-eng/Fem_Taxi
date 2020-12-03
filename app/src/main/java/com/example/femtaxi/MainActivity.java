@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void goToSelectClient() {
-        Intent intent = new Intent(MainActivity.this, EnviarImagenActivity.class);
+        Intent intent = new Intent(MainActivity.this, MapClienteActivity.class);
         startActivity(intent);
     }
 

@@ -10,6 +10,9 @@
         android:id="@+id/toolbar"
         layout="@layout/action_bar_toolbar"/>
 
+
+
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested"
         android:layout_width="match_parent"
@@ -24,6 +27,7 @@
             android:layout_height="match_parent"
             android:layout_marginTop="80dp">
 
+
             <ImageView
                 android:id="@+id/iv_photo"
                 android:layout_width="0dp"
@@ -31,7 +35,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="10dp"
                 android:adjustViewBounds="true"
-                android:padding="16dp"
+                android:padding="32dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toStartOf="@+id/iv_photo1"
                 app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +49,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
                 android:adjustViewBounds="true"
-                android:padding="16dp"
+                android:padding="32dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_photo"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -61,7 +65,7 @@
                 android:layout_margin="2dp"
                 android:layout_marginTop="76dp"
                 android:adjustViewBounds="true"
-                android:padding="16dp"
+                android:padding="32dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toStartOf="@+id/iv_photo3"
                 app:layout_constraintStart_toStartOf="@+id/iv_photo"
@@ -75,7 +79,7 @@
                 android:layout_gravity="center"
                 android:layout_margin="2dp"
                 android:adjustViewBounds="true"
-                android:padding="16dp"
+                android:padding="32dp"
                 android:scaleType="centerCrop"
                 app:layout_constraintBottom_toBottomOf="@+id/iv_photo2"
                 app:layout_constraintEnd_toEndOf="parent"
