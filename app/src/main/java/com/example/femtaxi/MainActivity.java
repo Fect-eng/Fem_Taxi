@@ -11,7 +11,7 @@ import com.example.femtaxi.client.MapClienteActivity;
 import com.example.femtaxi.driver.OpcionDualDriverActivity;
 
 public class MainActivity extends AppCompatActivity {
-    Button btnncliente; 
+    Button btnncliente;
     Button btndriverDual;
 
 
