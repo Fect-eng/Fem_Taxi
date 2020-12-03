@@ -8,6 +8,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.PowerManager;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -27,6 +28,7 @@ import java.util.Map;
 import static android.os.Build.VERSION_CODES.O;
 
 public class MyFirebaseMessagingUser extends FirebaseMessagingService {
+    String TAG = MyFirebaseMessagingUser.class.getSimpleName();
 
     int NOTIFICATION_CODE = 100;
 
@@ -47,6 +49,8 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
         String destino = data.get("destination");
         String minutos = data.get("min");
         String distance = data.get("distance");
+
+        Log.d(TAG, "onMessageReceived data: " + data);
         if (title != null) {
             if (Build.VERSION.SDK_INT >= O) {
                 if (title.contains("SOLICITUD DE SERVICIO")) {
@@ -66,6 +70,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
 
     private void showNotificationActivity(String idClient, String origin,
                                           String destino, String minutos, String distance) {
+        Log.d(TAG, "showNotificationActivity ");
         PowerManager pm = (PowerManager) getBaseContext().getSystemService(Context.POWER_SERVICE);
         boolean isScreenOn = pm.isScreenOn();
         if (!isScreenOn) {
@@ -89,6 +94,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
 
     @RequiresApi(api = O)
     private void showNotificacionApiOreo(String title, String body) {
+        Log.d(TAG, "showNotificacionApiOreo");
         PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
                 0,
                 new Intent(),
@@ -103,6 +109,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
 
     @RequiresApi(api = O)
     private void showNotificacionApiOreoAction(String title, String body, String idClient) {
+        Log.d(TAG, "showNotificacionApiOreoAction ");
         //Aceptar
         Intent accept = new Intent(this, AcceptReceiver.class);
         accept.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
@@ -139,6 +146,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
 
 
     private void showNotificationAllApi(String title, String body) {
+        Log.d(TAG, "showNotificationAllApi ");
         PendingIntent pendingIntent = PendingIntent.getActivity(getBaseContext(),
                 0,
                 new Intent(),
@@ -153,6 +161,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
     }
 
     private void showNotificationAllApiAction(String title, String body, String idClient) {
+        Log.d(TAG, "showNotificationAllApiAction ");
         Intent accept = new Intent(this, AcceptReceiver.class);
         accept.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
         PendingIntent pendingIntentAccept = PendingIntent.getBroadcast(this,

@@ -18,7 +18,6 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 
-
     <uses-feature
         android:name="android.hardware.camera2"
         android:required="true" />
@@ -72,6 +71,9 @@
         <activity
             android:name=".driver.OpcionDualDriverActivity"
             android:parentActivityName=".MainActivity" />
+
+        <activity android:name=".driver.NotificationBookingActivity" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -100,6 +102,17 @@
         <receiver
             android:name=".broadcast.CancelReceiver"
             android:enabled="true" />
+
+        <service
+            android:name=".service.MyFirebaseMessagingUser"
+            android:enabled="true"
+            android:exported="false"
+            android:stopWithTask="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

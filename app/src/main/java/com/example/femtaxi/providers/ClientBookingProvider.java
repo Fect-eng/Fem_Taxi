@@ -61,7 +61,7 @@ public class ClientBookingProvider {
         newStatus.put("time", clientBooking.getTime());
 
         return dbFireBase.collection(Constans.CLIENT_BOOKING)
-                .document()
+                .document(clientBooking.getIdClient())
                 .set(newStatus);
     }
 }

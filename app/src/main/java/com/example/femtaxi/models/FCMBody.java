@@ -13,6 +13,22 @@ public class FCMBody {
         this.data = data;
     }
 
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
     public Map<String, String> getData() {
         return data;
     }
@@ -21,28 +37,12 @@ public class FCMBody {
         this.data = data;
     }
 
-
-    // Getter Methods
-
-    public String getTo() {
-        return to;
+    @Override
+    public String toString() {
+        return "FCMBody{" +
+                "to='" + to + '\'' +
+                ", priority='" + priority + '\'' +
+                ", data=" + data +
+                '}';
     }
-
-    public String getPriority() {
-        return priority;
-    }
-
-
-
-    // Setter Methods
-
-    public void setTo( String to ) {
-        this.to = to;
-    }
-
-    public void setPriority( String priority ) {
-        this.priority = priority;
-    }
-
-
 }
