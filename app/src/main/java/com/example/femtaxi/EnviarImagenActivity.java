@@ -25,6 +25,7 @@ import androidx.core.content.FileProvider;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.femtaxi.databinding.ActivityMapClienteBinding;
+import com.example.femtaxi.driver.OpcionDualDriverActivity;
 import com.example.femtaxi.models.registroDriver1;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -39,6 +40,7 @@ import java.util.Locale;
 
 public class EnviarImagenActivity extends AppCompatActivity {
     private Button mUploadBtn;
+
     private StorageReference mStorage;
     private int GALLERY_INTENT_GLOBAL;
     private int GALLERY_INTENT = 1;         //antecedentes penales
@@ -47,10 +49,6 @@ public class EnviarImagenActivity extends AppCompatActivity {
     private int GALLERY_INTENT3 = 4;        //foto con vehiculo
     private int GALLERY_INTENT4 = 5;        //foto con SOAT
     //nuevos agregados
-    private int GALLERY_5 = 6;              //foto de tarjeta de propiedad
-    private int GALLERY_6 = 7;              //revision Tecnica (alternativo?)
-    private int GALLERY_7 = 8;              //setare (Alternativo)
-    private int GALLERY_8 = 9;              //foto conductora con el brevete
 
     private ActivityMapClienteBinding binding;
     static final int PERMISSION_CAMERA = 1;
@@ -78,7 +76,7 @@ public class EnviarImagenActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mStorage = FirebaseStorage.getInstance().getReference();
-        mUploadBtn = (Button) findViewById(R.id.btnnextimg);
+        mUploadBtn = (Button) findViewById(R.id.btnnextimg);       //aca estamos
         photo = (ImageView) findViewById(R.id.iv_photo);
         photo1 = (ImageView) findViewById(R.id.iv_photo1);
         photo2 = (ImageView) findViewById(R.id.iv_photo2);
@@ -123,6 +121,18 @@ public class EnviarImagenActivity extends AppCompatActivity {
                 verifiedPermision(GALLERY_INTENT4);
             }
         });
+        //btnnextimg
+        mUploadBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                siguienteImagen();
+            }
+        });
+    }
+
+    private void siguienteImagen() {
+        Intent intent = new Intent(  EnviarImagenActivity.this, EnviarImagenSegundoActivity.class);
+        startActivity(intent);
     }
 
     private void sendPhoto() {
