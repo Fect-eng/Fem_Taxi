@@ -9,11 +9,12 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.femtaxi.databinding.ActivityDriveCalicationBinding;
+import com.example.femtaxi.databinding.ActivityCalicationClientBinding;
 import com.example.femtaxi.driver.MapDriverActivity;
 import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.models.ClientBooking;
 import com.example.femtaxi.models.HistoryBooking;
+import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.HistoryBookingProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,11 +24,12 @@ import java.util.Date;
 
 public class CalificationClientActivity extends AppCompatActivity {
 
-    private ActivityDriveCalicationBinding binding;
+    private ActivityCalicationClientBinding binding;
 
     private ClientBookingProvider mClientBookingProvider;
+    private AuthProvider mAuthProvider;
 
-    private String mClientId;
+    //private String mClientId;
     private HistoryBooking mHistoryBooking;
     private HistoryBookingProvider mHistoryBookingProvider;
     private float mCalification = 0;
@@ -35,12 +37,13 @@ public class CalificationClientActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityDriveCalicationBinding.inflate(getLayoutInflater());
+        binding = ActivityCalicationClientBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         mHistoryBookingProvider = new HistoryBookingProvider();
+        mAuthProvider = new AuthProvider();
 
         mClientBookingProvider = new ClientBookingProvider();
-        mClientId = getIntent().getStringExtra(Constants.Extras.EXTRA_CLIENT_ID);
+        //mClientId = getIntent().getStringExtra(Constants.Extras.EXTRA_CLIENT_ID);
 
         getClientBooking();
 
@@ -59,7 +62,7 @@ public class CalificationClientActivity extends AppCompatActivity {
     }
 
     private void getClientBooking() {
-        mClientBookingProvider.getClientBooking(mClientId)
+        mClientBookingProvider.getClientBooking(mAuthProvider.getId())
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
@@ -68,6 +71,7 @@ public class CalificationClientActivity extends AppCompatActivity {
                             ClientBooking clientBooking = documentSnapshot.toObject(ClientBooking.class);
                             binding.txtAddressInit.setText(clientBooking.getOrigin());
                             binding.txtAddressEnd.setText(clientBooking.getDestination());
+                            binding.txtPrice.setText("S/ " + String.format("%.2f", clientBooking.getPrice()));
                             mHistoryBooking = new HistoryBooking(
                                     clientBooking.getIdHistory(),
                                     clientBooking.getDestination(),

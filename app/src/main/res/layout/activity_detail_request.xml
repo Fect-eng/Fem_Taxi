@@ -5,163 +5,200 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+    android:background="@color/colorPrimaryDark"
     tools:context=".client.DetailRequestActivity">
-
-    <include
-        android:id="@+id/include_toolbar"
-        layout="@layout/action_bar_toolbar" />
 
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toTopOf="@+id/container_map"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="170dp"
+        app:layout_constraintBottom_toTopOf="@+id/container_info_booking"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/include_toolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/container_map"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btn_solicitar"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="SOLICITAR AHORA"
+        android:textColor="#FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/btn_back_presset"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:src="@drawable/ic_arrow_back"
+        app:civ_circle_background_color="@color/colorPrimaryDark"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.github.florent37.shapeofview.shapes.BubbleView
+        android:id="@+id/container_info_booking"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:shape_bubble_arrowHeight="15dp"
+        app:shape_bubble_arrowPosition="top"
+        app:shape_bubble_arrowWidth="15dp"
+        app:shape_bubble_borderRadius="20dp">
 
-        <TextView
-            android:id="@+id/title_origin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Origen:"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/txt_origin"
-            app:layout_constraintEnd_toStartOf="@+id/title_destino"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/txt_origin"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/img_time_and_distance"
-            app:layout_constraintEnd_toEndOf="@+id/title_origin"
-            app:layout_constraintStart_toStartOf="@+id/title_origin"
-            app:layout_constraintTop_toBottomOf="@+id/title_origin"
-            tools:text="direccion" />
-
-        <TextView
-            android:id="@+id/title_destino"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Destino:"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/title_origin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/title_origin"
-            app:layout_constraintTop_toTopOf="@+id/title_origin" />
-
-        <TextView
-            android:id="@+id/txt_destino"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/img_price"
-            app:layout_constraintEnd_toEndOf="@+id/title_destino"
-            app:layout_constraintStart_toStartOf="@+id/title_destino"
-            app:layout_constraintTop_toBottomOf="@+id/title_destino"
-            tools:text="direccion" />
-
-        <ImageView
-            android:id="@+id/img_time_and_distance"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_action_time"
-            app:layout_constraintBottom_toTopOf="@+id/txt_title_time_and_distance"
-            app:layout_constraintEnd_toEndOf="@+id/txt_title_time_and_distance"
-            app:layout_constraintStart_toStartOf="@+id/txt_title_time_and_distance"
-            app:tint="@color/black" />
-
-        <TextView
-            android:id="@+id/txt_title_time_and_distance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Tiempo: "
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/txt_time_and_distance"
-            app:layout_constraintEnd_toEndOf="@+id/txt_time_and_distance"
-            app:layout_constraintStart_toStartOf="@+id/txt_time_and_distance" />
-
-        <TextView
-            android:id="@+id/txt_time_and_distance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="3 km , 3 minutos"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/btn_solicitar"
-            app:layout_constraintEnd_toStartOf="@+id/txt_price"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:id="@+id/img_price"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_action_money"
-            app:layout_constraintBottom_toTopOf="@+id/txt_title_price"
-            app:layout_constraintEnd_toEndOf="@+id/txt_title_price"
-            app:layout_constraintStart_toStartOf="@+id/txt_title_price"
-            app:tint="@color/black" />
-
-        <TextView
-            android:id="@+id/txt_title_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Precio:"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/txt_price"
-            app:layout_constraintEnd_toEndOf="@+id/txt_price"
-            app:layout_constraintStart_toStartOf="@+id/txt_price" />
-
-        <TextView
-            android:id="@+id/txt_price"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="50 soles"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@+id/txt_time_and_distance"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/txt_time_and_distance"
-            app:layout_constraintTop_toTopOf="@+id/txt_time_and_distance" />
-
-        <Button
-            android:id="@+id/btn_solicitar"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="190dp"
             android:background="@color/colorPrimaryDark"
-            android:text="SOLICITAR AHORA"
-            android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/title_origin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Origen:"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/txt_origin"
+                app:layout_constraintEnd_toStartOf="@+id/title_destino"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/txt_origin"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/img_time_and_distance"
+                app:layout_constraintEnd_toEndOf="@+id/title_origin"
+                app:layout_constraintStart_toStartOf="@+id/title_origin"
+                app:layout_constraintTop_toBottomOf="@+id/title_origin"
+                tools:text="direccion" />
+
+            <TextView
+                android:id="@+id/title_destino"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Destino:"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/title_origin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/title_origin"
+                app:layout_constraintTop_toTopOf="@+id/title_origin" />
+
+            <TextView
+                android:id="@+id/txt_destino"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/img_price"
+                app:layout_constraintEnd_toEndOf="@+id/title_destino"
+                app:layout_constraintStart_toStartOf="@+id/title_destino"
+                app:layout_constraintTop_toBottomOf="@+id/title_destino"
+                tools:text="direccion" />
+
+            <ImageView
+                android:id="@+id/img_time_and_distance"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_action_time"
+                app:layout_constraintBottom_toTopOf="@+id/txt_title_time_and_distance"
+                app:layout_constraintEnd_toEndOf="@+id/txt_title_time_and_distance"
+                app:layout_constraintStart_toStartOf="@+id/txt_title_time_and_distance"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/txt_title_time_and_distance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Tiempo: "
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/txt_time_and_distance"
+                app:layout_constraintEnd_toEndOf="@+id/txt_time_and_distance"
+                app:layout_constraintStart_toStartOf="@+id/txt_time_and_distance" />
+
+            <TextView
+                android:id="@+id/txt_time_and_distance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/txt_price"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="3 km , 3 minutos" />
+
+            <ImageView
+                android:id="@+id/img_price"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:src="@drawable/ic_action_money"
+                app:layout_constraintBottom_toTopOf="@+id/txt_title_price"
+                app:layout_constraintEnd_toEndOf="@+id/txt_title_price"
+                app:layout_constraintStart_toStartOf="@+id/txt_title_price"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/txt_title_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Precio:"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/txt_price"
+                app:layout_constraintEnd_toEndOf="@+id/txt_price"
+                app:layout_constraintStart_toStartOf="@+id/txt_price" />
+
+            <TextView
+                android:id="@+id/txt_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_time_and_distance"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/txt_time_and_distance"
+                app:layout_constraintTop_toTopOf="@+id/txt_time_and_distance"
+                tools:text="50 soles" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.github.florent37.shapeofview.shapes.BubbleView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

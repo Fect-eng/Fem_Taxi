@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
@@ -24,12 +25,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.femtaxi.R;
-import com.example.femtaxi.client.RequestDriverActivity;
 import com.example.femtaxi.databinding.ActivityMapDriverBookingBinding;
 import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.models.ClientBooking;
 import com.example.femtaxi.models.FCMBody;
 import com.example.femtaxi.models.FCMResponse;
+import com.example.femtaxi.models.Info;
 import com.example.femtaxi.models.Token;
 import com.example.femtaxi.models.User;
 import com.example.femtaxi.providers.AuthProvider;
@@ -37,6 +38,7 @@ import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.ClientProvider;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.example.femtaxi.providers.GoogleApiProvider;
+import com.example.femtaxi.providers.InfoProvider;
 import com.example.femtaxi.providers.NotificationProvider;
 import com.example.femtaxi.providers.TokenProvider;
 import com.example.femtaxi.utils.DecodePoints;
@@ -65,11 +67,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -94,6 +93,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
     private TokenProvider mTokenProvider;
     private ClientBookingProvider mClientBookingProvider;
     private NotificationProvider mNotificacionProvider;
+    private InfoProvider mInfoProvider;
     private final static int LOCATION_REQUEST_CODE = 100;
     private final static int SETTINGS_REQUEST_CODE = 200;
     private LocationRequest mLocationRequest;
@@ -104,11 +104,38 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
 
     private boolean mIsFistTime = true;
     private boolean mClientBoarding = false;
+    private boolean mRideStart = false;
 
     private List<LatLng> mPolyLinesList;
     private PolylineOptions mPolylineOptions;
     private LatLngBounds.Builder builder = LatLngBounds.builder();
     private LatLngBounds bounds = null;
+
+    private double mDistanceAndMeters = 1;
+    private int mMinutes = 0;
+    private int mSeconds = 0;
+    boolean mSecondsIsOver = false;
+    private Handler mHandler = new Handler();
+    private Info mInfo;
+    private Location mPreviusLocation = new Location("");
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            mSeconds++;
+            if (!mSecondsIsOver) {
+                binding.txtPrice.setText(mSeconds + " segundos");
+            } else {
+                binding.txtPrice.setText(mMinutes + " minutos " + mSeconds);
+            }
+            if (mSeconds == 59) {
+                mSeconds = 0;
+                mSecondsIsOver = true;
+                mMinutes++;
+            }
+            mHandler.postDelayed(this, 1000);
+        }
+    };
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -121,6 +148,12 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                     if (nMarker != null) {
                         nMarker.remove();
                     }
+
+                    if (mRideStart) {
+                        mDistanceAndMeters = mDistanceAndMeters + mPreviusLocation.distanceTo(location);
+
+                    }
+                    mPreviusLocation = location;
                     Log.d(TAG, "mLocationCallback mCurrentLatLng: " + mCurrentLatLng);
                     nMarker = nMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude()))
@@ -180,6 +213,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
         mAuthProvider = new AuthProvider();
         mTokenProvider = new TokenProvider();
         mNotificacionProvider = new NotificationProvider();
+        mInfoProvider = new InfoProvider();
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
@@ -201,6 +235,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                 finishBooking();
             }
         });
+        getInfo();
     }
 
     @Override
@@ -208,6 +243,13 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
         nMap = googleMap;
         nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         nMap.getUiSettings().setZoomControlsEnabled(true);
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        nMap.setMyLocationEnabled(true);
 
         mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
@@ -440,6 +482,8 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
     }
 
     private void startBooking() {
+        mRideStart = true;
+        mHandler.postDelayed(runnable, 1000);
         sendNotification("Viaje iniciado");
         mClientBookingProvider.getUpdateStatus(mExtraClientId, "start");
         binding.btnEndBooking.setVisibility(View.VISIBLE);
@@ -454,13 +498,13 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
 
     private void finishBooking() {
         sendNotification("Viaje Finalizado");
-        mClientBookingProvider.getUpdateStatus(mExtraClientId, "finish");
+        mClientBookingProvider.getUpdateHistoryBooking(mExtraClientId);
         if (mFusedLocation != null)
             mFusedLocation.removeLocationUpdates(mLocationCallback);
         mGeofireProvider.removeLocation(mAuthProvider.getId());
-        Intent intent = new Intent(MapDriveBookingActivity.this, CalificationDriverActivity.class);
-        startActivity(intent);
-        this.finish();
+        if (mHandler != null)
+            mHandler.removeCallbacks(runnable);
+        calculateRide();
     }
 
     private void sendNotification(String status) {
@@ -508,5 +552,35 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                     }
                 });
 
+    }
+
+    private void getInfo() {
+        mInfoProvider.getInfo()
+                .addOnSuccessListener(snapshots -> {
+                    if (snapshots.exists()) {
+                        mInfo = snapshots.toObject(Info.class);
+                    }
+                });
+    }
+
+    private void calculateRide() {
+        if (mMinutes == 0) {
+            mMinutes = 1;
+        }
+        double priceMin = mMinutes * mInfo.getMin();
+        double pricekm = (mDistanceAndMeters / 1000) * mInfo.getKm();
+        double total = priceMin + pricekm;
+        mClientBookingProvider.getUpdatePrice(mExtraClientId, total)
+        .addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                mClientBookingProvider.getUpdateStatus(mExtraClientId, "finish");
+                Intent intent = new Intent(MapDriveBookingActivity.this, CalificationDriverActivity.class);
+                intent.putExtra(Constants.Extras.EXTRA_CLIENT_ID, mExtraClientId);
+                intent.putExtra(Constants.Extras.EXTRA_PRICE, total);
+                startActivity(intent);
+                MapDriveBookingActivity.this.finish();
+            }
+        });
     }
 }

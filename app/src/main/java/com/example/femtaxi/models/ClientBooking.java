@@ -8,24 +8,25 @@ import java.io.Serializable;
 public class ClientBooking implements Serializable {
     private String idHistory;
     private String destination;
-    private Double destinationLat;
-    private Double destinationLong;
+    private double destinationLat;
+    private double destinationLong;
     private String idClient;
     private String idDriver;
     private String km;
     private String origin;
-    private Double originLat;
-    private Double originLong;
+    private double originLat;
+    private double originLong;
     private String status;
     private String time;
+    private double price;
 
     public ClientBooking() {
     }
 
-    public ClientBooking(String idHistory, String destination, Double destinationLat,
-                         Double destinationLong, String idClient, String idDriver, String km,
-                         String origin, Double originLat, Double originLong, String status,
-                         String time) {
+    public ClientBooking(String idHistory, String destination, double destinationLat,
+                         double destinationLong, String idClient, String idDriver, String km,
+                         String origin, double originLat, double originLong, String status,
+                         String time,double price) {
         this.idHistory = idHistory;
         this.destination = destination;
         this.destinationLat = destinationLat;
@@ -38,6 +39,7 @@ public class ClientBooking implements Serializable {
         this.originLong = originLong;
         this.status = status;
         this.time = time;
+        this.price = price;
     }
 
     public String getIdHistory() {
@@ -56,19 +58,19 @@ public class ClientBooking implements Serializable {
         this.destination = destination;
     }
 
-    public Double getDestinationLat() {
+    public double getDestinationLat() {
         return destinationLat;
     }
 
-    public void setDestinationLat(Double destinationLat) {
+    public void setDestinationLat(double destinationLat) {
         this.destinationLat = destinationLat;
     }
 
-    public Double getDestinationLong() {
+    public double getDestinationLong() {
         return destinationLong;
     }
 
-    public void setDestinationLong(Double destinationLong) {
+    public void setDestinationLong(double destinationLong) {
         this.destinationLong = destinationLong;
     }
 
@@ -104,19 +106,19 @@ public class ClientBooking implements Serializable {
         this.origin = origin;
     }
 
-    public Double getOriginLat() {
+    public double getOriginLat() {
         return originLat;
     }
 
-    public void setOriginLat(Double originLat) {
+    public void setOriginLat(double originLat) {
         this.originLat = originLat;
     }
 
-    public Double getOriginLong() {
+    public double getOriginLong() {
         return originLong;
     }
 
-    public void setOriginLong(Double originLong) {
+    public void setOriginLong(double originLong) {
         this.originLong = originLong;
     }
 
@@ -136,6 +138,14 @@ public class ClientBooking implements Serializable {
         this.time = time;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "ClientBooking{" +
@@ -151,6 +161,7 @@ public class ClientBooking implements Serializable {
                 ", originLong=" + originLong +
                 ", status='" + status + '\'' +
                 ", time='" + time + '\'' +
+                ", price=" + price +
                 '}';
     }
 }

@@ -6,51 +6,63 @@
     android:layout_height="match_parent"
     tools:context=".client.RequestDriverActivity">
 
-    <LinearLayout
+    <com.github.florent37.shapeofview.shapes.ArcView
+        android:id="@+id/container_loading"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="230dp"
+        android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:shape_arc_cropDirection="outside"
+        app:shape_arc_height="20dp"
+        app:shape_arc_position="bottom">
 
-       <com.airbnb.lottie.LottieAnimationView
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark" />
+
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/animation"
             android:layout_width="wrap_content"
             android:layout_height="200dp"
-            android:scaleType="centerCrop"
             android:layout_gravity="center"
-            app:lottie_loop="true"
+            android:layout_margin="30dp"
+            android:scaleType="centerCrop"
             app:lottie_autoPlay="true"
-            android:layout_margin="30dp">
+            app:lottie_fileName="search_driver.json"
+            app:lottie_imageAssetsFolder="assets"
+            app:lottie_loop="true" />
 
+    </com.github.florent37.shapeofview.shapes.ArcView>
 
-        </com.airbnb.lottie.LottieAnimationView>
+    <TextView
+        android:id="@+id/textViewLookingFor"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="BUSCANDO CONDUCTOR..."
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/container_loading" />
 
-        <TextView
-            android:id="@+id/textViewLookingFor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:text="BUSCANDO CONDUCTOR..."
-            android:textSize="18sp"/>
+    <Button
+        android:id="@+id/btn_cancel_viaje"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimaryDark"
+        android:text="CANCELAR VIAJE"
+        android:textColor="#FFFFFF"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/linearlala"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical"
-            android:layout_weight="1"
-            android:gravity="bottom">
-
-            <Button
-                android:id="@+id/btn_cancel_viaje"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CANCELAR VIAJE"
-                android:background="@drawable/rounded_button"
-                android:backgroundTint="@color/colorPrimaryDark"
-                android:textColor="#FFFFFF"
-                android:layout_margin="30dp"/>
-        </LinearLayout>
-
-
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

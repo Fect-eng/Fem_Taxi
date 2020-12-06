@@ -184,7 +184,8 @@ public class RequestDriverActivity extends AppCompatActivity {
                                                             mExtraOriginLat,
                                                             mExtraOriginLng,
                                                             "create",
-                                                            time
+                                                            time,
+                                                            0
                                                     );
                                                     mClientBookingProvider.create(clientBooking)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {

@@ -33,6 +33,13 @@ public class ClientBookingProvider {
                 .update(newStatus);
     }
 
+    public Task<Void> getUpdatePrice(String idClient, double price) {
+        Map<String, Object> newStatus = new HashMap<>();
+        newStatus.put("price", price);
+        return dbFireBase.document(idClient)
+                .update(newStatus);
+    }
+
     public Task<Void> create(ClientBooking clientBooking) {
         Map<String, Object> mapClientBooking = new HashMap<>();
         mapClientBooking.put("idHistory", clientBooking.getIdHistory());
@@ -50,5 +57,9 @@ public class ClientBookingProvider {
 
         return dbFireBase.document(clientBooking.getIdClient())
                 .set(mapClientBooking);
+    }
+
+    public void getUpdateHistoryBooking(String mExtraClientId) {
+
     }
 }

@@ -9,7 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.femtaxi.databinding.ActivityDriveCalicationBinding;
+import com.example.femtaxi.databinding.ActivityCalicationDriveBinding;
 import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.models.ClientBooking;
 import com.example.femtaxi.models.HistoryBooking;
@@ -22,7 +22,7 @@ import java.util.Date;
 
 public class CalificationDriverActivity extends AppCompatActivity {
 
-    private ActivityDriveCalicationBinding binding;
+    private ActivityCalicationDriveBinding binding;
 
     private ClientBookingProvider mClientBookingProvider;
 
@@ -30,16 +30,20 @@ public class CalificationDriverActivity extends AppCompatActivity {
     private HistoryBooking mHistoryBooking;
     private HistoryBookingProvider mHistoryBookingProvider;
     private float mCalification = 0;
+    private double mExtraPrice = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityDriveCalicationBinding.inflate(getLayoutInflater());
+        binding = ActivityCalicationDriveBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         mHistoryBookingProvider = new HistoryBookingProvider();
 
         mClientBookingProvider = new ClientBookingProvider();
         mClientId = getIntent().getStringExtra(Constants.Extras.EXTRA_CLIENT_ID);
+        mExtraPrice = getIntent().getDoubleExtra(Constants.Extras.EXTRA_PRICE, 0);
+
+        binding.txtPrice.setText("S/ " + String.format("%.2f", mExtraPrice));
 
         getClientBooking();
 

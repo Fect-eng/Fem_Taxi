@@ -15,6 +15,7 @@ import androidx.core.app.ActivityCompat;
 import com.example.femtaxi.R;
 import com.example.femtaxi.databinding.ActivityDetailRequestBinding;
 import com.example.femtaxi.helpers.Constants;
+import com.example.femtaxi.models.Info;
 import com.example.femtaxi.providers.GoogleApiProvider;
 import com.example.femtaxi.providers.InfoProvider;
 import com.example.femtaxi.utils.DecodePoints;
@@ -82,10 +83,6 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
 
-        setSupportActionBar(binding.includeToolbar.toolbar);
-        getSupportActionBar().setTitle("Detalle Cliente");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         mGoogleApiProvider = new GoogleApiProvider(DetailRequestActivity.this);
         mInfoProvider = new InfoProvider();
 
@@ -101,6 +98,10 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
 
         binding.txtOrigin.setText(mExtraOrigin);
         binding.txtDestino.setText(mExtraDestination);
+
+        binding.btnBackPresset.setOnClickListener(view -> {
+            this.finish();
+        });
     }
 
     private void goToRequestDriver() {
@@ -176,7 +177,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
                             JSONObject duration = leg.getJSONObject("duration");
                             String distanceText = distance.getString("text");
                             String durationText = duration.getString("text");
-                            binding.txtTimeAndDistance.setText(durationText + distanceText);
+                            binding.txtTimeAndDistance.setText(durationText + " , " + distanceText);
                             //mTextViewDistance.setText(distanceText);
 
                             String[] distanceAndKM = distanceText.split(" ");
@@ -198,7 +199,18 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
     }
 
     private void calcularPrice(double distanceValor, double minutosValor) {
-
+        mInfoProvider.getInfo()
+                .addOnSuccessListener(snapshots -> {
+                    if (snapshots.exists()) {
+                        Info info = snapshots.toObject(Info.class);
+                        double totalDistance = distanceValor * info.getKm();
+                        double totalMinutes = minutosValor * info.getMin();
+                        double total = totalDistance + totalMinutes;
+                        double minTotal = total - 0.50;
+                        double maxTotal = total + 0.50;
+                        binding.txtPrice.setText("S/ " + String.format("%.2f", minTotal) + " - " + String.format("%.2f", maxTotal));
+                    }
+                });
     }
 }
 
