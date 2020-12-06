@@ -40,7 +40,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/iv_photo1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/propiedad" />
 
             <ImageView
                 android:id="@+id/iv_photo1"
@@ -55,7 +55,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_photo"
                 app:layout_constraintTop_toTopOf="@+id/iv_photo"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/revitec" />
 
             <ImageView
                 android:id="@+id/iv_photo2"
@@ -70,7 +70,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/iv_photo3"
                 app:layout_constraintStart_toStartOf="@+id/iv_photo"
                 app:layout_constraintTop_toBottomOf="@+id/iv_photo"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/setare" />
 
             <ImageView
                 android:id="@+id/iv_photo3"
@@ -85,7 +85,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_photo2"
                 app:layout_constraintTop_toTopOf="@+id/iv_photo2"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/licencon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -96,11 +96,12 @@
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="16dp"
-        android:text="Enviar Imagenes"
+        android:text="Finalizar Registro"
         android:textColor="#FFFFFF"
         android:textSize="22dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
+        android:layout_margin="30dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"

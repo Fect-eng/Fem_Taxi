@@ -46,7 +46,7 @@ public class EnviarImagenSegundoActivity extends AppCompatActivity {
     private int GALLERY_INTENT1 = 2;        //Policiales
     private int GALLERY_INTENT2 = 3;        //DNI
     private int GALLERY_INTENT3 = 4;        //foto con vehiculo
-    private int GALLERY_INTENT4 = 5;        //foto con SOAT
+    //private int GALLERY_INTENT4 = 5;        //foto con SOAT
     //nuevos agregados
 
     private ActivityMapClienteBinding binding;
@@ -68,16 +68,15 @@ public class EnviarImagenSegundoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviar_imagen_segundo);
 
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Autenticación Google");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // mToolbar = findViewById(R.id.toolbar);
+//        getSupportActionBar().setTitle("Autenticación Google");
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        binding = ActivityMapClienteBinding.inflate(getLayoutInflater());
+       // binding = ActivityMapClienteBinding.inflate(getLayoutInflater());
 
-        setSupportActionBar(binding.includeToolbar.toolbar);
-        getSupportActionBar().setTitle("Mapa Cliente");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       // setSupportActionBar(binding.includeToolbar.toolbar);
+      //  getSupportActionBar().setTitle("Mapa Cliente");
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mStorage = FirebaseStorage.getInstance().getReference();
         mUploadBtn = (Button) findViewById(R.id.btnnextimg);
@@ -119,12 +118,12 @@ public class EnviarImagenSegundoActivity extends AppCompatActivity {
                 verifiedPermision(GALLERY_INTENT3);
             }
         });
-        photo4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                verifiedPermision(GALLERY_INTENT4);
-            }
-        });
+     //   photo4.setOnClickListener(new View.OnClickListener() {
+          //  @Override
+         //   public void onClick(View v) {
+           //     verifiedPermision(GALLERY_INTENT4);
+          //  }
+      //  });
     }
 
     private void sendPhoto() {
@@ -179,13 +178,13 @@ public class EnviarImagenSegundoActivity extends AppCompatActivity {
                     .load(tmpUri.getPath())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                     .into(photo3);
-        } else if (requestCode == GALLERY_INTENT4 && resultCode == RESULT_OK) {
+        } /*else if (requestCode == GALLERY_INTENT4 && resultCode == RESULT_OK) {
             uriArrayList.add(tmpUri);
             Glide.with(this)
                     .load(tmpUri.getPath())
                     .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
-                    .into(photo4);
-        }
+                    .into(photo4);*/
+        //}
     }
 
     private void verifiedPermision(int codeRequest) {
@@ -264,7 +263,5 @@ public class EnviarImagenSegundoActivity extends AppCompatActivity {
                 + "TaxiFem/" + "Camera");
         folder.mkdirs();
         return folder;
-    }
-
-
+                                                    }
     }

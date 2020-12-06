@@ -22,7 +22,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include_toolbar" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/container_map"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,130 +32,136 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/title_origin"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp">
+            android:gravity="center"
+            android:text="Origen:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/txt_origin"
+            app:layout_constraintEnd_toStartOf="@+id/title_destino"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Origen: "
-                android:textSize="16sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/textViewOrigin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="16sp"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txt_origin"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp">
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/img_time_and_distance"
+            app:layout_constraintEnd_toEndOf="@+id/title_origin"
+            app:layout_constraintStart_toStartOf="@+id/title_origin"
+            app:layout_constraintTop_toBottomOf="@+id/title_origin"
+            tools:text="direccion" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Destino: "
-                android:textSize="16sp"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/textViewDestination"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text=""
-                android:textSize="16sp"/>
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/title_destino"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp">
+            android:gravity="center"
+            android:text="Destino:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/title_origin"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/title_origin"
+            app:layout_constraintTop_toTopOf="@+id/title_origin" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tiempo: "
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/txt_destino"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/img_price"
+            app:layout_constraintEnd_toEndOf="@+id/title_destino"
+            app:layout_constraintStart_toStartOf="@+id/title_destino"
+            app:layout_constraintTop_toBottomOf="@+id/title_destino"
+            tools:text="direccion" />
 
-                <TextView
-                    android:id="@+id/textViewTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="16sp"/>
+        <ImageView
+            android:id="@+id/img_time_and_distance"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_action_time"
+            app:layout_constraintBottom_toTopOf="@+id/txt_title_time_and_distance"
+            app:layout_constraintEnd_toEndOf="@+id/txt_title_time_and_distance"
+            app:layout_constraintStart_toStartOf="@+id/txt_title_time_and_distance"
+            app:tint="@color/black" />
 
+        <TextView
+            android:id="@+id/txt_title_time_and_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Tiempo: "
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/txt_time_and_distance"
+            app:layout_constraintEnd_toEndOf="@+id/txt_time_and_distance"
+            app:layout_constraintStart_toStartOf="@+id/txt_time_and_distance" />
 
-            </LinearLayout>
+        <TextView
+            android:id="@+id/txt_time_and_distance"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="3 km , 3 minutos"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_solicitar"
+            app:layout_constraintEnd_toStartOf="@+id/txt_price"
+            app:layout_constraintStart_toStartOf="parent" />
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="horizontal"
-                >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Distancia: "
-                    android:textSize="16sp"
-                    android:textStyle="bold"/>
+        <ImageView
+            android:id="@+id/img_price"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_action_money"
+            app:layout_constraintBottom_toTopOf="@+id/txt_title_price"
+            app:layout_constraintEnd_toEndOf="@+id/txt_title_price"
+            app:layout_constraintStart_toStartOf="@+id/txt_title_price"
+            app:tint="@color/black" />
 
-                <TextView
-                    android:id="@+id/textViewDistance"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="16sp"/>
+        <TextView
+            android:id="@+id/txt_title_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Precio:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/txt_price"
+            app:layout_constraintEnd_toEndOf="@+id/txt_price"
+            app:layout_constraintStart_toStartOf="@+id/txt_price" />
 
-            </LinearLayout>
-
-
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/txt_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="50 soles"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/txt_time_and_distance"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/txt_time_and_distance"
+            app:layout_constraintTop_toTopOf="@+id/txt_time_and_distance" />
 
         <Button
-            android:id="@+id/btnRequestNow"
+            android:id="@+id/btn_solicitar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SOLICITAR AHORA"
             android:background="@color/colorPrimaryDark"
-            android:textColor="#FFFFFF" />
+            android:text="SOLICITAR AHORA"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

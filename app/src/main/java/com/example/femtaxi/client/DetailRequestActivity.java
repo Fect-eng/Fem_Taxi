@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -17,8 +16,8 @@ import com.example.femtaxi.R;
 import com.example.femtaxi.databinding.ActivityDetailRequestBinding;
 import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.providers.GoogleApiProvider;
+import com.example.femtaxi.providers.InfoProvider;
 import com.example.femtaxi.utils.DecodePoints;
-import com.example.femtaxi.utils.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -59,22 +58,19 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
     private LatLng mOriginLatLng;
     private LatLng mDestinationLatLng;
     private GoogleApiProvider mGoogleApiProvider;
+    private InfoProvider mInfoProvider;
     private List<LatLng> mPolyLinesList;
     private PolylineOptions mPolylineOptions;
     private LatLngBounds.Builder builder = LatLngBounds.builder();
     private LatLngBounds bounds = null;
 
-    private TextView mTextViewOrigin;
-    private TextView mTextViewdestination;
-    private TextView mTextViewTime;
-    private TextView mTextViewDistance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityDetailRequestBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        mButtonRequest = findViewById(R.id.btnRequestNow);
+        mButtonRequest = findViewById(R.id.btn_solicitar);
         mButtonRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,13 +87,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mGoogleApiProvider = new GoogleApiProvider(DetailRequestActivity.this);
-
-        mTextViewOrigin = findViewById(R.id.textViewOrigin);
-        mTextViewdestination = findViewById(R.id.textViewDestination);
-        mTextViewTime = findViewById(R.id.textViewTime);
-        mTextViewDistance = findViewById(R.id.textViewDistance);
-        mTextViewOrigin.setText(mExtraOrigin);
-        mTextViewdestination.setText(mExtraDestination);
+        mInfoProvider = new InfoProvider();
 
         mExtraOrigin = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN);
         mExtraOriginLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_ORIGIN_LAT, 0);
@@ -109,20 +99,18 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         mOriginLatLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
         mDestinationLatLng = new LatLng(mExtraDestinoLat, mExtradestinoLng);
 
-        String addressOrigin = Utils.getStreet(this, mExtraOriginLat, mExtraOriginLng);
-        String addressDestino = Utils.getStreet(this, mExtraDestinoLat, mExtradestinoLng);
-        binding.textViewOrigin.setText(addressOrigin);        //cambio de variable
-        binding.textViewDestination.setText(addressDestino);  //cambio de variable
+        binding.txtOrigin.setText(mExtraOrigin);
+        binding.txtDestino.setText(mExtraDestination);
     }
 
     private void goToRequestDriver() {
         Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
         intent.putExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN, mExtraOrigin);
-        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
-        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
+        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LAT, mExtraOriginLat);
+        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LONG, mExtraOriginLng);
         intent.putExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO, mExtraDestination);
-        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mDestinationLatLng.latitude);
-        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mDestinationLatLng.longitude);
+        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mExtraDestinoLat);
+        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mExtradestinoLng);
         startActivity(intent);
         this.finish();
     }
@@ -131,14 +119,14 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
     public void onMapReady(GoogleMap googleMap) {
         nMap = googleMap;
         nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        nMap.getUiSettings().setZoomControlsEnabled(true);
+        nMap.getUiSettings().setZoomControlsEnabled(false);
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        nMap.setMyLocationEnabled(true);
+        nMap.setMyLocationEnabled(false);
 
         nMap.addMarker(new MarkerOptions()
                 .position(mOriginLatLng)
@@ -188,8 +176,15 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
                             JSONObject duration = leg.getJSONObject("duration");
                             String distanceText = distance.getString("text");
                             String durationText = duration.getString("text");
-                            mTextViewTime.setText(durationText);
-                            mTextViewDistance.setText(distanceText);
+                            binding.txtTimeAndDistance.setText(durationText + distanceText);
+                            //mTextViewDistance.setText(distanceText);
+
+                            String[] distanceAndKM = distanceText.split(" ");
+                            double distanceValor = Double.parseDouble(distanceAndKM[0]);
+                            String[] durationAnMins = distanceText.split(" ");
+                            double minutosValor = Double.parseDouble(durationAnMins[0]);
+
+                            calcularPrice(distanceValor, minutosValor);
                         } catch (Exception e) {
                             Log.d(TAG, "drawRoute Error: " + e.getMessage());
                         }
@@ -200,6 +195,10 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
                         Log.d(TAG, "drawRoute onFailure Error: " + t.getMessage());
                     }
                 });
+    }
+
+    private void calcularPrice(double distanceValor, double minutosValor) {
+
     }
 }
 

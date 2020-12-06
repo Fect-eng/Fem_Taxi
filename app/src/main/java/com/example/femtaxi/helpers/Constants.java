@@ -11,6 +11,7 @@ public class Constants {
             public static final String CLIENT_BOOKING = "clientBooking";
             public static final String HISTORY_BOOKING = "historyBooking";
             public static final String TOKEN = "tokens";
+            public static final String INFO = "info";
         }
 
         public class Client {
