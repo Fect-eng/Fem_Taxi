@@ -1,6 +1,8 @@
 package com.example.femtaxi.providers;
 
-import com.example.femtaxi.helpers.Constans;
+import android.util.Log;
+
+import com.example.femtaxi.helpers.Constants;
 import com.firebase.geofire.GeoFire;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQuery;
@@ -9,43 +11,45 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class GeofireProvider {
+    String TAG = GeofireProvider.class.getSimpleName();
 
-    private DatabaseReference mDatabase;
-    private GeoFire mGeofire;
+    private DatabaseReference databaseReference;
+    private GeoFire geoFire;
 
     public GeofireProvider(String nodo) {
-        getGeoFire(nodo);
+        Log.d(TAG, "GeofireProvider nodo: " + nodo);
+        databaseReference = FirebaseDatabase.getInstance()
+                .getReference()
+                .child(nodo);
+        geoFire = new GeoFire(databaseReference);
     }
 
-    private GeoFire getGeoFire(String nodo) {
-        if (mGeofire == null) {
-            mDatabase = FirebaseDatabase.getInstance()
-                    .getReference()
-                    .child(nodo);
-            mGeofire = new GeoFire(mDatabase);
-        }
-        return mGeofire;
-    }
 
     public void saveLocation(String idDriver, LatLng latLng) {
-        mGeofire.setLocation(idDriver, new GeoLocation(latLng.latitude, latLng.longitude));
+        geoFire.setLocation(idDriver, new GeoLocation(latLng.latitude, latLng.longitude));
     }
 
     public void removeLocation(String idDriver) {
-        mGeofire.removeLocation(idDriver);
+        geoFire.removeLocation(idDriver);
     }
 
     public DatabaseReference isDriverWorking(String idDriver) {
         return FirebaseDatabase.getInstance()
                 .getReference()
-                .child(Constans.DRIVER_WORKING)
+                .child(Constants.Firebase.Nodo.DRIVER_WORKING)
                 .child(idDriver);
     }
 
     public GeoQuery getActiveDrivers(LatLng latLng, double radius) {
-        GeoQuery geoQuery = mGeofire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), radius);
+        GeoQuery geoQuery = geoFire.queryAtLocation(new GeoLocation(latLng.latitude, latLng.longitude), radius);
         geoQuery.removeAllListeners();
         return geoQuery;
+    }
+
+    public DatabaseReference getDriveLocation(String idDriver) {
+        return databaseReference
+                .child(idDriver)
+                .child("l");
     }
 
 }

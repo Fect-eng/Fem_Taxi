@@ -55,7 +55,7 @@
         <activity
             android:name=".client.MapClienteActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".ClientAuthentiActivity" />
+        <activity android:name=".client.LoginClientActivity" />
         <activity
             android:name=".ClienteOptionActivity"
             android:parentActivityName=".MainActivity" />
@@ -72,6 +72,10 @@
             android:parentActivityName=".MainActivity" />
 
         <activity android:name=".driver.NotificationBookingActivity" />
+
+        <activity android:name=".driver.MapDriveBookingActivity" />
+
+        <activity android:name=".client.MapClientBookingActivity" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

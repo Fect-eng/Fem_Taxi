@@ -5,11 +5,16 @@ import java.util.Map;
 public class FCMBody {
     private String to;
     private String priority;
+    private String ttl;
     Map<String, String> data;
 
-    public FCMBody(String to, String priority, Map<String, String> data) {
+    public FCMBody() {
+    }
+
+    public FCMBody(String to, String priority, String ttl, Map<String, String> data) {
         this.to = to;
         this.priority = priority;
+        this.ttl = ttl;
         this.data = data;
     }
 
@@ -29,6 +34,14 @@ public class FCMBody {
         this.priority = priority;
     }
 
+    public String getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(String ttl) {
+        this.ttl = ttl;
+    }
+
     public Map<String, String> getData() {
         return data;
     }
@@ -42,6 +55,7 @@ public class FCMBody {
         return "FCMBody{" +
                 "to='" + to + '\'' +
                 ", priority='" + priority + '\'' +
+                ", ttl='" + ttl + '\'' +
                 ", data=" + data +
                 '}';
     }

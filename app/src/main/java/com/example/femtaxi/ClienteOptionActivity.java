@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.femtaxi.client.LoginClientActivity;
+
 public class ClienteOptionActivity extends AppCompatActivity {
     //toolbar declarado
     Toolbar mToolbar;
@@ -33,7 +35,7 @@ public class ClienteOptionActivity extends AppCompatActivity {
     }
 
     private void goToSelectAuth() {
-        Intent intent = new Intent(ClienteOptionActivity.this, ClientAuthentiActivity.class);
+        Intent intent = new Intent(ClienteOptionActivity.this, LoginClientActivity.class);
         startActivity(intent);
     }
 }

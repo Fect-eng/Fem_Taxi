@@ -33,7 +33,7 @@ import com.example.femtaxi.MainActivity;
 import com.example.femtaxi.R;
 
 import com.example.femtaxi.databinding.ActivityMapClienteBinding;
-import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.example.femtaxi.providers.TokenProvider;
@@ -82,10 +82,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
-    private Marker nMarker;
     private List<Marker> mDriversMarkers = new ArrayList<>();
-    private Button mButtonConnect;
-    private boolean mIsconnect = false;
     private boolean mISFirstTime = true;
 
     private String mOrigin;
@@ -103,16 +100,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 if (getApplicationContext() != null) {
                     Log.d(TAG, "mLocationCallback getApplicationContext!=null: ");
                     mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    /*if (nMarker != null) {
-                        nMarker.remove();
-                    }
-                    Log.d(TAG, "mLocationCallback mCurrentLatLng: " + mCurrentLatLng);
-                    nMarker = nMap.addMarker(new MarkerOptions().position(
-                            new LatLng(location.getLatitude(), location.getLongitude()))
-                            .title("Posición Actual")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));*/
-
-
                     nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
                                     .target(mCurrentLatLng)
@@ -133,9 +120,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         binding = ActivityMapClienteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        mAuthProvider = new AuthProvider();    //authprovider
-        mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
-        mTokenProvider = new TokenProvider();    //instamcia
+        mAuthProvider = new AuthProvider();
+        mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
+        mTokenProvider = new TokenProvider();
 
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
@@ -205,6 +192,13 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mFusedLocation != null)
+            mFusedLocation.removeLocationUpdates(mLocationCallback);
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         nMap = googleMap;
         nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
@@ -258,12 +252,12 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private void requestDriver() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
             Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
-            intent.putExtra(Constans.Extras.EXTRA_ADDRESS_ORIGIN, mOrigin);
-            intent.putExtra(Constans.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
-            intent.putExtra(Constans.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
-            intent.putExtra(Constans.Extras.EXTRA_ADDRESS_DESTINO, mDestination);
-            intent.putExtra(Constans.Extras.EXTRA_DESTINO_LAT, mDestinationLatLng.latitude);
-            intent.putExtra(Constans.Extras.EXTRA_DESTINO_LONG, mDestinationLatLng.longitude);
+            intent.putExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN, mOrigin);
+            intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
+            intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
+            intent.putExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO, mDestination);
+            intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mDestinationLatLng.latitude);
+            intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mDestinationLatLng.longitude);
             startActivity(intent);
         } else {
             Toast.makeText(this, "Debe Seleccionar el lugar de recogida y el destino", Toast.LENGTH_SHORT).show();
@@ -386,12 +380,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (gpsActived()) {
-                    //  mButtonConnect.setText("DESCONECTARSE"); //valores asignados a conectarse
-                    //  mIsconnect = true;  //valor asigando a conectarse
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     nMap.setMyLocationEnabled(true);
                 } else {
-                    showAlertDialogNoGPS();   //mensaje DialogGPS
+                    showAlertDialogNoGPS();
                 }
             } else {
                 checkLocationPermissions();
@@ -437,7 +429,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     void generateToken() {
-        if(mAuthProvider.existSession())
-        mTokenProvider.createdToken(mAuthProvider.getId());
+        if (mAuthProvider.existSession())
+            mTokenProvider.createdToken(mAuthProvider.getId());
     }
 }

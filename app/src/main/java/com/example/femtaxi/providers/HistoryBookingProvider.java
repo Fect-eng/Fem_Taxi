@@ -1,6 +1,6 @@
 package com.example.femtaxi.providers;
 
-import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.models.HistoryBooking;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,7 +33,7 @@ public class HistoryBookingProvider {
         newStatus.put("time", historyBooking.getTime());
         newStatus.put("calificationClient", historyBooking.getCalificationClient());
         newStatus.put("calificationDrive", historyBooking.getCalificationDrive());
-        return dbFireBase.collection(Constans.HISTORY_BOOKING)
+        return dbFireBase.collection(Constants.Firebase.Nodo.HISTORY_BOOKING)
                 .document(historyBooking.getIdHistory())
                 .set(newStatus);
     }
@@ -41,7 +41,7 @@ public class HistoryBookingProvider {
     public Task<Void> getUpdateCalificationClient(String idHistory, float calificationClient) {
         Map<String, Object> newStatus = new HashMap<>();
         newStatus.put("calificationClient", calificationClient);
-        return dbFireBase.collection(Constans.HISTORY_BOOKING)
+        return dbFireBase.collection(Constants.Firebase.Nodo.HISTORY_BOOKING)
                 .document(idHistory)
                 .update(newStatus);
     }
@@ -49,13 +49,13 @@ public class HistoryBookingProvider {
     public Task<Void> getUpdateCalificationDriver(String idHistory, float calificationDriver) {
         Map<String, Object> newStatus = new HashMap<>();
         newStatus.put("calificationDrive", calificationDriver);
-        return dbFireBase.collection(Constans.HISTORY_BOOKING)
+        return dbFireBase.collection(Constants.Firebase.Nodo.HISTORY_BOOKING)
                 .document(idHistory)
                 .update(newStatus);
     }
 
     public Task<DocumentSnapshot> getHistoryBooking(String idHistory) {
-        return dbFireBase.collection(Constans.HISTORY_BOOKING)
+        return dbFireBase.collection(Constants.Firebase.Nodo.HISTORY_BOOKING)
                 .document(idHistory)
                 .get();
     }

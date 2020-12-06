@@ -1,6 +1,7 @@
 package com.example.femtaxi.providers;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.example.femtaxi.R;
 import com.example.femtaxi.retrofit.IGoogleApi;
@@ -10,6 +11,7 @@ import com.google.android.gms.maps.model.LatLng;
 import retrofit2.Call;
 
 public class GoogleApiProvider {
+    String TAG = GoogleApiProvider.class.getSimpleName();
 
     private Context context;
 
@@ -22,7 +24,8 @@ public class GoogleApiProvider {
         String query = "/maps/api/directions/json?mode=driving&transit_routing_preferences=less_driving&"
                 + "origin=" + origin.latitude + "," + origin.longitude + "&"
                 + "destination=" + destino.latitude + "," + destino.longitude + "&"
-                + "key=" + context.getResources().getString(R.string.google_api_key);                                   //key
+                + "key=" + context.getResources().getString(R.string.google_api_key);
+        Log.d(TAG, "GoogleApiProvider: " + baseUrl + query);
         return RetrofitUser.getClient(baseUrl).create(IGoogleApi.class).getDirections(baseUrl + query);
     }
 }

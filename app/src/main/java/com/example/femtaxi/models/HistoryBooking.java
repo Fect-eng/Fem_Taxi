@@ -3,14 +3,14 @@ package com.example.femtaxi.models;
 public class HistoryBooking {
     private String idHistory;
     private String destination;
-    private String destinationLat;
-    private String destinationLong;
+    private Double destinationLat;
+    private Double destinationLong;
     private String idClient;
     private String idDriver;
     private String km;
     private String origin;
-    private String originLat;
-    private String originLong;
+    private Double originLat;
+    private Double originLong;
     private String status;
     private String time;
     private double calificationClient;
@@ -20,10 +20,10 @@ public class HistoryBooking {
     public HistoryBooking() {
     }
 
-    public HistoryBooking(String idHistory, String destination, String destinationLat,
-                          String destinationLong, String idClient, String idDriver,
-                          String km, String origin, String originLat, String originLong,
-                          String status, String time) {
+    public HistoryBooking(String idHistory, String destination, Double destinationLat,
+                          Double destinationLong, String idClient, String idDriver, String km,
+                          String origin, Double originLat, Double originLong, String status,
+                          String time) {
         this.idHistory = idHistory;
         this.destination = destination;
         this.destinationLat = destinationLat;
@@ -54,19 +54,19 @@ public class HistoryBooking {
         this.destination = destination;
     }
 
-    public String getDestinationLat() {
+    public Double getDestinationLat() {
         return destinationLat;
     }
 
-    public void setDestinationLat(String destinationLat) {
+    public void setDestinationLat(Double destinationLat) {
         this.destinationLat = destinationLat;
     }
 
-    public String getDestinationLong() {
+    public Double getDestinationLong() {
         return destinationLong;
     }
 
-    public void setDestinationLong(String destinationLong) {
+    public void setDestinationLong(Double destinationLong) {
         this.destinationLong = destinationLong;
     }
 
@@ -102,19 +102,19 @@ public class HistoryBooking {
         this.origin = origin;
     }
 
-    public String getOriginLat() {
+    public Double getOriginLat() {
         return originLat;
     }
 
-    public void setOriginLat(String originLat) {
+    public void setOriginLat(Double originLat) {
         this.originLat = originLat;
     }
 
-    public String getOriginLong() {
+    public Double getOriginLong() {
         return originLong;
     }
 
-    public void setOriginLong(String originLong) {
+    public void setOriginLong(Double originLong) {
         this.originLong = originLong;
     }
 
@@ -163,14 +163,14 @@ public class HistoryBooking {
         return "HistoryBooking{" +
                 "idHistory='" + idHistory + '\'' +
                 ", destination='" + destination + '\'' +
-                ", destinationLat='" + destinationLat + '\'' +
-                ", destinationLong='" + destinationLong + '\'' +
+                ", destinationLat=" + destinationLat +
+                ", destinationLong=" + destinationLong +
                 ", idClient='" + idClient + '\'' +
                 ", idDriver='" + idDriver + '\'' +
                 ", km='" + km + '\'' +
                 ", origin='" + origin + '\'' +
-                ", originLat='" + originLat + '\'' +
-                ", originLong='" + originLong + '\'' +
+                ", originLat=" + originLat +
+                ", originLong=" + originLong +
                 ", status='" + status + '\'' +
                 ", time='" + time + '\'' +
                 ", calificationClient=" + calificationClient +

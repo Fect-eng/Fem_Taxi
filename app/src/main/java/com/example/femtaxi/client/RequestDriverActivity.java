@@ -1,5 +1,6 @@
 package com.example.femtaxi.client;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -9,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.femtaxi.databinding.ActivityRequestDriverBinding;
-import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.models.ClientBooking;
 import com.example.femtaxi.models.FCMBody;
 import com.example.femtaxi.models.FCMResponse;
@@ -73,14 +74,14 @@ public class RequestDriverActivity extends AppCompatActivity {
 
 
         binding.animation.playAnimation();
-        mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
+        mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
 
-        mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LAT, 0);
-        mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LONG, 0);
-        mExtraDestinoLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_DESTINO_LAT, 0);
-        mExtradestinoLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_DESTINO_LONG, 0);
-        mExtraOrigin = getIntent().getStringExtra(Constans.Extras.EXTRA_ADDRESS_ORIGIN);
-        mExtraDestination = getIntent().getStringExtra(Constans.Extras.EXTRA_ADDRESS_DESTINO);
+        mExtraOrigin = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN);
+        mExtraOriginLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_ORIGIN_LAT, 0);
+        mExtraOriginLng = getIntent().getDoubleExtra(Constants.Extras.EXTRA_ORIGIN_LONG, 0);
+        mExtraDestination = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO);
+        mExtraDestinoLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LAT, 0);
+        mExtradestinoLng = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LONG, 0);
         mTokenProvider = new TokenProvider();
         mClientBookingProvider = new ClientBookingProvider();
         mAuthProvider = new AuthProvider();
@@ -142,7 +143,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                 });
     }
 
-    private void sendNotification(String time, String km) {
+    private void sendNotification(String time, String distance) {
         Log.i(TAG, "sendNotification");
         mTokenProvider.getTokenUser(mIdDriverFound)
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -153,8 +154,13 @@ public class RequestDriverActivity extends AppCompatActivity {
                             Log.d(TAG, "sendNotification onSuccess token: " + token);
                             Map<String, String> map = new HashMap<>();
                             map.put("title", "SOLICITUD DE SERVICIO A " + time + " DE TU POSICION");
-                            map.put("body", "Un cliente esta solicitando un servicio a una distancia de " + km + " KM");
-                            FCMBody fcmBody = new FCMBody(token.getToken(), "high", map);
+                            map.put("body", "Un cliente esta solicitando un servicio a una distancia de " + distance + " KM");
+                            map.put("idClient", mAuthProvider.getId());
+                            map.put("origin", mExtraOrigin);
+                            map.put("destination", mExtraDestination);
+                            map.put("min", time);
+                            map.put("distance", distance + " KM");
+                            FCMBody fcmBody = new FCMBody(token.getToken(), "high","4500s", map);
                             Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
                             mNotificacionProvider.sendNotification(fcmBody)
                                     .enqueue(new Callback<FCMResponse>() {
@@ -169,14 +175,14 @@ public class RequestDriverActivity extends AppCompatActivity {
                                                     ClientBooking clientBooking = new ClientBooking(
                                                             idHistory,
                                                             mExtraDestination,
-                                                            String.valueOf(mExtraDestinoLat),
-                                                            String.valueOf(mExtradestinoLng),
+                                                            mExtraDestinoLat,
+                                                            mExtradestinoLng,
                                                             mAuthProvider.getId(),
                                                             mIdDriverFound,
-                                                            km,
+                                                            distance,
                                                             mExtraOrigin,
-                                                            String.valueOf(mExtraOriginLat),
-                                                            String.valueOf(mExtraOriginLng),
+                                                            mExtraOriginLat,
+                                                            mExtraOriginLng,
                                                             "create",
                                                             time
                                                     );
@@ -185,6 +191,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
                                                                     Toast.makeText(RequestDriverActivity.this, "Peticion creada con exito", Toast.LENGTH_SHORT).show();
+                                                                    checkStatusClientBooking();
                                                                 }
                                                             });
 
@@ -219,35 +226,53 @@ public class RequestDriverActivity extends AppCompatActivity {
                 .enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        /*try {
+                        try {
                             JSONObject jsonObject = new JSONObject(response.body());
-                            Log.d(TAG, "createClientBooking jsonObject: " + jsonObject);
+                            Log.d(TAG, "drawRoute jsonObject: " + jsonObject);
                             JSONArray jsonArray = jsonObject.getJSONArray("routes");
-                            Log.d(TAG, "createClientBooking jsonArray: " + jsonArray);
+                            Log.d(TAG, "drawRoute jsonArray: " + jsonArray);
                             JSONObject route = jsonArray.getJSONObject(0);
-                            Log.d(TAG, "createClientBooking route: " + route);
-                            JSONObject polyLines = route.getJSONObject("overview_polilyne");
-                            Log.d(TAG, "createClientBooking polyLines: " + polyLines);
-                            String points = polyLines.getString("point");
-                            Log.d(TAG, "createClientBooking points: " + points);
+                            Log.d(TAG, "drawRoute route: " + route);
+                            JSONObject polyLines = route.getJSONObject("overview_polyline");
+                            Log.d(TAG, "drawRoute polyLines: " + polyLines);
+                            String points = polyLines.getString("points");
+                            Log.d(TAG, "drawRoute points: " + points);
 
                             JSONArray legs = route.getJSONArray("legs");
                             JSONObject leg = legs.getJSONObject(0);
                             JSONObject distance = leg.getJSONObject("distance");
                             JSONObject duration = leg.getJSONObject("duration");
                             String distanceText = distance.getString("text");
-                            String durationText = duration.getString("text");*/
-
-                        //sendNotification(durationText, distanceText);
-                        sendNotification("5", " 20");
-                        /*} catch (Exception e) {
-                            Log.d(TAG, "createClientBooking Error: " + e.getMessage());
-                        }*/
+                            String durationText = duration.getString("text");
+                            sendNotification(durationText, distanceText);
+                        } catch (Exception e) {
+                            Log.d(TAG, "drawRoute Error: " + e.getMessage());
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<String> call, Throwable t) {
                         Log.d(TAG, "createClientBooking onFailure Error: " + t.getMessage());
+                    }
+                });
+    }
+
+    private void checkStatusClientBooking() {
+        mClientBookingProvider.getClientBooking(mAuthProvider.getId())
+                .addSnapshotListener((value, error) -> {
+                    if (value.exists()) {
+                        ClientBooking clientBooking = value.toObject(ClientBooking.class);
+                        Log.d(TAG, "sendNotification clientBooking: " + clientBooking);
+                        if (clientBooking.getStatus().equals("accept")) {
+                            Intent intent = new Intent(RequestDriverActivity.this, MapClientBookingActivity.class);
+                            startActivity(intent);
+                            this.finish();
+                        } else if (clientBooking.getStatus().equals("cancel")) {
+                            Toast.makeText(RequestDriverActivity.this, "El conductor no acepto el viaje", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(RequestDriverActivity.this, MapClienteActivity.class);
+                            startActivity(intent);
+                            this.finish();
+                        }
                     }
                 });
     }

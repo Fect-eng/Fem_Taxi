@@ -19,7 +19,7 @@ import com.example.femtaxi.broadcast.AcceptReceiver;
 import com.example.femtaxi.broadcast.CancelReceiver;
 import com.example.femtaxi.channel.NotificationHelpers;
 import com.example.femtaxi.driver.NotificationBookingActivity;
-import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.helpers.Constants;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -40,7 +40,6 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        RemoteMessage.Notification notification = remoteMessage.getNotification();
         Map<String, String> data = remoteMessage.getData();
         String title = data.get("title");
         String body = data.get("body");
@@ -83,11 +82,11 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
             wakeLock.acquire(10000);
         }
         Intent intent = new Intent(getBaseContext(), NotificationBookingActivity.class);
-        intent.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
-        intent.putExtra(Constans.Extras.EXTRA_ADDRESS_ORIGIN, origin);
-        intent.putExtra(Constans.Extras.EXTRA_ADDRESS_DESTINO, destino);
-        intent.putExtra(Constans.Extras.EXTRA_MINUT, minutos);
-        intent.putExtra(Constans.Extras.EXTRA_KM, distance);
+        intent.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
+        intent.putExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN, origin);
+        intent.putExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO, destino);
+        intent.putExtra(Constants.Extras.EXTRA_MINUT, minutos);
+        intent.putExtra(Constants.Extras.EXTRA_KM, distance);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -112,7 +111,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
         Log.d(TAG, "showNotificacionApiOreoAction ");
         //Aceptar
         Intent accept = new Intent(this, AcceptReceiver.class);
-        accept.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
+        accept.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
         PendingIntent pendingIntentAccept = PendingIntent.getBroadcast(this,
                 NOTIFICATION_CODE,
                 accept,
@@ -125,7 +124,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
 
         //cancelar
         Intent cancel = new Intent(this, AcceptReceiver.class);
-        accept.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
+        accept.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
         PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this,
                 NOTIFICATION_CODE,
                 cancel,
@@ -163,7 +162,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
     private void showNotificationAllApiAction(String title, String body, String idClient) {
         Log.d(TAG, "showNotificationAllApiAction ");
         Intent accept = new Intent(this, AcceptReceiver.class);
-        accept.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
+        accept.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
         PendingIntent pendingIntentAccept = PendingIntent.getBroadcast(this,
                 NOTIFICATION_CODE,
                 accept,
@@ -176,7 +175,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
         ).build();
 
         Intent cancel = new Intent(this, CancelReceiver.class);
-        accept.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
+        accept.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
         PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this,
                 NOTIFICATION_CODE,
                 cancel,

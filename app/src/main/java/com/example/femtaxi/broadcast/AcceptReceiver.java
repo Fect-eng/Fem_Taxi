@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.example.femtaxi.driver.MapDriveBookingActivity;
-import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.GeofireProvider;
@@ -20,12 +20,12 @@ public class AcceptReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         mAuthProvider = new AuthProvider();
-        mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
+        mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_WORKING);
         mGeofireProvider.removeLocation(mAuthProvider.getId());
 
-        String idClient = intent.getExtras().getString(Constans.Extras.EXTRA_CLIENT_ID);
+        String idClient = intent.getExtras().getString(Constants.Extras.EXTRA_CLIENT_ID);
         mClientBookingProvider = new ClientBookingProvider();
-        mClientBookingProvider.getUpdateStatus(idClient, "Aceptado");
+        mClientBookingProvider.getUpdateStatus(idClient, "accept");
 
         NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         manager.cancel(2);
@@ -33,7 +33,7 @@ public class AcceptReceiver extends BroadcastReceiver {
         Intent intent1 = new Intent(context, MapDriveBookingActivity.class);
         intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent1.setAction(Intent.ACTION_RUN);
-        intent1.putExtra(Constans.Extras.EXTRA_CLIENT_ID, idClient);
+        intent1.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
         context.startActivity(intent1);
     }
 }

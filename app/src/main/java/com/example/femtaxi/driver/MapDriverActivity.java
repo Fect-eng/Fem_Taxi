@@ -15,22 +15,19 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.femtaxi.MainActivity;
 import com.example.femtaxi.R;
-import com.example.femtaxi.databinding.ActivityMapClienteBinding;
 import com.example.femtaxi.databinding.ActivityMapDriverBinding;
-import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.GeofireProvider;
@@ -111,7 +108,7 @@ public class MapDriverActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         binding = ActivityMapDriverBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        mGeofireProvider = new GeofireProvider(Constans.DRIVER_ACTIVE);
+        mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
         mAuthProvider = new AuthProvider();
         mClientBookingProvider = new ClientBookingProvider();
         mTokenProvider = new TokenProvider();
@@ -136,15 +133,30 @@ public class MapDriverActivity extends AppCompatActivity
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkLocationPermissions();
-        isDriverWorking();
         generatedToken();
+        isDriverWorking();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mListener != null)
-            mGeofireProvider.isDriverWorking(mAuthProvider.getId()).removeEventListener(mListener);
+        Log.d(TAG, "onDestroy");
+        if (mListener != null) {
+            Log.d(TAG, "onDestroy");
+            mGeofireProvider.isDriverWorking(mAuthProvider.getId())
+                    .removeEventListener(mListener);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "onPause");
+        if (mListener != null) {
+            Log.d(TAG, "onPause");
+            mGeofireProvider.isDriverWorking(mAuthProvider.getId())
+                    .removeEventListener(mListener);
+        }
     }
 
     @Override
@@ -258,9 +270,12 @@ public class MapDriverActivity extends AppCompatActivity
     private void disconnect() {
         Log.d(TAG, "disconnect");
         if (mFusedLocation != null) {
+            Log.d(TAG, "disconnect");
             mFusedLocation.removeLocationUpdates(mLocationCallback);
-            if (mAuthProvider.existSession())
+            if (mAuthProvider.existSession()) {
+                Log.d(TAG, "disconnect");
                 mGeofireProvider.removeLocation(mAuthProvider.getId());
+            }
         } else {
             Toast.makeText(this, "No te puedes desconectar", Toast.LENGTH_SHORT).show();
         }
@@ -296,9 +311,12 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     private void updateLocation() {
+        Log.d(TAG, "updateLocation");
         if (mIsconnect) {
             Log.d(TAG, "updateLocation");
             if (mAuthProvider.existSession() && mCurrentLatLng != null) {
+                Log.d(TAG, "updateLocation");
+                isDriverWorking();
                 mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
             }
         }
@@ -313,12 +331,15 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     private void isDriverWorking() {
+        Log.d(TAG, "isDriverWorking");
         mListener = mGeofireProvider.isDriverWorking(mAuthProvider.getId())
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.exists())
+                        if (snapshot.exists()) {
                             disconnect();
+                            Log.d(TAG, "isDriverWorking");
+                        }
                     }
 
                     @Override

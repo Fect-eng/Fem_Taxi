@@ -1,4 +1,4 @@
-package com.example.femtaxi.driver;
+package com.example.femtaxi.client;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.femtaxi.databinding.ActivityDriveCalicationBinding;
+import com.example.femtaxi.driver.MapDriverActivity;
 import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.models.ClientBooking;
 import com.example.femtaxi.models.HistoryBooking;
@@ -20,7 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Date;
 
-public class CalificationDriverActivity extends AppCompatActivity {
+public class CalificationClientActivity extends AppCompatActivity {
 
     private ActivityDriveCalicationBinding binding;
 
@@ -108,8 +109,8 @@ public class CalificationDriverActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Toast.makeText(CalificationDriverActivity.this, "Debe colocar su calificacion", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(CalificationDriverActivity.this, MapDriverActivity.class);
+                                                Toast.makeText(CalificationClientActivity.this, "Debe colocar su calificacion", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(CalificationClientActivity.this, MapDriverActivity.class);
                                                 startActivity(intent);
                                                 finish();
                                             }

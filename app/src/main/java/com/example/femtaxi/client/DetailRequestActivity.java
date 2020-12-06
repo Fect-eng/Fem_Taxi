@@ -15,7 +15,7 @@ import androidx.core.app.ActivityCompat;
 
 import com.example.femtaxi.R;
 import com.example.femtaxi.databinding.ActivityDetailRequestBinding;
-import com.example.femtaxi.helpers.Constans;
+import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.providers.GoogleApiProvider;
 import com.example.femtaxi.utils.DecodePoints;
 import com.example.femtaxi.utils.Utils;
@@ -74,8 +74,6 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         super.onCreate(savedInstanceState);
         binding = ActivityDetailRequestBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        //button
-        // btnRequestNow
         mButtonRequest = findViewById(R.id.btnRequestNow);
         mButtonRequest.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,8 +82,6 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
 
             }
         });
-        //button
-
 
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
@@ -96,22 +92,19 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
 
         mGoogleApiProvider = new GoogleApiProvider(DetailRequestActivity.this);
 
-        //instanmcias
         mTextViewOrigin = findViewById(R.id.textViewOrigin);
         mTextViewdestination = findViewById(R.id.textViewDestination);
         mTextViewTime = findViewById(R.id.textViewTime);
         mTextViewDistance = findViewById(R.id.textViewDistance);
-
         mTextViewOrigin.setText(mExtraOrigin);
         mTextViewdestination.setText(mExtraDestination);
-        //finde instancias
 
-        mExtraOriginLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LAT, 0);
-        mExtraOriginLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_ORIGIN_LONG, 0);
-        mExtraDestinoLat = getIntent().getDoubleExtra(Constans.Extras.EXTRA_DESTINO_LAT, 0);
-        mExtradestinoLng = getIntent().getDoubleExtra(Constans.Extras.EXTRA_DESTINO_LONG, 0);
-        mExtraOrigin = getIntent().getStringExtra(Constans.Extras.EXTRA_ADDRESS_ORIGIN);
-        mExtraDestination = getIntent().getStringExtra(Constans.Extras.EXTRA_ADDRESS_DESTINO);
+        mExtraOrigin = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN);
+        mExtraOriginLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_ORIGIN_LAT, 0);
+        mExtraOriginLng = getIntent().getDoubleExtra(Constants.Extras.EXTRA_ORIGIN_LONG, 0);
+        mExtraDestination = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO);
+        mExtraDestinoLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LAT, 0);
+        mExtradestinoLng = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LONG, 0);
 
         mOriginLatLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
         mDestinationLatLng = new LatLng(mExtraDestinoLat, mExtradestinoLng);
@@ -124,14 +117,14 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
 
     private void goToRequestDriver() {
         Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
-        intent.putExtra(Constans.Extras.EXTRA_ADDRESS_ORIGIN, mExtraOrigin);
-        intent.putExtra(Constans.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
-        intent.putExtra(Constans.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
-        intent.putExtra(Constans.Extras.EXTRA_ADDRESS_DESTINO, mExtraDestination);
-        intent.putExtra(Constans.Extras.EXTRA_DESTINO_LAT, mDestinationLatLng.latitude);
-        intent.putExtra(Constans.Extras.EXTRA_DESTINO_LONG, mDestinationLatLng.longitude);
+        intent.putExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN, mExtraOrigin);
+        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
+        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
+        intent.putExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO, mExtraDestination);
+        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mDestinationLatLng.latitude);
+        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mDestinationLatLng.longitude);
         startActivity(intent);
-        finish();
+        this.finish();
     }
 
     @Override
@@ -176,9 +169,9 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
                             Log.d(TAG, "drawRoute jsonArray: " + jsonArray);
                             JSONObject route = jsonArray.getJSONObject(0);
                             Log.d(TAG, "drawRoute route: " + route);
-                            JSONObject polyLines = route.getJSONObject("overview_polilyne");
+                            JSONObject polyLines = route.getJSONObject("overview_polyline");
                             Log.d(TAG, "drawRoute polyLines: " + polyLines);
-                            String points = polyLines.getString("point");
+                            String points = polyLines.getString("points");
                             Log.d(TAG, "drawRoute points: " + points);
                             mPolyLinesList = DecodePoints.decodePoly(points);
                             mPolylineOptions = new PolylineOptions();
