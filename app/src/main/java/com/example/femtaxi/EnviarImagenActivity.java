@@ -75,6 +75,10 @@ public class EnviarImagenActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Mapa Cliente");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+      /*  mToolbar = findViewById(R.id.toolbar);
+        getSupportActionBar().setTitle("Autenticación Google");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+
         mStorage = FirebaseStorage.getInstance().getReference();
         mUploadBtn = (Button) findViewById(R.id.btnnextimg);       //aca estamos
         photo = (ImageView) findViewById(R.id.iv_photo);
@@ -122,12 +126,12 @@ public class EnviarImagenActivity extends AppCompatActivity {
             }
         });
         //btnnextimg
-        mUploadBtn.setOnClickListener(new View.OnClickListener() {
+       /* mUploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 siguienteImagen();
             }
-        });
+        });*/
     }
 
     private void siguienteImagen() {

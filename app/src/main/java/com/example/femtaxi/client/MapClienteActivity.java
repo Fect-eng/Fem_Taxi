@@ -112,7 +112,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                             .title("Posición Actual")
                             .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));*/
 
-
                     nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
                                     .target(mCurrentLatLng)

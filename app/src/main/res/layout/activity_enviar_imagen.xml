@@ -17,24 +17,14 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/btnnextimg"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="40dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="40dp"
-                android:gravity="center"
-                android:text="Cliente Elegir Opcion:"
-                android:textColor="#FFFFFF"
-                android:textSize="28dp"
-                android:textStyle="bold"/>
-
+            android:layout_marginTop="30dp">
 
             <ImageView
                 android:id="@+id/iv_photo"
@@ -48,7 +38,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/iv_photo1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/policial" />
 
             <ImageView
                 android:id="@+id/iv_photo1"
@@ -63,7 +53,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_photo"
                 app:layout_constraintTop_toTopOf="@+id/iv_photo"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/penales" />
 
             <ImageView
                 android:id="@+id/iv_photo2"
@@ -77,7 +68,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/iv_photo3"
                 app:layout_constraintStart_toStartOf="@+id/iv_photo"
                 app:layout_constraintTop_toBottomOf="@+id/iv_photo"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/dniazul" />
 
             <ImageView
                 android:id="@+id/iv_photo3"
@@ -92,7 +83,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/iv_photo2"
                 app:layout_constraintTop_toTopOf="@+id/iv_photo2"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/soat" />
 
             <ImageView
                 android:id="@+id/iv_photo4"
@@ -106,7 +97,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_photo2"
-                app:srcCompat="@android:drawable/sym_def_app_icon" />
+                app:srcCompat="@drawable/ftdriver" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -119,6 +110,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="40dp"
+        android:layout_margin="40dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/colorPrimaryDark"
         android:text="Guardar Imagenes"
