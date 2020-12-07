@@ -571,16 +571,16 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
         double pricekm = (mDistanceAndMeters / 1000) * mInfo.getKm();
         double total = priceMin + pricekm;
         mClientBookingProvider.getUpdatePrice(mExtraClientId, total)
-        .addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                mClientBookingProvider.getUpdateStatus(mExtraClientId, "finish");
-                Intent intent = new Intent(MapDriveBookingActivity.this, CalificationDriverActivity.class);
-                intent.putExtra(Constants.Extras.EXTRA_CLIENT_ID, mExtraClientId);
-                intent.putExtra(Constants.Extras.EXTRA_PRICE, total);
-                startActivity(intent);
-                MapDriveBookingActivity.this.finish();
-            }
-        });
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        mClientBookingProvider.getUpdateStatus(mExtraClientId, "finish");
+                        Intent intent = new Intent(MapDriveBookingActivity.this, CalificationDriverActivity.class);
+                        intent.putExtra(Constants.Extras.EXTRA_CLIENT_ID, mExtraClientId);
+                        intent.putExtra(Constants.Extras.EXTRA_PRICE, total);
+                        startActivity(intent);
+                        MapDriveBookingActivity.this.finish();
+                    }
+                });
     }
 }

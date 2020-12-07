@@ -28,6 +28,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -65,6 +66,7 @@ public class RequestDriverActivity extends AppCompatActivity {
     private ClientBookingProvider mClientBookingProvider;
     private AuthProvider mAuthProvider;
     private GoogleApiProvider mGoogleApiProvider;
+    private ListenerRegistration mListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,12 +92,19 @@ public class RequestDriverActivity extends AppCompatActivity {
         binding.btnCancelViaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                cancelRequest();
             }
         });
         LatLng latLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
         if (latLng != null) {
             getClosestDriver(latLng);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mListener != null) mListener.remove();
     }
 
     private void getClosestDriver(LatLng LatLng) {
@@ -160,7 +169,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                             map.put("destination", mExtraDestination);
                             map.put("min", time);
                             map.put("distance", distance + " KM");
-                            FCMBody fcmBody = new FCMBody(token.getToken(), "high","4500s", map);
+                            FCMBody fcmBody = new FCMBody(token.getToken(), "high", "4500s", map);
                             Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
                             mNotificacionProvider.sendNotification(fcmBody)
                                     .enqueue(new Callback<FCMResponse>() {
@@ -187,7 +196,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                                                             time,
                                                             0
                                                     );
-                                                    mClientBookingProvider.create(clientBooking)
+                                                    mClientBookingProvider.createClentBooking(clientBooking)
                                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                                 @Override
                                                                 public void onSuccess(Void aVoid) {
@@ -221,9 +230,60 @@ public class RequestDriverActivity extends AppCompatActivity {
 
     }
 
+    private void sendNotificationCancel() {
+        Log.i(TAG, "sendNotification");
+        mTokenProvider.getTokenUser(mIdDriverFound)
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Token token = documentSnapshot.toObject(Token.class);
+                            Log.d(TAG, "sendNotification onSuccess token: " + token);
+                            Map<String, String> map = new HashMap<>();
+                            map.put("title", "VIAJE CANCELADO");
+                            map.put("body", "Un cliente cancelo la solicitud");
+                            FCMBody fcmBody = new FCMBody(token.getToken(), "high", "4500s", map);
+                            Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
+                            mNotificacionProvider.sendNotification(fcmBody)
+                                    .enqueue(new Callback<FCMResponse>() {
+                                        @Override
+                                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                                            Log.d(TAG, "sendNotification onResponse: " + response);
+                                            if (response.body() != null) {
+                                                if (response.body().getSuccess() == 1) {
+                                                    Toast.makeText(RequestDriverActivity.this, "Viaje cancelado con exito", Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(RequestDriverActivity.this, MapClienteActivity.class);
+                                                    startActivity(intent);
+                                                    RequestDriverActivity.this.finish();
+                                                } else {
+                                                    Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+                                            Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
+                                        }
+                                    });
+                        } else {
+                            Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "sendNotification onFailure: " + e.getMessage());
+                    }
+                });
+
+    }
+
     private void createClientBooking() {
         Log.i(TAG, "createClientBooking");
-        mGoogleApiProvider.getDirections(new LatLng(mExtraOriginLat, mExtraOriginLng), new LatLng(mExtraDestinoLat, mExtradestinoLng))
+        mGoogleApiProvider.getDirections(new LatLng(mExtraOriginLat, mExtraOriginLng),
+                new LatLng(mExtraDestinoLat, mExtradestinoLng))
                 .enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
@@ -259,7 +319,7 @@ public class RequestDriverActivity extends AppCompatActivity {
     }
 
     private void checkStatusClientBooking() {
-        mClientBookingProvider.getClientBooking(mAuthProvider.getId())
+        mListener = mClientBookingProvider.getClientBooking(mAuthProvider.getId())
                 .addSnapshotListener((value, error) -> {
                     if (value.exists()) {
                         ClientBooking clientBooking = value.toObject(ClientBooking.class);
@@ -274,6 +334,16 @@ public class RequestDriverActivity extends AppCompatActivity {
                             startActivity(intent);
                             this.finish();
                         }
+                    }
+                });
+    }
+
+    private void cancelRequest() {
+        mClientBookingProvider.deleteClientBooking(mAuthProvider.getId())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        sendNotificationCancel();
                     }
                 });
     }

@@ -7,40 +7,37 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class ClientBookingProvider {
 
-    CollectionReference dbFireBase;
+    CollectionReference collectionReference;
 
     public ClientBookingProvider() {
-        dbFireBase = FirebaseFirestore.getInstance()
+        collectionReference = FirebaseFirestore.getInstance()
                 .collection(Constants.Firebase.Nodo.CLIENT_BOOKING);
     }
 
     public DocumentReference getClientBooking(String idClient) {
-        return dbFireBase.document(idClient);
+        return collectionReference.document(idClient);
     }
 
     public Task<Void> getUpdateStatus(String idClient, String status) {
         Map<String, Object> newStatus = new HashMap<>();
         newStatus.put("status", status);
-        return dbFireBase.document(idClient)
+        return collectionReference.document(idClient)
                 .update(newStatus);
     }
 
     public Task<Void> getUpdatePrice(String idClient, double price) {
         Map<String, Object> newStatus = new HashMap<>();
         newStatus.put("price", price);
-        return dbFireBase.document(idClient)
+        return collectionReference.document(idClient)
                 .update(newStatus);
     }
 
-    public Task<Void> create(ClientBooking clientBooking) {
+    public Task<Void> createClentBooking(ClientBooking clientBooking) {
         Map<String, Object> mapClientBooking = new HashMap<>();
         mapClientBooking.put("idHistory", clientBooking.getIdHistory());
         mapClientBooking.put("destination", clientBooking.getDestination());
@@ -55,11 +52,16 @@ public class ClientBookingProvider {
         mapClientBooking.put("status", clientBooking.getStatus());
         mapClientBooking.put("time", clientBooking.getTime());
 
-        return dbFireBase.document(clientBooking.getIdClient())
+        return collectionReference.document(clientBooking.getIdClient())
                 .set(mapClientBooking);
     }
 
-    public void getUpdateHistoryBooking(String mExtraClientId) {
+    public Task<Void> deleteClientBooking(String clientId) {
+        return collectionReference.document(clientId)
+                .delete();
+    }
+
+    public void getUpdateHistoryBooking(String clientId) {
 
     }
 }

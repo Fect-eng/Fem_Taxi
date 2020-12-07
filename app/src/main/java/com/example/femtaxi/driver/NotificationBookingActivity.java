@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.GeofireProvider;
+import com.google.firebase.firestore.ListenerRegistration;
 
 public class NotificationBookingActivity extends AppCompatActivity {
     private ActivityNotificationBookingBinding binding;
@@ -25,6 +27,7 @@ public class NotificationBookingActivity extends AppCompatActivity {
     private String mExtraAddressDetino;
     private String mExtraMinutes;
     private String mExtraKM;
+    private ClientBookingProvider mClientBookingProvider;
     private int mCounter = 10;
     private Handler mHandler;
     Runnable runnable = new Runnable() {
@@ -39,12 +42,14 @@ public class NotificationBookingActivity extends AppCompatActivity {
             }
         }
     };
+    ListenerRegistration mListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNotificationBookingBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        mClientBookingProvider = new ClientBookingProvider();
         mExtraIdClient = getIntent().getStringExtra(Constants.Extras.EXTRA_CLIENT_ID);
         mExtraAddressOrigin = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN);
         mExtraAddressDetino = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO);
@@ -78,6 +83,7 @@ public class NotificationBookingActivity extends AppCompatActivity {
                 cancelBooking();
             }
         });
+        checkClientCancelBooking();
     }
 
     @Override
@@ -85,6 +91,8 @@ public class NotificationBookingActivity extends AppCompatActivity {
         super.onDestroy();
         if (mHandler != null)
             mHandler.removeCallbacks(runnable);
+        if (mListener != null)
+            mListener.remove();
     }
 
     private void initTimer() {
@@ -126,5 +134,17 @@ public class NotificationBookingActivity extends AppCompatActivity {
 
         startActivity(new Intent(this, MapDriverActivity.class));
         finish();
+    }
+
+    private void checkClientCancelBooking() {
+        mListener = mClientBookingProvider.getClientBooking(mExtraIdClient)
+                .addSnapshotListener((value, error) -> {
+                    if (!value.exists()) {
+                        Toast.makeText(NotificationBookingActivity.this, "El conductor no acepto el viaje", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(NotificationBookingActivity.this, MapDriverActivity.class);
+                        startActivity(intent);
+                        this.finish();
+                    }
+                });
     }
 }

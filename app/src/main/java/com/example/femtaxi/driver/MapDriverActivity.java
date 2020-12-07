@@ -149,17 +149,6 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause");
-        if (mListener != null) {
-            Log.d(TAG, "onPause");
-            mGeofireProvider.isDriverWorking(mAuthProvider.getId())
-                    .removeEventListener(mListener);
-        }
-    }
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         nMap = googleMap;
         nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);

@@ -1,6 +1,7 @@
 package com.example.femtaxi.service;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -55,14 +56,24 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
                 if (title.contains("SOLICITUD DE SERVICIO")) {
                     showNotificacionApiOreoAction(title, body, idClient);
                     showNotificationActivity(idClient, origin, destino, minutos, distance);
-                } else
+                } else if (title.contains("VIAJE CANCELADO")) {
+                    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancel(2);
                     showNotificacionApiOreo(title, body);
+                } else {
+                    showNotificacionApiOreo(title, body);
+                }
             } else {
                 if (title.contains("SOLICITUD DE SERVICIO")) {
                     showNotificationAllApiAction(title, body, idClient);
                     showNotificationActivity(idClient, origin, destino, minutos, distance);
-                } else
+                } else if (title.contains("SOLICITUD DE SERVICIO")) {
+                    NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    manager.cancel(2);
                     showNotificationAllApi(title, body);
+                } else {
+                    showNotificationAllApi(title, body);
+                }
             }
         }
     }
