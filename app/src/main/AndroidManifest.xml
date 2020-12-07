@@ -29,10 +29,27 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".EnviarImagenSegundoActivity"></activity>
+
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".client.CalificationClientActivity"/>
+
+        <activity android:name=".driver.CalificationDriverActivity"/>
+
+        <activity android:name=".EnviarImagenSegundoActivity"/>
+
         <activity android:name=".client.RequestDriverActivity" />
+
         <activity android:name=".llmadasDiariasActivity" />
+
         <activity android:name=".MapBoxPlaceActivity" />
+
         <activity
             android:name=".client.DetailRequestActivity"
             android:parentActivityName=".client.MapClienteActivity" />
@@ -43,24 +60,32 @@
             android:resource="@xml/file_paths" />
 
         <activity android:name=".imagenesCelularActivity" />
-        <activity android:name=".EnviarImagenTresActivity" />
-        <activity android:name=".EnviarImagenDosActivity" />
+
         <activity android:name=".RegisterActivity" />
+
         <activity
             android:name=".loginActivity"
             android:parentActivityName=".MainActivity" />
+
         <activity android:name=".EnviarImagenActivity" />
+
         <activity android:name=".ElegantDataActivity" />
+
         <activity android:name=".GpsDriverActivity" />
+
         <activity
             android:name=".client.MapClienteActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".client.LoginClientActivity" />
+
         <activity
             android:name=".driver.MapDriverActivity"
             android:parentActivityName=".driver.OpcionDualDriverActivity" />
+
         <activity android:name=".RegistroDriverImageActivity" />
+
         <activity android:name=".RegistroDriverSegundoActivity" />
+
         <activity
             android:name=".RegistroDriverPrimerActivity"
             android:parentActivityName=".driver.OpcionDualDriverActivity" />
@@ -73,14 +98,6 @@
         <activity android:name=".driver.MapDriveBookingActivity" />
 
         <activity android:name=".client.MapClientBookingActivity" />
-
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
