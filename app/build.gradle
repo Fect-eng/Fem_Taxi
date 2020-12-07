@@ -69,6 +69,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:21.0.0'
 
     //lottie
+
     implementation 'com.airbnb.android:lottie:3.5.0'
 
     //retrofit

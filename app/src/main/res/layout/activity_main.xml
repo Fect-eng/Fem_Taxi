@@ -50,7 +50,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_button"
-                android:text="Conductor"
+                android:text="Conductora"
                 android:backgroundTint="#E91E63"
                 android:textColor="#FFFFFF"
                 android:textSize="20dp"
