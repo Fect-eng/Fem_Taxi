@@ -2,6 +2,7 @@ package com.example.femtaxi.client;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -154,130 +155,136 @@ public class RequestDriverActivity extends AppCompatActivity {
 
     private void sendNotification(String time, String distance) {
         Log.i(TAG, "sendNotification");
-        mTokenProvider.getTokenUser(mIdDriverFound)
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            Token token = documentSnapshot.toObject(Token.class);
-                            Log.d(TAG, "sendNotification onSuccess token: " + token);
-                            Map<String, String> map = new HashMap<>();
-                            map.put("title", "SOLICITUD DE SERVICIO A " + time + " DE TU POSICION");
-                            map.put("body", "Un cliente esta solicitando un servicio a una distancia de " + distance + " KM");
-                            map.put("idClient", mAuthProvider.getId());
-                            map.put("origin", mExtraOrigin);
-                            map.put("destination", mExtraDestination);
-                            map.put("min", time);
-                            map.put("distance", distance + " KM");
-                            FCMBody fcmBody = new FCMBody(token.getToken(), "high", "4500s", map);
-                            Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
-                            mNotificacionProvider.sendNotification(fcmBody)
-                                    .enqueue(new Callback<FCMResponse>() {
-                                        @Override
-                                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                                            Log.d(TAG, "sendNotification onResponse: " + response);
-                                            if (response.body() != null) {
-                                                if (response.body().getSuccess() == 1) {
-                                                    Toast.makeText(RequestDriverActivity.this, "Notificacion enviada con exito", Toast.LENGTH_SHORT).show();
-                                                    String idHistory = new SimpleDateFormat("HHmmssddmmyyyy").format(
-                                                            Calendar.getInstance(Locale.getDefault()).getTime());
-                                                    ClientBooking clientBooking = new ClientBooking(
-                                                            idHistory,
-                                                            mExtraDestination,
-                                                            mExtraDestinoLat,
-                                                            mExtradestinoLng,
-                                                            mAuthProvider.getId(),
-                                                            mIdDriverFound,
-                                                            distance,
-                                                            mExtraOrigin,
-                                                            mExtraOriginLat,
-                                                            mExtraOriginLng,
-                                                            "create",
-                                                            time,
-                                                            0
-                                                    );
-                                                    mClientBookingProvider.createClentBooking(clientBooking)
-                                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                @Override
-                                                                public void onSuccess(Void aVoid) {
-                                                                    Toast.makeText(RequestDriverActivity.this, "Peticion creada con exito", Toast.LENGTH_SHORT).show();
-                                                                    checkStatusClientBooking();
-                                                                }
-                                                            });
+        if (!TextUtils.isEmpty(mIdDriverFound)) {
+            mTokenProvider.getTokenUser(mIdDriverFound)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                Token token = documentSnapshot.toObject(Token.class);
+                                Log.d(TAG, "sendNotification onSuccess token: " + token);
+                                Map<String, String> map = new HashMap<>();
+                                map.put("title", "SOLICITUD DE SERVICIO A " + time + " DE TU POSICION");
+                                map.put("body", "Un cliente esta solicitando un servicio a una distancia de " + distance + " KM");
+                                map.put("idClient", mAuthProvider.getId());
+                                map.put("origin", mExtraOrigin);
+                                map.put("destination", mExtraDestination);
+                                map.put("min", time);
+                                map.put("distance", distance + " KM");
+                                FCMBody fcmBody = new FCMBody(token.getToken(), "high", "4500s", map);
+                                Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
+                                mNotificacionProvider.sendNotification(fcmBody)
+                                        .enqueue(new Callback<FCMResponse>() {
+                                            @Override
+                                            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                                                Log.d(TAG, "sendNotification onResponse: " + response);
+                                                if (response.body() != null) {
+                                                    if (response.body().getSuccess() == 1) {
+                                                        Toast.makeText(RequestDriverActivity.this, "Notificacion enviada con exito", Toast.LENGTH_SHORT).show();
+                                                        String idHistory = new SimpleDateFormat("HHmmssddmmyyyy").format(
+                                                                Calendar.getInstance(Locale.getDefault()).getTime());
+                                                        ClientBooking clientBooking = new ClientBooking(
+                                                                idHistory,
+                                                                mExtraDestination,
+                                                                mExtraDestinoLat,
+                                                                mExtradestinoLng,
+                                                                mAuthProvider.getId(),
+                                                                mIdDriverFound,
+                                                                distance,
+                                                                mExtraOrigin,
+                                                                mExtraOriginLat,
+                                                                mExtraOriginLng,
+                                                                "create",
+                                                                time,
+                                                                0
+                                                        );
+                                                        mClientBookingProvider.createClentBooking(clientBooking)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void aVoid) {
+                                                                        Toast.makeText(RequestDriverActivity.this, "Peticion creada con exito", Toast.LENGTH_SHORT).show();
+                                                                        checkStatusClientBooking();
+                                                                    }
+                                                                });
 
-                                                } else {
-                                                    Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                                    } else {
+                                                        Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
                                             }
-                                        }
 
-                                        @Override
-                                        public void onFailure(Call<FCMResponse> call, Throwable t) {
-                                            Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
-                                        }
-                                    });
-                        } else {
-                            Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                                            @Override
+                                            public void onFailure(Call<FCMResponse> call, Throwable t) {
+                                                Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "sendNotification onFailure: " + e.getMessage());
-                    }
-                });
-
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "sendNotification onFailure: " + e.getMessage());
+                        }
+                    });
+        } else {
+            Toast.makeText(RequestDriverActivity.this, "El conductor no cuenta con token de notificacion", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void sendNotificationCancel() {
         Log.i(TAG, "sendNotification");
-        mTokenProvider.getTokenUser(mIdDriverFound)
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            Token token = documentSnapshot.toObject(Token.class);
-                            Log.d(TAG, "sendNotification onSuccess token: " + token);
-                            Map<String, String> map = new HashMap<>();
-                            map.put("title", "VIAJE CANCELADO");
-                            map.put("body", "Un cliente cancelo la solicitud");
-                            FCMBody fcmBody = new FCMBody(token.getToken(), "high", "4500s", map);
-                            Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
-                            mNotificacionProvider.sendNotification(fcmBody)
-                                    .enqueue(new Callback<FCMResponse>() {
-                                        @Override
-                                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                                            Log.d(TAG, "sendNotification onResponse: " + response);
-                                            if (response.body() != null) {
-                                                if (response.body().getSuccess() == 1) {
-                                                    Toast.makeText(RequestDriverActivity.this, "Viaje cancelado con exito", Toast.LENGTH_SHORT).show();
-                                                    Intent intent = new Intent(RequestDriverActivity.this, MapClienteActivity.class);
-                                                    startActivity(intent);
-                                                    RequestDriverActivity.this.finish();
-                                                } else {
-                                                    Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(mIdDriverFound)) {
+            mTokenProvider.getTokenUser(mIdDriverFound)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                Token token = documentSnapshot.toObject(Token.class);
+                                Log.d(TAG, "sendNotification onSuccess token: " + token);
+                                Map<String, String> map = new HashMap<>();
+                                map.put("title", "VIAJE CANCELADO");
+                                map.put("body", "Un cliente cancelo la solicitud");
+                                FCMBody fcmBody = new FCMBody(token.getToken(), "high", "4500s", map);
+                                Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
+                                mNotificacionProvider.sendNotification(fcmBody)
+                                        .enqueue(new Callback<FCMResponse>() {
+                                            @Override
+                                            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                                                Log.d(TAG, "sendNotification onResponse: " + response);
+                                                if (response.body() != null) {
+                                                    if (response.body().getSuccess() == 1) {
+                                                        Toast.makeText(RequestDriverActivity.this, "Viaje cancelado con exito", Toast.LENGTH_SHORT).show();
+                                                        Intent intent = new Intent(RequestDriverActivity.this, MapClienteActivity.class);
+                                                        startActivity(intent);
+                                                        RequestDriverActivity.this.finish();
+                                                    } else {
+                                                        Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                                    }
                                                 }
                                             }
-                                        }
 
-                                        @Override
-                                        public void onFailure(Call<FCMResponse> call, Throwable t) {
-                                            Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
-                                        }
-                                    });
-                        } else {
-                            Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                                            @Override
+                                            public void onFailure(Call<FCMResponse> call, Throwable t) {
+                                                Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
+                                            }
+                                        });
+                            } else {
+                                Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "sendNotification onFailure: " + e.getMessage());
-                    }
-                });
-
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "sendNotification onFailure: " + e.getMessage());
+                        }
+                    });
+        } else {
+            Toast.makeText(RequestDriverActivity.this, "El conductor no cuenta con token de notificacion", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void createClientBooking() {

@@ -10,8 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.femtaxi.databinding.ActivityCalicationClientBinding;
-import com.example.femtaxi.driver.MapDriverActivity;
-import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.models.ClientBooking;
 import com.example.femtaxi.models.HistoryBooking;
 import com.example.femtaxi.providers.AuthProvider;
@@ -29,7 +27,6 @@ public class CalificationClientActivity extends AppCompatActivity {
     private ClientBookingProvider mClientBookingProvider;
     private AuthProvider mAuthProvider;
 
-    //private String mClientId;
     private HistoryBooking mHistoryBooking;
     private HistoryBookingProvider mHistoryBookingProvider;
     private float mCalification = 0;
@@ -43,7 +40,6 @@ public class CalificationClientActivity extends AppCompatActivity {
         mAuthProvider = new AuthProvider();
 
         mClientBookingProvider = new ClientBookingProvider();
-        //mClientId = getIntent().getStringExtra(Constants.Extras.EXTRA_CLIENT_ID);
 
         getClientBooking();
 
@@ -105,7 +101,9 @@ public class CalificationClientActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-
+                                                Intent intent = new Intent(CalificationClientActivity.this, MapClienteActivity.class);
+                                                startActivity(intent);
+                                                finish();
                                             }
                                         });
                             } else {
@@ -113,8 +111,7 @@ public class CalificationClientActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Toast.makeText(CalificationClientActivity.this, "Debe colocar su calificacion", Toast.LENGTH_SHORT).show();
-                                                Intent intent = new Intent(CalificationClientActivity.this, MapDriverActivity.class);
+                                                Intent intent = new Intent(CalificationClientActivity.this, MapClienteActivity.class);
                                                 startActivity(intent);
                                                 finish();
                                             }

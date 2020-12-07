@@ -104,7 +104,9 @@ public class CalificationDriverActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-
+                                                Intent intent = new Intent(CalificationDriverActivity.this, MapDriverActivity.class);
+                                                startActivity(intent);
+                                                finish();
                                             }
                                         });
                             } else {
@@ -112,7 +114,6 @@ public class CalificationDriverActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Toast.makeText(CalificationDriverActivity.this, "Debe colocar su calificacion", Toast.LENGTH_SHORT).show();
                                                 Intent intent = new Intent(CalificationDriverActivity.this, MapDriverActivity.class);
                                                 startActivity(intent);
                                                 finish();

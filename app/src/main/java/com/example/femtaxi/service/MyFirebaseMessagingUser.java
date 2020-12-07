@@ -143,7 +143,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
         ).build();
 
         //cancelar
-        Intent cancel = new Intent(this, AcceptReceiver.class);
+        Intent cancel = new Intent(this, CancelReceiver.class);
         cancel.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
         PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this,
                 NOTIFICATION_CODE,
