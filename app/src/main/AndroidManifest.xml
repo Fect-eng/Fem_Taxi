@@ -57,9 +57,6 @@
             android:parentActivityName=".MainActivity" />
         <activity android:name=".client.LoginClientActivity" />
         <activity
-            android:name=".ClienteOptionActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity
             android:name=".driver.MapDriverActivity"
             android:parentActivityName=".driver.OpcionDualDriverActivity" />
         <activity android:name=".RegistroDriverImageActivity" />

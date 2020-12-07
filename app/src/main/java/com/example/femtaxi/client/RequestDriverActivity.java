@@ -46,7 +46,7 @@ import retrofit2.Response;
 public class RequestDriverActivity extends AppCompatActivity {
     String TAG = RequestDriverActivity.class.getSimpleName();
 
-    ActivityRequestDriverBinding binding;
+    private ActivityRequestDriverBinding binding;
 
     private GeofireProvider mGeofireProvider;
 
@@ -75,7 +75,7 @@ public class RequestDriverActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-       // binding.animation.playAnimation();
+        binding.animation.playAnimation();
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
 
         mExtraOrigin = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN);

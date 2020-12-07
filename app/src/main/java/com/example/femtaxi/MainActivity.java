@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.femtaxi.client.MapClienteActivity;
+import com.example.femtaxi.client.LoginClientActivity;
 import com.example.femtaxi.driver.OpcionDualDriverActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -35,12 +35,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void goToSelectClient() {           //cliente ClienteOptionActivity
-        Intent intent = new Intent(MainActivity.this,ClienteOptionActivity .class);
+    private void goToSelectClient() {
+        Intent intent = new Intent(MainActivity.this, LoginClientActivity.class);
         startActivity(intent);
     }
 
-    private void goToSelectAuth() {     //driver
+    private void goToSelectAuth() {
         Intent intent = new Intent(  MainActivity.this, OpcionDualDriverActivity.class);
         startActivity(intent);
     }

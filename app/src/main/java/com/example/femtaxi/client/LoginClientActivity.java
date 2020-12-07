@@ -1,16 +1,16 @@
 package com.example.femtaxi.client;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.femtaxi.R;
+import com.example.femtaxi.databinding.ActivityLoginClienteBinding;
 import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.models.Client;
 import com.example.femtaxi.providers.AuthProvider;
@@ -19,7 +19,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,29 +31,28 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginClientActivity extends AppCompatActivity {
-    Toolbar mToolbar;
+
+    private ActivityLoginClienteBinding binding;
     private GoogleSignInOptions gso;
     private GoogleSignInClient mGoogleSignInClient;
-    private SignInButton loginGoodle;
     private AuthProvider mAuthProvider;
     private ClientProvider mClientProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login_cliente);
+        binding = ActivityLoginClienteBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Autenticación Google");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         initGoogle();
         mAuthProvider = new AuthProvider();
         mClientProvider = new ClientProvider();
-        loginGoodle = findViewById(R.id.btn_login_google);
 
-        loginGoodle.setOnClickListener(new View.OnClickListener() {
+        binding.btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signInWithGoogle();
