@@ -51,6 +51,13 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
         String distance = data.get("distance");
 
         Log.d(TAG, "onMessageReceived data: " + data);
+        Log.d(TAG, "onMessageReceived title: " + title);
+        Log.d(TAG, "onMessageReceived body: " + body);
+        Log.d(TAG, "onMessageReceived idClient: " + idClient);
+        Log.d(TAG, "onMessageReceived origin: " + origin);
+        Log.d(TAG, "onMessageReceived destino: " + destino);
+        Log.d(TAG, "onMessageReceived minutos: " + minutos);
+        Log.d(TAG, "onMessageReceived distance: " + distance);
         if (title != null) {
             if (Build.VERSION.SDK_INT >= O) {
                 if (title.contains("SOLICITUD DE SERVICIO")) {
@@ -81,6 +88,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
     private void showNotificationActivity(String idClient, String origin,
                                           String destino, String minutos, String distance) {
         Log.d(TAG, "showNotificationActivity ");
+        Log.d(TAG, "onMessageReceived idClient: " + idClient);
         PowerManager pm = (PowerManager) getBaseContext().getSystemService(Context.POWER_SERVICE);
         boolean isScreenOn = pm.isScreenOn();
         if (!isScreenOn) {
@@ -120,6 +128,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
     @RequiresApi(api = O)
     private void showNotificacionApiOreoAction(String title, String body, String idClient) {
         Log.d(TAG, "showNotificacionApiOreoAction ");
+        Log.d(TAG, "onMessageReceived idClient: " + idClient);
         //Aceptar
         Intent accept = new Intent(this, AcceptReceiver.class);
         accept.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
@@ -135,7 +144,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
 
         //cancelar
         Intent cancel = new Intent(this, AcceptReceiver.class);
-        accept.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
+        cancel.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
         PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this,
                 NOTIFICATION_CODE,
                 cancel,
@@ -171,6 +180,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
     }
 
     private void showNotificationAllApiAction(String title, String body, String idClient) {
+        Log.d(TAG, "onMessageReceived idClient: " + idClient);
         Log.d(TAG, "showNotificationAllApiAction ");
         Intent accept = new Intent(this, AcceptReceiver.class);
         accept.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
@@ -186,7 +196,7 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
         ).build();
 
         Intent cancel = new Intent(this, CancelReceiver.class);
-        accept.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
+        cancel.putExtra(Constants.Extras.EXTRA_CLIENT_ID, idClient);
         PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this,
                 NOTIFICATION_CODE,
                 cancel,

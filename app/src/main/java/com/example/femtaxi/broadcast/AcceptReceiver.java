@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.femtaxi.driver.MapDriveBookingActivity;
 import com.example.femtaxi.helpers.Constants;
@@ -12,6 +13,7 @@ import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.GeofireProvider;
 
 public class AcceptReceiver extends BroadcastReceiver {
+    String TAG = AcceptReceiver.class.getSimpleName();
 
     private GeofireProvider mGeofireProvider;
     private AuthProvider mAuthProvider;
@@ -19,11 +21,11 @@ public class AcceptReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        String idClient = intent.getExtras().getString(Constants.Extras.EXTRA_CLIENT_ID);
+        Log.d(TAG, "onReceive idClient: " + idClient);
         mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_WORKING);
         mGeofireProvider.removeLocation(mAuthProvider.getId());
-
-        String idClient = intent.getExtras().getString(Constants.Extras.EXTRA_CLIENT_ID);
         mClientBookingProvider = new ClientBookingProvider();
         mClientBookingProvider.getUpdateStatus(idClient, "accept");
 
