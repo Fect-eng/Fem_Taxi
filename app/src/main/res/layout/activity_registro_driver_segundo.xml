@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:gravity="center"
-                android:text="Conductor Carro"
+                android:text="Conductora Carro"
 
                 android:layout_marginTop="150dp"
                 android:textSize="26dp"
@@ -55,7 +55,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Numero Placa"
-                        android:inputType="number"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="text|textCapCharacters"></com.google.android.material.textfield.TextInputEditText>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -83,7 +83,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Numero Carro"
-                        android:inputType="number">
+                        android:inputType="text|textCapCharacters">
                     </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -141,12 +141,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Tipo Carro"
-                        android:inputType="textCapCharacters">
+                        android:inputType="text|textCapCharacters">
                     </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"

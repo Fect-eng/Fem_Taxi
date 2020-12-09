@@ -76,7 +76,9 @@
         <activity
             android:name=".client.MapClienteActivity"
             android:parentActivityName=".MainActivity" />
-        <activity android:name=".client.LoginClientActivity" />
+
+        <activity android:name=".client.LoginClientActivity"
+            android:parentActivityName=".MainActivity"/>
 
         <activity
             android:name=".driver.MapDriverActivity"

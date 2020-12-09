@@ -44,7 +44,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
 
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Bienvenido Conductor");
+        getSupportActionBar().setTitle("Bienvenida Conductora");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuthProvider = new AuthProvider();

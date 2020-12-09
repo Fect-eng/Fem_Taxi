@@ -39,6 +39,7 @@ public class RegistroDriverSegundoActivity extends AppCompatActivity {
     FirebaseAuth auth;
     //Creamos un button ALertaDialog
     private Button AlertBtn;
+
     Button btnnextmagen; //boton siguiente imagen
     registroDriver1 mRegistroDriver1;
 
@@ -50,7 +51,7 @@ public class RegistroDriverSegundoActivity extends AppCompatActivity {
         //codigo de toolbar
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Anterior Registro");
+        getSupportActionBar().setTitle("Registro Conductora");
         //Finde de codigo de toolbar
         //===========================================================================================
 
