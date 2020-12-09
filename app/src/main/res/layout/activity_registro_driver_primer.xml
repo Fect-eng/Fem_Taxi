@@ -25,7 +25,7 @@
                 android:layout_marginTop="70dp"
                 android:gravity="center"
 
-                android:text="Registro Conductor"
+                android:text="Registro Conductora"
                 android:textColor="#020101"
                 android:textSize="26dp"
                 android:textStyle="bold" />
@@ -161,7 +161,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/textoFechaNac"
-                        android:layout_width="match_parent"
+                        android:layout_width="185dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
@@ -169,6 +169,20 @@
                         android:inputType="datetime">
 
                     </com.google.android.material.textfield.TextInputEditText>
+
+                    <Button
+                        android:id="@+id/txtfecha"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="210dp"
+                        android:layout_marginTop="-50dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/rounded_button"
+                        android:backgroundTint="@color/colorPrimary"
+                        android:text="Fecha"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16dp" />
+
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>

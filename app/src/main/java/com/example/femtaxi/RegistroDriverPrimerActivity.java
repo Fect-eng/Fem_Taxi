@@ -1,12 +1,16 @@
 package com.example.femtaxi;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -21,11 +25,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.Serializable;
+import java.util.Calendar;
 import java.util.HashMap;
 
+import static android.media.CamcorderProfile.get;
 
-public class RegistroDriverPrimerActivity extends AppCompatActivity {
 
+public class RegistroDriverPrimerActivity extends AppCompatActivity implements View.OnClickListener {
+
+    Button txtfecha;
     //toolbar declarado
     Toolbar mToolbar;
     //==================================================================================
@@ -48,18 +56,19 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity {
     Button btnnextdriver;              //boton de layout que nos dirije a otra layout
     registroDriver1 registroDriver1;
     FirebaseAuth auth;
-
+    private int dia, mes, ano, hora;     //fechas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro_driver_primer);
         mToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Formulario Conductor");
+        getSupportActionBar().setTitle("Formulario Conductora");
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //===================================================================================================================================
 
+        txtfecha = findViewById(R.id.txtfecha);   //instranciado
         //boton de alert dialog
         textoNombresCom = findViewById(R.id.textoNombresCom);                       //texto nombres completos
         textoApe = findViewById(R.id.textoApe);
@@ -108,6 +117,16 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity {
         //});
 
 //==========================================================================================================================================
+        //txtfecha.setOnClickListener(new View.OnClickListener() {
+           // @RequiresApi(api = Build.VERSION_CODES.O)
+         //   @Override
+          //  public void onClick(View v) {
+
+          //  }
+      //  });
+
+        txtfecha.setOnClickListener(this);
+
 
     }//oncreate no eliminarsh
 
@@ -217,6 +236,26 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity {
         sendFirebase.put("Telefono", registroDriver1.getCelular());
         sendFirebase.put("correo", registroDriver1.getEmail());
         return sendFirebase;
+    }
+
+  //  @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onClick(View v) {
+        if (v == txtfecha) {
+            final Calendar c  = Calendar.getInstance();
+            dia = c.get(Calendar.DAY_OF_MONTH);
+            mes = c.get(Calendar.MONTH);
+            ano = c.get(Calendar.YEAR);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    textoFechaNac.setText(dayOfMonth+"/"+(monthOfYear+1)+"/"+year);
+                }
+            }
+                    ,dia, mes, ano);
+            datePickerDialog.show();
+        }
     }
 }
 

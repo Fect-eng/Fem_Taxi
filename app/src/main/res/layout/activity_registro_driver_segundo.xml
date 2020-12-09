@@ -9,7 +9,7 @@
 
     <include layout="@layout/action_bar_toolbar" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -24,11 +24,11 @@
                 android:layout_height="30dp"
                 android:layout_marginTop="150dp"
                 android:gravity="center"
-
                 android:text="Conductor Carro"
                 android:textColor="#020101"
                 android:textSize="26dp"
                 android:textStyle="bold"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Numero Placa"
-                        android:inputType="number" />
+                        android:inputType="text|textCapCharacters" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -78,13 +78,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Numero Carro"
-                        android:inputType="number"/>
+                        android:inputType="text|textCapCharacters"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-            <!--Segundo Bloque-->
 
-            <!--DNI-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,7 +109,6 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-            <!--Fin DNI-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -135,17 +132,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Tipo Carro"
-                        android:inputType="textCapCharacters"/>
+                        android:inputType="text|textCapCharacters"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
 
                 <Button
                     android:id="@+id/btnConductorcar"
@@ -164,7 +159,8 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"

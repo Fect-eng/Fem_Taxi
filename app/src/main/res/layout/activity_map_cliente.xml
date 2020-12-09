@@ -118,7 +118,7 @@
         android:layout_marginLeft="60dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/colorPrimary"
-        android:text="SOlicitar Servicio"
+        android:text="Solicitar Servicio"
         android:textColor="#FFFFFF"
         android:textSize="19dp"
         app:layout_constraintBottom_toBottomOf="parent"

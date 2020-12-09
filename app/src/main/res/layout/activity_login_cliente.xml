@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
+    android:background="@color/overlay"
     android:fitsSystemWindows="true"
     tools:context=".client.LoginClientActivity">
 
@@ -12,43 +12,68 @@
         android:id="@+id/include_toolbar"
         layout="@layout/action_bar_toolbar" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="250dp"
-            android:layout_height="200dp"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_marginTop="150dp"
-            app:srcCompat="@drawable/logo" />
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="40dp"
-            android:gravity="center"
-            android:text="Iniciar sesión:"
-            android:textColor="#FFFFFF"
-            android:textSize="28dp"
-            android:textStyle="bold" />
+            <com.github.florent37.shapeofview.shapes.ArcView
+                android:id="@+id/container_loading"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:elevation="2dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shape_arc_cropDirection="outside"
+                app:shape_arc_height="20dp"
+                app:shape_arc_position="bottom">
 
-        <com.google.android.gms.common.SignInButton
-            android:id="@+id/btn_login_google"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="50dp"
-            android:background="@drawable/rounded_button"
-            android:gravity="center"
-            app:layout_constraintBottom_toTopOf="@+id/btn_register"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/container_body" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimary" />
 
-    </LinearLayout>
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animation_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="false"
+                    app:lottie_rawRes="@raw/googlesigin" />
 
+            </com.github.florent37.shapeofview.shapes.ArcView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="40dp"
+                android:gravity="center"
+                android:text="Iniciar sesión:"
+                android:textColor="#FFFFFF"
+                android:textSize="28dp"
+                android:textStyle="bold" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/btn_login_google"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="50dp"
+                android:background="@drawable/rounded_button"
+                android:gravity="center"
+                app:layout_constraintBottom_toTopOf="@+id/btn_register"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/container_body" />
+
+        </LinearLayout>
+
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
