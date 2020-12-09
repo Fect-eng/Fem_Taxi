@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
-    tools:context=".RegistroDriverSegundoActivity"
-    >
-    <include layout="@layout/action_bar_toolbar"/>
+    tools:context=".RegistroDriverSegundoActivity">
+
+    <include layout="@layout/action_bar_toolbar" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -21,24 +22,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:gravity="center"
-                android:text="Conductor Carro"
-
                 android:layout_marginTop="150dp"
-                android:textSize="26dp"
-                android:textColor="#020101"
-                android:textStyle="bold">
-            </TextView>
-            <!--LineARLayout es donde empieza el contenido-->
+                android:gravity="center"
 
-            <!--Otro Bloque estabamos que nos webeabamos_XD-->
-            <!--Ubicacion de Nombre y Apellidos Completos -->
+                android:text="Conductor Carro"
+                android:textColor="#020101"
+                android:textSize="26dp"
+                android:textStyle="bold"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
@@ -55,7 +51,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Numero Placa"
-                        android:inputType="number"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -63,16 +59,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/apellido"
-                    />
+                    app:srcCompat="@drawable/apellido" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -83,8 +78,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Numero Carro"
-                        android:inputType="number">
-                    </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
+                        android:inputType="number"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
             <!--Segundo Bloque-->
@@ -93,9 +88,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
@@ -112,8 +107,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Modelo Carro"
-                        android:inputType="text|textCapCharacters">
-                    </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
+                        android:inputType="text|textCapCharacters"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
             <!--Fin DNI-->
@@ -121,16 +116,15 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/domicilio"
-                    />
+                    app:srcCompat="@drawable/domicilio" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -141,20 +135,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Tipo Carro"
-                        android:inputType="textCapCharacters">
-                    </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
+                        android:inputType="textCapCharacters"/>
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
-
-
+                android:orientation="vertical">
 
 
                 <Button
@@ -164,9 +154,9 @@
                     android:layout_marginLeft="70dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="70dp"
-                    android:text="Siguiente"
                     android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Siguiente"
                     android:textColor="@color/TextoDriver"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -181,7 +171,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_margin="@dimen/content_inset"
         app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

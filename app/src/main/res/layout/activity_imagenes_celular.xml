@@ -9,27 +9,28 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/btnFotos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btnFoto"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:text="@string/btnFoto" />
+
         <TextView
             android:id="@+id/lblPermiso"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Estado del permiso"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:text="Estado del permiso" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:gravity="center"/>
-
+            android:gravity="center" />
 
     </LinearLayout>
 

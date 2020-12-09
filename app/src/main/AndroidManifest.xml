@@ -18,16 +18,18 @@
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <uses-feature
-        android:name="android.hardware.camera2"
+        android:name="android.hardware.camera"
         android:required="true" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsPictureInPicture="false"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
 
         <activity android:name=".MainActivity">
@@ -38,66 +40,129 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".client.CalificationClientActivity"/>
+        <activity android:name=".client.CalificationClientActivity" />
 
-        <activity android:name=".driver.CalificationDriverActivity"/>
+        <activity
+            android:name=".driver.ProfileDriverActivity"
+            android:parentActivityName=".driver.MapDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".EnviarImagenSegundoActivity"/>
+        <activity
+            android:name=".driver.HistoryBookingDriverActivity"
+            android:parentActivityName=".driver.MapDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".client.RequestDriverActivity" />
+        <activity
+            android:name=".driver.CalificationDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".llmadasDiariasActivity" />
+        <activity
+            android:name=".EnviarImagenSegundoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".MapBoxPlaceActivity" />
+        <activity
+            android:name=".client.RequestDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".llmadasDiariasActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".MapBoxPlaceActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".client.DetailRequestActivity"
-            android:parentActivityName=".client.MapClienteActivity" />
-        <activity android:name=".pruebasAppActivity" />
+            android:parentActivityName=".client.MapClienteActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".client.ProfileClientActivity"
+            android:parentActivityName=".client.MapClienteActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".client.HistoryBookingClientActivity"
+            android:parentActivityName=".client.MapClienteActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".pruebasAppActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
 
-        <activity android:name=".imagenesCelularActivity" />
+        <activity
+            android:name=".imagenesCelularActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".RegisterActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".loginActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".EnviarImagenActivity" />
+        <activity
+            android:name=".EnviarImagenActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".ElegantDataActivity" />
+        <activity
+            android:name=".ElegantDataActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".GpsDriverActivity" />
+        <activity
+            android:name=".GpsDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".client.MapClienteActivity"
-            android:parentActivityName=".MainActivity" />
-        <activity android:name=".client.LoginClientActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".client.LoginClientActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".driver.MapDriverActivity"
-            android:parentActivityName=".driver.OpcionDualDriverActivity" />
+            android:parentActivityName=".driver.OpcionDualDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".RegistroDriverImageActivity" />
+        <activity
+            android:name=".RegistroDriverImageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".RegistroDriverSegundoActivity" />
+        <activity
+            android:name=".RegistroDriverSegundoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".RegistroDriverPrimerActivity"
-            android:parentActivityName=".driver.OpcionDualDriverActivity" />
+            android:parentActivityName=".driver.OpcionDualDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity
             android:name=".driver.OpcionDualDriverActivity"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".driver.NotificationBookingActivity" />
+        <activity
+            android:name=".driver.NotificationBookingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".driver.MapDriveBookingActivity" />
+        <activity
+            android:name=".driver.MapDriveBookingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".client.MapClientBookingActivity" />
+        <activity
+            android:name=".client.MapClientBookingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

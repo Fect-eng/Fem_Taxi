@@ -5,6 +5,8 @@ import com.example.femtaxi.models.HistoryBooking;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -57,6 +59,19 @@ public class HistoryBookingProvider {
     public Task<DocumentSnapshot> getHistoryBooking(String idHistory) {
         return dbFireBase.collection(Constants.Firebase.Nodo.HISTORY_BOOKING)
                 .document(idHistory)
+                .get();
+    }
+
+    public Task<QuerySnapshot> getListHistoryBookingClient(String idClient) {
+        return dbFireBase.collection(Constants.Firebase.Nodo.HISTORY_BOOKING)
+                .whereEqualTo("idClient", idClient)
+                //.orderBy("idHostory", Query.Direction.ASCENDING)
+                .get();
+    }
+    public Task<QuerySnapshot> getListHistoryBookingDriver(String idDriver) {
+        return dbFireBase.collection(Constants.Firebase.Nodo.HISTORY_BOOKING)
+                .whereEqualTo("idDriver", idDriver)
+                //.orderBy("idHostory", Query.Direction.ASCENDING)
                 .get();
     }
 }

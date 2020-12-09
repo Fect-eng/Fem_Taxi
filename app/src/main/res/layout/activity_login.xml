@@ -4,20 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".loginActivity"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorPrimary"
+    tools:context=".loginActivity">
 
-    <include layout="@layout/action_bar_toolbar"></include>
-
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
             <ImageView
 
@@ -38,21 +40,21 @@
                 android:textStyle="bold">
 
             </TextView>
-            <!--LineARLayout es donde empieza el contenido-->
-            <!--Otro Bloque estabamos que nos webeabamos_XD-->
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="top"
                 android:layout_marginTop="26dp"
+                android:layout_marginBottom="26dp"
+                android:gravity="top"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -62,29 +64,27 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/overlay">
 
-                       <EditText
-                           android:id="@+id/casillaEmail"
-                           android:layout_width="match_parent"
-                           android:layout_height="wrap_content"
-                           android:textColorHint="#FFFFFF"
-                           android:hint="Ingrese Email"
-
-
-                           android:inputType="text|textEmailAddress"/>
+                        <EditText
+                            android:id="@+id/casillaEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Ingrese Email"
+                            android:inputType="text|textEmailAddress"
+                            android:textColor="@color/white" />
 
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginLeft="20dp">
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -94,15 +94,18 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:textColorHint="@color/overlay">
 
                         <EditText
                             android:id="@+id/casillaPass"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:hint="Ingrese Password"
-                            android:inputType="text|textPassword"/>
-                      </com.google.android.material.textfield.TextInputLayout>
+                            android:inputType="text|textPassword"
+                            android:textColor="@color/white" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
 
@@ -116,10 +119,7 @@
                     android:backgroundTint="#155AA3"
                     android:text="Tengo Cuenta"
                     android:textColor="@color/Colorletras"
-                    android:textSize="22dp"
-                    >
-
-                </Button>
+                    android:textSize="22dp" />
 
                 <Button
                     android:id="@+id/registrar"
@@ -132,12 +132,12 @@
                     android:enabled="true"
                     android:text="Registrarme"
                     android:textColor="@color/Colorletras"
-                    android:textSize="22dp">
-
-                </Button>
+                    android:textSize="22dp" />
 
             </LinearLayout>
+
         </LinearLayout>
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

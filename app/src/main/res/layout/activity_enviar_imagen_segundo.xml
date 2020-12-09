@@ -8,10 +8,7 @@
 
     <include
         android:id="@+id/toolbar"
-        layout="@layout/action_bar_toolbar"/>
-
-
-
+        layout="@layout/action_bar_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested"
@@ -26,7 +23,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginTop="80dp">
-
 
             <ImageView
                 android:id="@+id/iv_photo"
@@ -95,15 +91,15 @@
         android:id="@+id/btnnextimg"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_margin="30dp"
+        android:layout_marginLeft="40dp"
         android:layout_marginTop="16dp"
+        android:layout_marginRight="40dp"
+        android:background="@drawable/rounded_button"
+        android:backgroundTint="@color/colorPrimary"
         android:text="Finalizar Registro"
         android:textColor="#FFFFFF"
         android:textSize="22dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_margin="30dp"
-        android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorPrimaryDark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

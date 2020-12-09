@@ -3,13 +3,13 @@ package com.example.femtaxi.utils;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
-import android.util.Log;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
 public class Utils {
+
     public static String getStreet(Context context, double latitude, double longitude) {
         String street = "Ubicación no disponible";
         Geocoder geocoder = new Geocoder(context, Locale.getDefault());

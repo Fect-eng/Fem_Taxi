@@ -21,7 +21,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark" />
+            android:background="@color/colorPrimary" />
 
 
         <com.airbnb.lottie.LottieAnimationView
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="30dp"
         android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimary"
         android:text="CANCELAR VIAJE"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"

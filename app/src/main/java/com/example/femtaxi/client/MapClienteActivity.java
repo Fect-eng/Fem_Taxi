@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -221,8 +220,16 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_logout) {
-            logout();
+        switch (item.getItemId()) {
+            case R.id.menu_exit:
+                logout();
+                break;
+            case R.id.menu_edit_profile:
+                moveToEditProfile();
+                break;
+            case R.id.menu_history_booking:
+                moveToHistoryBooking();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -428,8 +435,19 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         finish();
     }
 
-    void generateToken() {
+    private void generateToken() {
         if (mAuthProvider.existSession())
             mTokenProvider.createdToken(mAuthProvider.getId());
     }
+
+    private void moveToEditProfile() {
+        Intent intent = new Intent(MapClienteActivity.this, ProfileClientActivity.class);
+        startActivity(intent);
+    }
+
+    private void moveToHistoryBooking() {
+        Intent intent = new Intent(MapClienteActivity.this, HistoryBookingClientActivity.class);
+        startActivity(intent);
+    }
+
 }

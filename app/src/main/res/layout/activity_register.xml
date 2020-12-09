@@ -6,11 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
-    <include layout="@layout/action_bar_toolbar"/>
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/action_bar_toolbar" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include_toolbar">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -20,31 +27,25 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
+                android:layout_marginTop="@dimen/content_inset"
                 android:gravity="center"
                 android:text="Registro Conductor v2"
-
-                android:layout_marginTop="70dp"
-                android:textSize="26dp"
                 android:textColor="#020101"
-                android:textStyle="bold">
-            </TextView>
-            <!--LineARLayout es donde empieza el contenido-->
+                android:textSize="26dp"
+                android:textStyle="bold" />
 
-            <!--Otro Bloque estabamos que nos webeabamos_XD-->
-            <!--Ubicacion de Nombre y Apellidos Completos -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/femenino"
-                    />
+                    app:srcCompat="@drawable/femenino" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -55,25 +56,23 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Nombres Completos"
-                        android:inputType="text"
-                        >
-                    </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
+                        android:inputType="text" />
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="50dp"
                     android:layout_marginTop="8dp"
-                    app:srcCompat="@drawable/apellido"
-                    />
+                    app:srcCompat="@drawable/apellido" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
@@ -84,19 +83,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Correo Electronico"
-                        android:inputType="textEmailAddress">
-                    </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-            <!--Segundo Bloque-->
 
-            <!--DNI-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginLeft="20dp">
+                android:orientation="horizontal">
 
                 <ImageView
                     android:layout_width="40dp"
@@ -113,17 +110,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Contraseña"
-                        android:inputType="textPassword">
-                    </com.google.android.material.textfield.TextInputEditText></com.google.android.material.textfield.TextInputLayout>
+                        android:inputType="textPassword" />
+
+                </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
-            <!--Fin DNI-->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/btnRegister"
@@ -132,9 +128,9 @@
                     android:layout_marginLeft="70dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="70dp"
-                    android:text="Registrarme"
                     android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Registrarme"
                     android:textColor="@color/TextoDriver"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -147,9 +143,9 @@
                     android:layout_marginLeft="70dp"
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="70dp"
-                    android:text="Siguiente"
                     android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Siguiente"
                     android:textColor="@color/TextoDriver"
                     android:textSize="20dp"
                     android:textStyle="bold" />
@@ -157,7 +153,8 @@
             </LinearLayout>
 
         </LinearLayout>
-    </ScrollView>
+
+    </androidx.core.widget.NestedScrollView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

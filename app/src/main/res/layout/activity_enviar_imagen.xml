@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".EnviarImagenActivity">
 
-
     <include
         android:id="@+id/toolbar"
         layout="@layout/action_bar_toolbar"/>
@@ -112,7 +111,7 @@
         android:layout_marginRight="40dp"
         android:layout_margin="40dp"
         android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimary"
         android:text="Guardar Imagenes"
         android:textColor="#FFFFFF"
         android:textSize="22dp"

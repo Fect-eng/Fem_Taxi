@@ -12,6 +12,8 @@ public class Constants {
             public static final String HISTORY_BOOKING = "historyBooking";
             public static final String TOKEN = "tokens";
             public static final String INFO = "info";
+            public static final String IMAGE_CLIENT = "image_client";
+            public static final String IMAGE_DRIVER = "image_driver";
         }
 
         public class Client {
@@ -20,6 +22,16 @@ public class Constants {
             public static final String EMAIL = "email";
             public static final String PHOTO = "photo";
         }
+    }
+
+    public class PERMISSION {
+        public static final int PICK_IMAGE_REQUEST = 1000;
+        public static final int PICK_CAMERA_REQUEST = 2000;
+    }
+
+    public class REQUEST {
+        public static final int REQUEST_CODE_GALLERY = 100;
+        public static final int REQUEST_CODE_CAMERA = 200;
     }
 
     public class Extras {

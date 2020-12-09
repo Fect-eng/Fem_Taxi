@@ -27,7 +27,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.femtaxi.databinding.ActivityMapClienteBinding;
 import com.example.femtaxi.driver.OpcionDualDriverActivity;
 import com.example.femtaxi.models.registroDriver1;
+import com.example.femtaxi.utils.FileUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.util.FileUtil;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -135,7 +137,7 @@ public class EnviarImagenActivity extends AppCompatActivity {
     }
 
     private void siguienteImagen() {
-        Intent intent = new Intent(  EnviarImagenActivity.this, EnviarImagenSegundoActivity.class);
+        Intent intent = new Intent(EnviarImagenActivity.this, EnviarImagenSegundoActivity.class);
         startActivity(intent);
     }
 
@@ -158,7 +160,7 @@ public class EnviarImagenActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permsissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                pickImageCamera(GALLERY_INTENT_GLOBAL);
+                FileUtils.pickImageCamera(this, GALLERY_INTENT_GLOBAL);
             else
                 verifiedPermision(GALLERY_INTENT_GLOBAL);
         }
@@ -205,12 +207,12 @@ public class EnviarImagenActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             boolean granted = hasPermissions(mPermission);
             if (granted) {
-                tmpUri = pickImageCamera(GALLERY_INTENT_GLOBAL);
+                tmpUri = FileUtils.pickImageCamera(this, GALLERY_INTENT_GLOBAL);
             } else {
                 ActivityCompat.requestPermissions(this, mPermission, PERMISSION_CAMERA);
             }
         } else {
-            tmpUri = pickImageCamera(GALLERY_INTENT_GLOBAL);
+            tmpUri = FileUtils.pickImageCamera(this, GALLERY_INTENT_GLOBAL);
         }
     }
 
@@ -230,52 +232,6 @@ public class EnviarImagenActivity extends AppCompatActivity {
             return ActivityCompat.checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED;
         }
         return true;
-    }
-
-    public Uri pickImageCamera(final int requestCode) {
-        Intent intent = new Intent();
-        intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
-                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
-        Uri uriTemp = getMediaTempUri("IMG", "jpg");
-
-        try {
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uriTemp);
-            intent.putExtra("return-data", true);
-            try {
-                startActivityForResult(intent, requestCode);
-            } catch (ActivityNotFoundException e) {
-                startActivityForResult(Intent.createChooser(intent, null),
-                        requestCode);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return uriTemp;
-    }
-
-    public Uri getMediaTempUri(String prefix, String extension) {
-        Uri uriTemp;
-        String timeStamp = new SimpleDateFormat("HHmmssdMMyyyy").format(Calendar.getInstance(Locale.getDefault()).getTime());
-        String name = String.format("%s_%s.%s",
-                prefix, timeStamp.replace(" ", "-"), extension);
-        File fileTemp = new File(getAppMediaProfileFolder(), name);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            uriTemp = FileProvider.getUriForFile(this,
-                    BuildConfig.APPLICATION_ID, fileTemp);
-        } else {
-            uriTemp = Uri.fromFile(fileTemp);
-        }
-        return uriTemp;
-    }
-
-    public static File getAppMediaProfileFolder() {
-        File folder = new File(Environment.getExternalStorageDirectory() + File.separator
-                + "TaxiFem/" + "Camera");
-        folder.mkdirs();
-        return folder;
     }
 }
 

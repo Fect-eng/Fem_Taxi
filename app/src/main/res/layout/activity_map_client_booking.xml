@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".driver.MapDriverActivity">
+    android:background="@color/colorPrimary"
+    tools:context=".client.MapClientBookingActivity">
 
     <include
         android:id="@+id/include_toolbar"
@@ -30,35 +31,57 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        app:layout_constraintBottom_toTopOf="@+id/cv_info_client"
+        android:layout_marginBottom="110dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/include_toolbar" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_info_client"
+    <com.github.florent37.shapeofview.shapes.BubbleView
+        android:id="@+id/container_info_client"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
+        android:layout_height="130dp"
+        android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:shape_bubble_arrowHeight="15dp"
+        app:shape_bubble_arrowPosition="top"
+        app:shape_bubble_arrowWidth="15dp"
+        app:shape_bubble_borderRadius="20dp">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/content_inset"
             android:orientation="vertical">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/img_user"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_location"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/content_inset_half_card"
+                android:clickable="true"
+                android:contentDescription="Avatar"
+                android:focusable="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_login_user"
+                app:civ_circle_background_color="@color/overlay"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_login_user"
+                tools:ignore="ContentDescription,HardcodedText,VectorDrawableCompat" />
+
 
             <TextView
                 android:id="@+id/txt_name_user"
@@ -103,6 +126,7 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.github.florent37.shapeofview.shapes.BubbleView>
+    >
 
 </androidx.constraintlayout.widget.ConstraintLayout>

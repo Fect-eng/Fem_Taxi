@@ -14,10 +14,8 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"/>
 
-    </fragment>
-    <!-- boton asignado para conexion en booleano -->
     <Button
         android:id="@+id/btnConnect"
         android:layout_width="match_parent"
@@ -26,7 +24,7 @@
         android:layout_margin="30dp"
         android:layout_marginLeft="50dp"
         android:background="@drawable/rounded_button"
-        android:backgroundTint="@color/colorPrimaryDark"
+        android:backgroundTint="@color/colorPrimary"
         android:text="CONECTARSE"
         android:textColor="#FFFFFF"
         android:textSize="25dp" />

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -25,10 +26,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.femtaxi.R;
 import com.example.femtaxi.client.RequestDriverActivity;
 import com.example.femtaxi.databinding.ActivityMapDriverBookingBinding;
 import com.example.femtaxi.helpers.Constants;
+import com.example.femtaxi.models.Client;
 import com.example.femtaxi.models.ClientBooking;
 import com.example.femtaxi.models.FCMBody;
 import com.example.femtaxi.models.FCMResponse;
@@ -391,9 +395,16 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            User user = documentSnapshot.toObject(User.class);
-                            binding.txtNameUser.setText(user.getName());
-                            binding.txtEmailUser.setText(user.getEmail());
+                            Client client = documentSnapshot.toObject(Client.class);
+                            Drawable placeholder = getResources().getDrawable(R.drawable.ic_login_user);
+                            Glide.with(MapDriveBookingActivity.this)
+                                    .load(client.getPhoto())
+                                    .placeholder(placeholder)
+                                    .error(placeholder)
+                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                    .into(binding.imgUser);
+                            binding.txtNameUser.setText(client.getName());
+                            binding.txtEmailUser.setText(client.getEmail());
                         }
                     }
                 });

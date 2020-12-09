@@ -1,6 +1,6 @@
 package com.example.femtaxi.models;
 
-public class Client {
+public class Driver {
     String UId;
     String name;
     String email;

@@ -1,20 +1,46 @@
 package com.example.femtaxi.providers;
 
+import com.example.femtaxi.helpers.Constants;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import java.util.Map;
 
 public class DriverProvider {
+    FirebaseFirestore firebaseFirestore;
 
-    DatabaseReference mDatabase;
+    public DocumentReference getClientId(String clienId) {
+        return firebaseFirestore.collection(Constants.Firebase.Nodo.DRIVER)
+                .document(clienId);
+    }
 
     public DriverProvider() {
-        mDatabase = FirebaseDatabase.getInstance().getReference().child("Users").child("Clients");
+        firebaseFirestore = FirebaseFirestore.getInstance();
+    }
 
+    public Task<DocumentSnapshot> getDataUser(FirebaseUser firebaseUser) {
+        return firebaseFirestore.collection(Constants.Firebase.Nodo.DRIVER)
+                .document(firebaseUser.getUid())
+                .get();
+    }
+
+    public DocumentReference getDataUser(String UId) {
+        return firebaseFirestore.collection(Constants.Firebase.Nodo.DRIVER)
+                .document(UId);
+    }
+
+    public Task<Void> setDataUser(String UId, Map<String, Object> user) {
+        return firebaseFirestore.collection(Constants.Firebase.Nodo.DRIVER)
+                .document(UId)
+                .set(user);
+    }
+
+    public Task<Void> getUpdateDataUser(String UId, Map<String, Object> dataUser) {
+        return firebaseFirestore.collection(Constants.Firebase.Nodo.DRIVER)
+                .document(UId)
+                .update(dataUser);
     }
 }
-
-  /*  public Task<Void> create(Driver driver){
-       // return mDatabase.child(driver.getId()).setValue(driver);
-
-}*/

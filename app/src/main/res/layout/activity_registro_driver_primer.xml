@@ -28,11 +28,8 @@
                 android:text="Registro Conductor"
                 android:textColor="#020101"
                 android:textSize="26dp"
-                android:textStyle="bold"></TextView>
-            <!--LineARLayout es donde empieza el contenido-->
+                android:textStyle="bold" />
 
-            <!--Otro Bloque estabamos que nos webeabamos_XD-->
-            <!--Ubicacion de Nombre y Apellidos Completos -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -55,7 +52,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Nombres Completos"
-                        android:inputType="text|textCapCharacters"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="text|textCapCharacters" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -82,7 +79,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Apellido Completo"
-                        android:inputType="text|textCapCharacters"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="text|textCapCharacters" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -111,7 +108,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="DNI Nacional / Extranjero"
-                        android:inputType="number"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -139,7 +136,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Domicilio Actual"
-                        android:inputType="textCapCharacters"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="textCapCharacters" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -198,7 +195,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Número Telefonico"
-                        android:inputType="number"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -225,7 +222,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Correo Electronico"
-                        android:inputType="textEmailAddress"></com.google.android.material.textfield.TextInputEditText>
+                        android:inputType="textEmailAddress" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -243,7 +240,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_marginRight="70dp"
                     android:background="@drawable/rounded_button"
-                    android:backgroundTint="@color/colorPrimaryDark"
+                    android:backgroundTint="@color/colorPrimary"
                     android:text="Siguiente"
                     android:textColor="@color/TextoDriver"
                     android:textSize="20dp"

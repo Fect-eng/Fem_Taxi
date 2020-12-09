@@ -7,15 +7,15 @@
     tools:context=".pruebasAppActivity">
 
     <EditText
+        android:id="@+id/edi_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/edi_text"
-        android:hint="Ingresa dato"
-        android:padding="16dp"
-        android:drawablePadding="16dp"
+        android:background="@android:drawable/editbox_background"
         android:drawableLeft="@drawable/ic_location"
+        android:drawablePadding="16dp"
         android:gravity="center_vertical"
-        android:background="@android:drawable/editbox_background"/>
+        android:hint="Ingresa dato"
+        android:padding="16dp" />
 
     <TextView
         android:id="@+id/text_view2"
@@ -38,8 +38,7 @@
         android:fontFamily="monospace"
         android:padding="12dp"
         android:textSize="24sp"
-        android:textStyle="bold"
-        >
+        android:textStyle="bold">
 
     </TextView>
 

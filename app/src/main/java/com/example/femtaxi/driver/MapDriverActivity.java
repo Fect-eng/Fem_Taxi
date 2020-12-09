@@ -26,7 +26,11 @@ import androidx.core.content.ContextCompat;
 
 import com.example.femtaxi.MainActivity;
 import com.example.femtaxi.R;
+import com.example.femtaxi.client.HistoryBookingClientActivity;
+import com.example.femtaxi.client.MapClienteActivity;
+import com.example.femtaxi.client.ProfileClientActivity;
 import com.example.femtaxi.databinding.ActivityMapDriverBinding;
+import com.example.femtaxi.driver.adapter.HistoryBookingDriverAdapter;
 import com.example.femtaxi.helpers.Constants;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.ClientBookingProvider;
@@ -171,8 +175,16 @@ public class MapDriverActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_logout) {
-            logout();
+        switch (item.getItemId()) {
+            case R.id.menu_history_booking:
+                moveToHistoryBooking();
+                break;
+            case R.id.menu_exit:
+                logout();
+                break;
+            case R.id.menu_edit_profile:
+                moveToEditProfile();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -213,7 +225,7 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     private void checkLocationPermissions() {
-        if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(MapDriverActivity.this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -340,5 +352,15 @@ public class MapDriverActivity extends AppCompatActivity
 
     private void generatedToken() {
         mTokenProvider.createdToken(mAuthProvider.getId());
+    }
+
+    private void moveToEditProfile() {
+        Intent intent = new Intent(MapDriverActivity.this, ProfileDriverActivity.class);
+        startActivity(intent);
+    }
+
+    private void moveToHistoryBooking() {
+        Intent intent = new Intent(MapDriverActivity.this, HistoryBookingDriverActivity.class);
+        startActivity(intent);
     }
 }

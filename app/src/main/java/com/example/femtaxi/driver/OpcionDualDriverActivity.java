@@ -25,7 +25,6 @@ import com.google.firebase.auth.AuthResult;
 public class OpcionDualDriverActivity extends AppCompatActivity {
     String TAG = OpcionDualDriverActivity.class.getSimpleName();
     Button mButtonDialog;
-    Toolbar mToolbar;
     EditText txtUsuario, txtPassword;
     Button btnlogearDriver;
     Button botonDualRegistro;
@@ -34,22 +33,16 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     private AuthProvider mAuthProvider;
 
     Button mButonLogin;
-        //pruebas exitosas
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opcion_dual_driver);
-        mButonLogin = findViewById(R.id.btnlogearDriver);    //para 2 funciones
-        mButtonDialog = findViewById(R.id.botonDualRegistro); //alertdialog
+        mButonLogin = findViewById(R.id.btnlogearDriver);
+        mButtonDialog = findViewById(R.id.botonDualRegistro);
 
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle("Bienvenido Conductor");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mAuthProvider = new AuthProvider();
 
-       // botonDualRegistro = findViewById(R.id.botonDualRegistro);
         mButtonDialog = (Button) findViewById(R.id.botonDualRegistro);
         mButtonDialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,12 +61,6 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
                                 });
                             }
                         });
-                // .setNegativeButton("no", new DialogInterface.OnClickListener() {
-                //   @Override
-                // public void onClick(DialogInterface dialog, int which) {
-                //   dialog.cancel();
-                // }
-                //});
                 AlertDialog titulo = alerta.create();
                 titulo.setTitle("Compromiso Conductor");
                 titulo.show();

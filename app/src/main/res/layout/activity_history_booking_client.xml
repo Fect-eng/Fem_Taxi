@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".driver.MapDriverActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/btn_back_presset"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        android:elevation="5dp"
+        android:src="@drawable/ic_arrow_back"
+        app:civ_circle_background_color="@color/ColorDriverBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txt_status_booking"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/content_inset"
+        android:text="Historial de viajes"
+        android:textColor="@color/colorPrimary"
+        android:textSize="@dimen/static_header_text_size"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_back_presset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/btn_back_presset"
+        app:layout_constraintTop_toTopOf="@+id/btn_back_presset" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_back_presset"
+        tools:itemCount="6"
+        tools:listitem="@layout/raw_history_booking_client" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

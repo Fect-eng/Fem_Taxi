@@ -138,7 +138,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                             mRadius = mRadius + 0.1f;
                             if (mRadius > 5) {
                                 binding.textViewLookingFor.setText("NO SE ENCONTRO UN CONDUCTOR");
-                                Toast.makeText(RequestDriverActivity.this, "NO SE ENCONTRO UN CONDUCTOR", Toast.LENGTH_SHORT).show();
+                                moveToMapClient("No se encontro choferes disponibles");
                                 return;
                             } else {
                                 getClosestDriver(LatLng);
@@ -256,10 +256,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                                                 Log.d(TAG, "sendNotification onResponse: " + response);
                                                 if (response.body() != null) {
                                                     if (response.body().getSuccess() == 1) {
-                                                        Toast.makeText(RequestDriverActivity.this, "Viaje cancelado con exito", Toast.LENGTH_SHORT).show();
-                                                        Intent intent = new Intent(RequestDriverActivity.this, MapClienteActivity.class);
-                                                        startActivity(intent);
-                                                        RequestDriverActivity.this.finish();
+                                                        moveToMapClient("Viaje cancelado con exito");
                                                     } else {
                                                         Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
                                                     }
@@ -283,8 +280,15 @@ public class RequestDriverActivity extends AppCompatActivity {
                         }
                     });
         } else {
-            Toast.makeText(RequestDriverActivity.this, "El conductor no cuenta con token de notificacion", Toast.LENGTH_SHORT).show();
+            moveToMapClient("Viaje cancelado");
         }
+    }
+
+    private void moveToMapClient(String s) {
+        Toast.makeText(RequestDriverActivity.this, s, Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(RequestDriverActivity.this, MapClienteActivity.class);
+        startActivity(intent);
+        RequestDriverActivity.this.finish();
     }
 
     private void createClientBooking() {
@@ -336,10 +340,7 @@ public class RequestDriverActivity extends AppCompatActivity {
                             startActivity(intent);
                             this.finish();
                         } else if (clientBooking.getStatus().equals("cancel")) {
-                            Toast.makeText(RequestDriverActivity.this, "El conductor no acepto el viaje", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(RequestDriverActivity.this, MapClienteActivity.class);
-                            startActivity(intent);
-                            this.finish();
+                            moveToMapClient("El conductor no acepto el viaje");
                         }
                     }
                 });
