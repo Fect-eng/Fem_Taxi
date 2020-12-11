@@ -33,12 +33,14 @@ import com.example.femtaxi.R;
 
 import com.example.femtaxi.databinding.ActivityMapClienteBinding;
 import com.example.femtaxi.helpers.Constants;
+import com.example.femtaxi.helpers.PreferencesManager;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.GeofireProvider;
 import com.example.femtaxi.providers.TokenProvider;
 import com.example.femtaxi.utils.Utils;
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -53,7 +55,14 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.RectangularBounds;
+import com.google.android.libraries.places.api.net.PlacesClient;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.firebase.database.DatabaseError;
+import com.google.maps.android.SphericalUtil;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
@@ -61,6 +70,7 @@ import com.mapbox.mapboxsdk.plugins.places.autocomplete.PlaceAutocomplete;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.model.PlaceOptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MapClienteActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -69,10 +79,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     private ActivityMapClienteBinding binding;
 
-    private static final int REQUEST_CODE_AUTOCOMPLETE_ORIGIN = 100;
-    private static final int REQUEST_CODE_AUTOCOMPLETE_DESTINO = 200;
     private AuthProvider mAuthProvider;
-    private LatLng mCurrentLatLng;
     private GoogleMap nMap;
     private SupportMapFragment nMapFragment;
     private LocationRequest mLocationRequest;
@@ -89,7 +96,11 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private String mDestination;
     private LatLng mDestinationLatLng;
     private GoogleMap.OnCameraIdleListener mCameraListener;
-    private TokenProvider mTokenProvider;     //acceso al token
+    private TokenProvider mTokenProvider;
+    private PlacesClient mPlacesClient;
+    private AutocompleteSupportFragment autocompleteOrigin;
+    private AutocompleteSupportFragment autocompleteDestino;
+
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -98,16 +109,17 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 Log.d(TAG, "mLocationCallback location: " + location);
                 if (getApplicationContext() != null) {
                     Log.d(TAG, "mLocationCallback getApplicationContext!=null: ");
-                    mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                    mOriginLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
-                                    .target(mCurrentLatLng)
+                                    .target(mOriginLatLng)
                                     .zoom(16f)
                                     .build()));
                     Log.d(TAG, "mLocationCallback getLatitude: " + location.getLatitude() + ", getLongitude: " + location.getLongitude());
                     if (mISFirstTime) {
                         mISFirstTime = false;
                         getActiveDrivers();
+                        limitSearch();
                     }
                 }
             }
@@ -128,42 +140,11 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
-        Mapbox.getInstance(this, getResources().getString(R.string.access_token));
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkLocationPermissions();
 
         generateToken();
-
-        binding.cardOrigin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new PlaceAutocomplete.IntentBuilder()
-                        .accessToken(Mapbox.getAccessToken() != null ? Mapbox.getAccessToken() : getString(R.string.access_token))
-                        .placeOptions(PlaceOptions.builder()
-                                .backgroundColor(Color.parseColor("#EEEEEE"))
-                                .limit(10)
-                                .country("PE")
-                                .build(PlaceOptions.MODE_CARDS))
-                        .build(MapClienteActivity.this);
-                startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE_ORIGIN);
-            }
-        });
-
-        binding.cardDestino.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new PlaceAutocomplete.IntentBuilder()
-                        .accessToken(Mapbox.getAccessToken() != null ? Mapbox.getAccessToken() : getString(R.string.access_token))
-                        .placeOptions(PlaceOptions.builder()
-                                .backgroundColor(Color.parseColor("#EEEEEE"))
-                                .limit(10)
-                                .country("PE")
-                                .build(PlaceOptions.MODE_CARDS))
-                        .build(MapClienteActivity.this);
-                startActivityForResult(intent, REQUEST_CODE_AUTOCOMPLETE_DESTINO);
-            }
-        });
 
         binding.btnRequestDrive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,22 +153,14 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
 
-        mCameraListener = new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                try {
-                    Geocoder geocoder = new Geocoder(MapClienteActivity.this);
-                    mOriginLatLng = nMap.getCameraPosition().target;
-                    mOrigin = Utils.getStreet(MapClienteActivity.this,
-                            mOriginLatLng.latitude,
-                            mOriginLatLng.longitude);
-                    binding.txtOrigin.setText(mOrigin);
-                    binding.txtDestino.setText((mDestination));
-                } catch (Exception e) {
-                    Log.d(TAG, "error: " + e.getMessage());
-                }
-            }
-        };
+        if (!Places.isInitialized())
+            Places.initialize(this, getResources().getString(R.string.google_api_key));
+
+        mPlacesClient = Places.createClient(this);
+
+        instanceAutoCompleteOrigin();
+        instanceAutoCompleteDestino();
+        instanceCameraListener();
     }
 
     @Override
@@ -256,6 +229,62 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 
+    private void instanceCameraListener() {
+        mCameraListener = new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                try {
+                    mOriginLatLng = nMap.getCameraPosition().target;
+                    mOrigin = Utils.getStreet(MapClienteActivity.this,
+                            mOriginLatLng.latitude,
+                            mOriginLatLng.longitude);
+                    autocompleteOrigin.setText(mOrigin);
+                } catch (Exception e) {
+                    Log.d(TAG, "error: " + e.getMessage());
+                }
+            }
+        };
+    }
+
+    private void instanceAutoCompleteDestino() {
+        autocompleteDestino = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.txt_destino);
+        autocompleteDestino.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        autocompleteDestino.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                mDestination = place.getName();
+                mDestinationLatLng = place.getLatLng();
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+
+            }
+        });
+    }
+
+    private void instanceAutoCompleteOrigin() {
+        autocompleteOrigin = (AutocompleteSupportFragment) getSupportFragmentManager().findFragmentById(R.id.txt_origin);
+        autocompleteOrigin.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.LAT_LNG, Place.Field.NAME));
+        autocompleteOrigin.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(@NonNull Place place) {
+                mOrigin = place.getName();
+                mOriginLatLng = place.getLatLng();
+                nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
+                        new CameraPosition.Builder()
+                                .target(mOriginLatLng)
+                                .zoom(16f)
+                                .build()));
+            }
+
+            @Override
+            public void onError(@NonNull Status status) {
+
+            }
+        });
+    }
+
     private void requestDriver() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
             Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
@@ -272,7 +301,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void getActiveDrivers() {
-        mGeofireProvider.getActiveDrivers(mCurrentLatLng, 10)
+        mGeofireProvider.getActiveDrivers(mOriginLatLng, 10)
                 .addGeoQueryEventListener(new GeoQueryEventListener() {
                     @Override
                     public void onKeyEntered(String key, GeoLocation location) {
@@ -339,27 +368,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             nMap.setMyLocationEnabled(true);
         } else if (requestCode == SETTINGS_REQUEST_CODE && !gpsActived()) {
             showAlertDialogNoGPS();
-        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE_ORIGIN) {
-            CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
-            mOriginLatLng = new LatLng(((Point) selectedCarmenFeature.geometry()).latitude(),
-                    ((Point) selectedCarmenFeature.geometry()).longitude());
-            mOrigin = Utils.getStreet(this,
-                    ((Point) selectedCarmenFeature.geometry()).latitude(),
-                    ((Point) selectedCarmenFeature.geometry()).longitude());
-            Log.d(TAG, "mOriginLatLng: " + mOriginLatLng);
-            Log.d(TAG, "mOrigin: " + mOrigin);
-            binding.txtOrigin.setText(mOrigin);
-
-        } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_AUTOCOMPLETE_DESTINO) {
-            CarmenFeature selectedCarmenFeature = PlaceAutocomplete.getPlace(data);
-            mDestinationLatLng = new LatLng(((Point) selectedCarmenFeature.geometry()).latitude(),
-                    ((Point) selectedCarmenFeature.geometry()).longitude());
-            mDestination = Utils.getStreet(this,
-                    ((Point) selectedCarmenFeature.geometry()).latitude(),
-                    ((Point) selectedCarmenFeature.geometry()).longitude());
-            Log.d(TAG, "mDestinationLatLng: " + mDestinationLatLng);
-            Log.d(TAG, "mDestination: " + mOrigin);
-            binding.txtDestino.setText(mDestination);
         }
     }
 
@@ -430,9 +438,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void logout() {
+        new PreferencesManager(this).setIsClient(false);
         Intent intent = new Intent(MapClienteActivity.this, MainActivity.class);
         startActivity(intent);
-        finish();
+        MapClienteActivity.this.finish();
     }
 
     private void generateToken() {
@@ -450,4 +459,12 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         startActivity(intent);
     }
 
+    private void limitSearch() {
+        LatLng northSide = SphericalUtil.computeOffset(mOriginLatLng, 10000, 0);
+        LatLng southSide = SphericalUtil.computeOffset(mOriginLatLng, 10000, 180);
+        autocompleteOrigin.setCountry("PE");
+        autocompleteOrigin.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
+        autocompleteDestino.setCountry("PE");
+        autocompleteDestino.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
+    }
 }

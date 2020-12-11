@@ -34,6 +34,12 @@ public class Constants {
         public static final int REQUEST_CODE_CAMERA = 200;
     }
 
+    public class Preferences {
+        public static final String SHARED_PREF_NAME = "SHARED_PREF_NAME";
+        public static final String PREF_IS_CLIENT = "PREF_IS_CLIENT";
+        public static final String PREF_IS_DRIVER = "PREF_IS_DRIVER";
+    }
+
     public class Extras {
         public static final String EXTRA_CLIENT_ID = "EXTRA_CLIENT_ID";
         public static final String EXTRA_MINUT = "EXTRA_MINUT";
@@ -45,5 +51,6 @@ public class Constants {
         public static final String EXTRA_DESTINO_LAT = "EXTRA_DESTINO_LAT";
         public static final String EXTRA_DESTINO_LONG = "EXTRA_DESTINO_LONG";
         public static final String EXTRA_PRICE = "EXTRA_PRICE";
+        public static final String EXTRA_IS_CONNECTED = "EXTRA_IS_CONNECTED";
     }
 }

@@ -12,10 +12,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.example.femtaxi.R;
 import com.example.femtaxi.RegistroDriverPrimerActivity;
+import com.example.femtaxi.helpers.Constants;
+import com.example.femtaxi.helpers.PreferencesManager;
 import com.example.femtaxi.providers.AuthProvider;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,6 +34,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     private AuthProvider mAuthProvider;
 
     Button mButonLogin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,21 +99,9 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
                 }
             }
         });
-
         botonDualRegistro = findViewById(R.id.botonDualRegistro);
-      //  botonDualRegistro.setOnClickListener(new View.OnClickListener() {
-        //    @Override
-          //  public void onClick(View view) {
-            //    goToSelectAuth();
-           // }
-       // });
-    }//finaloncreate ====================================================================================
-/*
-    private void regeditDrimerPrimeraActividad() {  //boton de artdialog
-         Intent intent = new Intent(this, RegistroDriverPrimerActivity.class);
-        startActivity(intent);
+    }
 
-    }*/
 
     public void btnlogearDriver(View v) {
         if (txtUsuario.getText().toString().isEmpty()) {
@@ -123,7 +113,6 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         }
     }
 
-    //validamos nuestros campos
     public boolean validarCampos() {
         boolean retorno = true;
         if (txtPassword.getText().toString().isEmpty()) {
@@ -143,8 +132,13 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     }
 
     private void moveToMapDriver() {
-        Intent intent = new Intent(getApplicationContext(), MapDriverActivity.class);  //si valida te vas al next
+        new PreferencesManager(this).setIsDriver(true);
+        Intent intent = new Intent(OpcionDualDriverActivity.this, MapDriverActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction(Intent.ACTION_RUN);
+        intent.putExtra(Constants.Extras.EXTRA_IS_CONNECTED, false);
         startActivity(intent);
+        OpcionDualDriverActivity.this.finish();
     }
 }
 

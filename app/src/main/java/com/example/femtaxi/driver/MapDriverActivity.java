@@ -32,6 +32,7 @@ import com.example.femtaxi.client.ProfileClientActivity;
 import com.example.femtaxi.databinding.ActivityMapDriverBinding;
 import com.example.femtaxi.driver.adapter.HistoryBookingDriverAdapter;
 import com.example.femtaxi.helpers.Constants;
+import com.example.femtaxi.helpers.PreferencesManager;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.ClientBookingProvider;
 import com.example.femtaxi.providers.GeofireProvider;
@@ -81,14 +82,14 @@ public class MapDriverActivity extends AppCompatActivity
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
-                Log.d(TAG, "mLocationCallback location: " + location);
+                //Log.d(TAG, "mLocationCallback location: " + location);
                 if (getApplicationContext() != null) {
-                    Log.d(TAG, "mLocationCallback getApplicationContext!=null: ");
+                    //Log.d(TAG, "mLocationCallback getApplicationContext!=null: ");
                     mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     if (nMarker != null) {
                         nMarker.remove();
                     }
-                    Log.d(TAG, "mLocationCallback mCurrentLatLng: " + mCurrentLatLng);
+                    //Log.d(TAG, "mLocationCallback mCurrentLatLng: " + mCurrentLatLng);
                     nMarker = nMap.addMarker(new MarkerOptions().position(
                             new LatLng(location.getLatitude(), location.getLongitude()))
                             .title("Posición Actual")
@@ -101,7 +102,7 @@ public class MapDriverActivity extends AppCompatActivity
                                     .build()));
                     if (mIsconnect)
                         updateLocation();
-                    Log.d(TAG, "mLocationCallback getLatitude: " + location.getLatitude() + ", getLongitude: " + location.getLongitude());
+                    //Log.d(TAG, "mLocationCallback getLatitude: " + location.getLatitude() + ", getLongitude: " + location.getLongitude());
                 }
             }
         }
@@ -112,6 +113,7 @@ public class MapDriverActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         binding = ActivityMapDriverBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        mIsconnect = getIntent().getBooleanExtra(Constants.Extras.EXTRA_IS_CONNECTED, false);
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
         mAuthProvider = new AuthProvider();
         mClientBookingProvider = new ClientBookingProvider();
@@ -123,7 +125,6 @@ public class MapDriverActivity extends AppCompatActivity
         binding.btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //aun falta asiganr codigo
                 if (mIsconnect) {
                     disconnect();
                 } else {
@@ -133,12 +134,16 @@ public class MapDriverActivity extends AppCompatActivity
                 binding.btnConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
             }
         });
-        binding.btnConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkLocationPermissions();
         generatedToken();
         isDriverWorking();
+        Log.d(TAG, "onCreate savedInstanceState: " + savedInstanceState);
+        Log.d(TAG, "onCreate mIsconnect: " + mIsconnect);
+        if (mIsconnect)
+            startLocation();
+        binding.btnConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
     }
 
     @Override
@@ -146,7 +151,7 @@ public class MapDriverActivity extends AppCompatActivity
         super.onDestroy();
         Log.d(TAG, "onDestroy");
         if (mListener != null) {
-            Log.d(TAG, "onDestroy");
+            Log.d(TAG, "onDestroy mListener: " + mListener);
             mGeofireProvider.isDriverWorking(mAuthProvider.getId())
                     .removeEventListener(mListener);
         }
@@ -283,16 +288,17 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     private void startLocation() {
-        Log.d(TAG, "startLocation");
+        //Log.d(TAG, "startLocation");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d(TAG, "startLocation mayo a m");
+            //Log.d(TAG, "startLocation mayo a m");
             if (ContextCompat.checkSelfPermission(this,
                     Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "startLocation permiso activado");
+                //Log.d(TAG, "startLocation permiso activado");
                 if (gpsActived()) {
-                    Log.d(TAG, "startLocation gps activado");
+                    //Log.d(TAG, "startLocation gps activado");
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    nMap.setMyLocationEnabled(true);
+                    if (nMap != null)
+                        nMap.setMyLocationEnabled(true);
                 } else {
                     showAlertDialogNoGPS();
                 }
@@ -314,9 +320,9 @@ public class MapDriverActivity extends AppCompatActivity
     private void updateLocation() {
         Log.d(TAG, "updateLocation");
         if (mIsconnect) {
-            Log.d(TAG, "updateLocation");
+            Log.d(TAG, "updateLocation mIsconnect: " + mIsconnect);
             if (mAuthProvider.existSession() && mCurrentLatLng != null) {
-                Log.d(TAG, "updateLocation");
+                Log.d(TAG, "updateLocation mAuthProvider.existSession(): " + mAuthProvider.existSession());
                 isDriverWorking();
                 mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
             }
@@ -325,10 +331,11 @@ public class MapDriverActivity extends AppCompatActivity
 
     private void logout() {
         Toast.makeText(this, "Sesion Cerrada", Toast.LENGTH_SHORT).show();
+        new PreferencesManager(this).setIsDriver(false);
         disconnect();
         Intent intent = new Intent(MapDriverActivity.this, MainActivity.class);
         startActivity(intent);
-        finish();
+        MapDriverActivity.this.finish();
     }
 
     private void isDriverWorking() {

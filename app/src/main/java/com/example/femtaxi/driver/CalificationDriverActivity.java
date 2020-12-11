@@ -104,9 +104,7 @@ public class CalificationDriverActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Intent intent = new Intent(CalificationDriverActivity.this, MapDriverActivity.class);
-                                                startActivity(intent);
-                                                finish();
+                                                moveToMapDriverActivity();
                                             }
                                         });
                             } else {
@@ -114,9 +112,7 @@ public class CalificationDriverActivity extends AppCompatActivity {
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Intent intent = new Intent(CalificationDriverActivity.this, MapDriverActivity.class);
-                                                startActivity(intent);
-                                                finish();
+                                                moveToMapDriverActivity();
                                             }
                                         });
                             }
@@ -125,5 +121,14 @@ public class CalificationDriverActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Debe colocar su calificacion", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void moveToMapDriverActivity() {
+        Intent intent = new Intent(CalificationDriverActivity.this, MapDriverActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction(Intent.ACTION_RUN);
+        intent.putExtra(Constants.Extras.EXTRA_IS_CONNECTED, true);
+        startActivity(intent);
+        CalificationDriverActivity.this.finish();
     }
 }

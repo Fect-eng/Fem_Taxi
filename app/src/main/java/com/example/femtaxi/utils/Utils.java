@@ -16,8 +16,7 @@ public class Utils {
         try {
             List<Address> direccion = geocoder.getFromLocation(latitude, longitude, 1);
             if (direccion.size() > 0) {
-                street = direccion.get(0).getAddressLine(0);
-
+                String address = direccion.get(0).getAddressLine(0);
                 String locality = direccion.get(0).getLocality();
                 String adminArea = direccion.get(0).getAdminArea();
                 String countryName = direccion.get(0).getCountryName();
@@ -31,6 +30,8 @@ public class Utils {
                 String subThoroughfare = direccion.get(0).getSubThoroughfare();
                 String thoroughfare = direccion.get(0).getThoroughfare();
                 String url = direccion.get(0).getUrl();
+
+                street = address + " " + locality;
 
             }
         } catch (IOException e) {

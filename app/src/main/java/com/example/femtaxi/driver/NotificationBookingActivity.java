@@ -132,19 +132,25 @@ public class NotificationBookingActivity extends AppCompatActivity {
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.cancel(2);
 
-        startActivity(new Intent(this, MapDriverActivity.class));
-        finish();
+        moveToMapDriverActivity();
     }
 
     private void checkClientCancelBooking() {
         mListener = mClientBookingProvider.getClientBooking(mExtraIdClient)
                 .addSnapshotListener((value, error) -> {
                     if (!value.exists()) {
-                        Toast.makeText(NotificationBookingActivity.this, "El conductor no acepto el viaje", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(NotificationBookingActivity.this, MapDriverActivity.class);
-                        startActivity(intent);
-                        this.finish();
+                        Toast.makeText(NotificationBookingActivity.this, "El cliente cancelo el viaje", Toast.LENGTH_SHORT).show();
+                        moveToMapDriverActivity();
                     }
                 });
+    }
+
+    private void moveToMapDriverActivity() {
+        Intent intent = new Intent(NotificationBookingActivity.this, MapDriverActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setAction(Intent.ACTION_RUN);
+        intent.putExtra(Constants.Extras.EXTRA_IS_CONNECTED, true);
+        startActivity(intent);
+        this.finish();
     }
 }

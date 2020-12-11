@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.femtaxi.R;
 import com.example.femtaxi.databinding.ActivityLoginClienteBinding;
 import com.example.femtaxi.helpers.Constants;
+import com.example.femtaxi.helpers.PreferencesManager;
 import com.example.femtaxi.models.Client;
 import com.example.femtaxi.providers.AuthProvider;
 import com.example.femtaxi.providers.ClientProvider;
@@ -43,11 +44,6 @@ public class LoginClientActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginClienteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        setSupportActionBar(binding.includeToolbar.toolbar);
-        getSupportActionBar().setTitle("Autenticación Google");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         initGoogle();
         mAuthProvider = new AuthProvider();
         mClientProvider = new ClientProvider();
@@ -152,8 +148,9 @@ public class LoginClientActivity extends AppCompatActivity {
     }
 
     private void moveToMain() {
-        Intent intent = new Intent(this, MapClienteActivity.class);
+        new PreferencesManager(this).setIsClient(true);
+        Intent intent = new Intent(LoginClientActivity.this, MapClienteActivity.class);
         startActivity(intent);
-        finish();
+        LoginClientActivity.this.finish();
     }
 }

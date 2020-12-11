@@ -242,6 +242,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
             }
         });
         getInfo();
+        updateLocation();
     }
 
     @Override

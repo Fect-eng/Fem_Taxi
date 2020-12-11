@@ -39,9 +39,9 @@
                     android:id="@+id/animation_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:lottie_rawRes="@raw/animation_driverman"
+                    app:lottie_autoPlay="true"
                     app:lottie_loop="true"
-                    app:lottie_autoPlay="true" />
+                    app:lottie_rawRes="@raw/animation_driverman" />
 
             </com.github.florent37.shapeofview.shapes.ArcView>
 
@@ -79,16 +79,17 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:hint="Ingrese Email"
+                        android:textColorHint="@color/overlay">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/txtUsuario"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Ingrese Email"
+                            android:inputType="text|textEmailAddress"
+                            android:textColor="@color/white" />
 
-
-                            android:inputType="text|textEmailAddress"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
@@ -108,15 +109,17 @@
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:hint="Ingrese Password"
+                        android:textColorHint="@color/overlay">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/txtPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Ingrese Password"
+                            android:inputType="text|textPassword"
+                            android:textColor="@color/white" />
 
-                            android:inputType="text|textPassword"/>
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
@@ -133,7 +136,7 @@
                     android:text="Tengo Cuenta"
 
                     android:textColor="@color/Colorletras"
-                    android:textSize="22dp"/>
+                    android:textSize="22dp" />
 
                 <Button
                     android:id="@+id/botonDualRegistro"
@@ -145,7 +148,7 @@
                     android:backgroundTint="#155AA3"
                     android:text="Registro Conductor"
                     android:textColor="@color/Colorletras"
-                    android:textSize="22dp"/>
+                    android:textSize="22dp" />
 
             </LinearLayout>
 
