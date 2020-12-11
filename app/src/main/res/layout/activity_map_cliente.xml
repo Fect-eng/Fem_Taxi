@@ -5,9 +5,21 @@
     android:layout_height="match_parent"
     tools:context=".client.MapClienteActivity">
 
-    <include
-        android:id="@+id/include_toolbar"
-        layout="@layout/action_bar_toolbar" />
+    <com.google.android.material.appbar.MaterialToolbar
+    android:id="@+id/include_toolbar"
+    layout="@layout/action_bar_toolbar" />
+
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
+        app:menu="@menu/activity_main_drawer" >
+
+    </com.google.android.material.navigation.NavigationView>
 
     <fragment
         android:id="@+id/map"
@@ -83,16 +95,17 @@
         android:layout_width="79dp"
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/localizador"
+        android:src="@drawable/mapilogs"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.499" />
 
     <Button
         android:id="@+id/btn_request_drive"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_width="216dp"
+        android:layout_height="49dp"
         android:layout_gravity="center_horizontal"
         android:layout_margin="40dp"
         android:layout_marginLeft="60dp"
@@ -104,5 +117,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

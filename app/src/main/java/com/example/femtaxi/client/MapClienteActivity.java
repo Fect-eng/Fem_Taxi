@@ -137,7 +137,12 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);                      //true
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_name);    //icono
+
+
+
+
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -162,6 +167,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         instanceAutoCompleteDestino();
         instanceCameraListener();
     }
+
 
     @Override
     protected void onDestroy() {
