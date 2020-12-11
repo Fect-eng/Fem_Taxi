@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.femtaxi">
+    package="pe.com.android.femtaxi">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -170,7 +170,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.femtaxi"
+            android:authorities="pe.com.android.femtaxi"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
