@@ -128,10 +128,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);                      //true
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_name);    //icono
 
-
-
-
-
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         Mapbox.getInstance(this, getResources().getString(R.string.access_token));
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
