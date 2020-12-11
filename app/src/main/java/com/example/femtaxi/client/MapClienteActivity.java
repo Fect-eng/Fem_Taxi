@@ -125,7 +125,12 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);                      //true
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_name);    //icono
+
+
+
+
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         Mapbox.getInstance(this, getResources().getString(R.string.access_token));
@@ -189,6 +194,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             }
         };
     }
+
 
     @Override
     protected void onDestroy() {

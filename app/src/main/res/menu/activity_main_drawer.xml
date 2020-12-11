@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_urbano"
+            android:icon="@drawable/urbano"
+            android:title="Intraurbano" />
+        <item
+            android:id="@+id/nav_delivery"
+            android:icon="@drawable/delivery"
+            android:title="Delivery" />
+        <item
+            android:id="@+id/nav_mensaje"
+            android:icon="@drawable/mensajeri"
+            android:title="Mensajeria" />
+
+        <item
+            android:id="@+id/nav_carga"
+            android:icon="@drawable/carga"
+            android:title="Carga" />
+
+        <item
+            android:id="@+id/nav_mascota"
+            android:icon="@drawable/mascota"
+            android:title="Mascota" />
+
+        <item
+            android:id="@+id/nav_elegida"
+            android:icon="@drawable/amiga"
+            android:title="Amiga Elegida" />
+
+        <item
+            android:id="@+id/nav_operador"
+            android:icon="@drawable/llamar"
+            android:title="Llamar Operadora" />
+
+    </group>
+</menu>
