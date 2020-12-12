@@ -1,10 +1,12 @@
 package pe.com.android.femtaxi.client;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,6 +18,7 @@ import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.models.Client;
 import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.ClientProvider;
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -38,12 +41,14 @@ public class LoginClientActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private AuthProvider mAuthProvider;
     private ClientProvider mClientProvider;
+    private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginClienteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        mProgressDialog = new ProgressDialog(this);
         initGoogle();
         mAuthProvider = new AuthProvider();
         mClientProvider = new ClientProvider();
@@ -60,6 +65,8 @@ public class LoginClientActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK) {
+            mProgressDialog.dismiss();
+            Toast.makeText(LoginClientActivity.this, "Error desconocido", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -76,6 +83,9 @@ public class LoginClientActivity extends AppCompatActivity {
                         }
                     } else {
                     }
+                } else {
+                    mProgressDialog.dismiss();
+                    Toast.makeText(LoginClientActivity.this, "Sin informacion para mostrar", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
@@ -89,6 +99,9 @@ public class LoginClientActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
+        mProgressDialog.setMessage("Espere un momento por favor...");
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.show();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         final Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, 666);
@@ -148,6 +161,7 @@ public class LoginClientActivity extends AppCompatActivity {
     }
 
     private void moveToMain() {
+        mProgressDialog.dismiss();
         new PreferencesManager(this).setIsClient(true);
         Intent intent = new Intent(LoginClientActivity.this, MapClienteActivity.class);
         startActivity(intent);

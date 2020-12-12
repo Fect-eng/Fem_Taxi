@@ -1,34 +1,50 @@
 {
   "project_info": {
-    "project_number": "1034431647187",
-    "firebase_url": "https://taxifem-bfa5e.firebaseio.com",
-    "project_id": "taxifem-bfa5e",
-    "storage_bucket": "taxifem-bfa5e.appspot.com"
+    "project_number": "802108111970",
+    "firebase_url": "https://taxifemenino-4f6f3-default-rtdb.firebaseio.com",
+    "project_id": "taxifemenino-4f6f3",
+    "storage_bucket": "taxifemenino-4f6f3.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1034431647187:android:543e8098efa19723de3326",
+        "mobilesdk_app_id": "1:802108111970:android:e1be6b4d7ed611f7f6653b",
         "android_client_info": {
           "package_name": "pe.com.android.femtaxi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1034431647187-ehkook260ivk8vlnmjd8rk0pinqcqbdu.apps.googleusercontent.com",
+          "client_id": "802108111970-oh5gfind8r3en5v4v2bs2dh92m77fbhs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pe.com.android.femtaxi",
+            "certificate_hash": "3c266b6023842ae982dbdb7ecb4e4f4b78ea7889"
+          }
+        },
+        {
+          "client_id": "802108111970-thqga938jkt5ae7mj1kliluo6cvjsaq6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pe.com.android.femtaxi",
+            "certificate_hash": "dcb57cda348eaf397b4bcdbc86777a34274ec6b0"
+          }
+        },
+        {
+          "client_id": "802108111970-280uoo0bcsne1frm623a9va79q8bcd15.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDkpl-_5RuDkeNqxWJAyypBJo31cuS-ccA"
+          "current_key": "AIzaSyCq0eQA0tKY7kxfRYrrPV5oIL9flNz3ORc"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "1034431647187-ehkook260ivk8vlnmjd8rk0pinqcqbdu.apps.googleusercontent.com",
+              "client_id": "802108111970-280uoo0bcsne1frm623a9va79q8bcd15.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
