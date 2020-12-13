@@ -66,18 +66,18 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity implements V
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //===================================================================================================================================
 
-        txtfecha = findViewById(R.id.txtfecha);   //instranciado
+        txtfecha = findViewById(R.id.txtfecha);
         //boton de alert dialog
-        textoNombresCom = findViewById(R.id.textoNombresCom);                       //texto nombres completos
+        textoNombresCom = findViewById(R.id.textoNombresCom);
         textoApe = findViewById(R.id.textoApe);
         textodni = findViewById(R.id.textodni);
         textodireccion = findViewById(R.id.textodireccion);
-        textoFechaNac = findViewById(R.id.textoFechaNac);                          //Fecha Nacimiento    cambiamos variable en layout
+        textoFechaNac = findViewById(R.id.textoFechaNac);
         textocelular = findViewById(R.id.textocelular);
         textemail = findViewById(R.id.textemail);
 
 
-        btnnextdriver = findViewById(R.id.btnnextdriver); //hacemos uso de la primera variable
+        btnnextdriver = findViewById(R.id.btnnextdriver);
         btnnextdriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
