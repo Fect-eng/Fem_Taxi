@@ -104,7 +104,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".loginActivity"
+            android:name=".driver.loginDriveActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 

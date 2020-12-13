@@ -24,6 +24,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
 
 import pe.com.android.femtaxi.MainActivity;
 import pe.com.android.femtaxi.R;
@@ -35,6 +36,7 @@ import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.GeofireProvider;
 import pe.com.android.femtaxi.providers.TokenProvider;
 import pe.com.android.femtaxi.utils.Utils;
+
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.common.api.Status;
@@ -127,12 +129,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
         mTokenProvider = new TokenProvider();
 
-        setSupportActionBar(binding.includeToolbar.toolbar);
-        getSupportActionBar().setTitle("Mapa Cliente");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().show();
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_action_name);    //icono
-
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
@@ -140,10 +136,21 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
         generateToken();
 
-        binding.btnRequestDrive.setOnClickListener(new View.OnClickListener() {
+        binding.rootLayout.btnRequestDrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 requestDriver();
+            }
+        });
+
+        binding.rootLayout.btnMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    binding.drawerLayout.openDrawer(GravityCompat.START);
+                }
             }
         });
 

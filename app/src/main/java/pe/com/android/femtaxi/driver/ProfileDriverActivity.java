@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import pe.com.android.femtaxi.R;
 import pe.com.android.femtaxi.client.MapClienteActivity;
 import pe.com.android.femtaxi.databinding.ActivityProfileClientBinding;
@@ -27,6 +28,7 @@ import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.DriverProvider;
 import pe.com.android.femtaxi.utils.CompressorBitmapImage;
 import pe.com.android.femtaxi.utils.FileUtils;
+
 import com.github.kayvannj.permission_utils.Func;
 import com.github.kayvannj.permission_utils.PermissionUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -166,20 +168,18 @@ public class ProfileDriverActivity extends AppCompatActivity {
         mRequestObject = PermissionUtil.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
-                .onAllGranted(
-                        new Func() {
-                            @Override
-                            protected void call() {
-                                FileUtils.pickImageGallery(ProfileDriverActivity.this);
-                            }
-                        })
-                .onAnyDenied(
-                        new Func() {
-                            @Override
-                            protected void call() {
-                                checkPermissionGallery();
-                            }
-                        }).ask(Constants.REQUEST.REQUEST_CODE_GALLERY);
+                .onAllGranted(new Func() {
+                    @Override
+                    protected void call() {
+                        FileUtils.pickImageGallery(ProfileDriverActivity.this);
+                    }
+                })
+                .onAnyDenied(new Func() {
+                    @Override
+                    protected void call() {
+                        checkPermissionGallery();
+                    }
+                }).ask(Constants.REQUEST.REQUEST_CODE_GALLERY);
     }
 
     private void checkPermissionCamera() {
@@ -187,21 +187,19 @@ public class ProfileDriverActivity extends AppCompatActivity {
                 .request(Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
-                .onAllGranted(
-                        new Func() {
-                            @Override
-                            protected void call() {
-                                mTempUri = FileUtils.pickImageCamera(ProfileDriverActivity.this,
-                                        Constants.PERMISSION.PICK_CAMERA_REQUEST);
-                            }
-                        })
-                .onAnyDenied(
-                        new Func() {
-                            @Override
-                            protected void call() {
-                                checkPermissionCamera();
-                            }
-                        }).ask(Constants.REQUEST.REQUEST_CODE_CAMERA);
+                .onAllGranted(new Func() {
+                    @Override
+                    protected void call() {
+                        mTempUri = FileUtils.pickImageCamera(ProfileDriverActivity.this,
+                                Constants.PERMISSION.PICK_CAMERA_REQUEST);
+                    }
+                })
+                .onAnyDenied(new Func() {
+                    @Override
+                    protected void call() {
+                        checkPermissionCamera();
+                    }
+                }).ask(Constants.REQUEST.REQUEST_CODE_CAMERA);
     }
 
     private void updateData() {
@@ -220,7 +218,7 @@ public class ProfileDriverActivity extends AppCompatActivity {
         byte[] imageByte = CompressorBitmapImage.getImage(this, mImageFile.getPath(), 1024, 1024);
         StorageReference storageReference = FirebaseStorage.getInstance()
                 .getReference()
-                .child(Constants.Firebase.Nodo.IMAGE_CLIENT)
+                .child(Constants.Firebase.Nodo.IMAGE_DRIVER)
                 .child(mAuthProvider.getId());
         UploadTask uploadTask = storageReference.putBytes(imageByte);
         uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {

@@ -61,9 +61,9 @@ public class EnviarImagenActivity extends AppCompatActivity {
         setContentView(R.layout.activity_enviar_imagen);
         binding = ActivityMapClienteBinding.inflate(getLayoutInflater());
 
-        setSupportActionBar(binding.includeToolbar.toolbar);
+        /*setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 
       /*  mToolbar = findViewById(R.id.toolbar);
         getSupportActionBar().setTitle("Autenticación Google");

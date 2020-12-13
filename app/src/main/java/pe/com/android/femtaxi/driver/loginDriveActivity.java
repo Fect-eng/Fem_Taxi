@@ -1,4 +1,4 @@
-package pe.com.android.femtaxi;
+package pe.com.android.femtaxi.driver;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -13,14 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import pe.com.android.femtaxi.driver.MapDriverActivity;
-import pe.com.android.femtaxi.driver.OpcionDualDriverActivity;
+import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.RegistroDriverPrimerActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class loginActivity extends AppCompatActivity implements View.OnClickListener {
+public class loginDriveActivity extends AppCompatActivity implements View.OnClickListener {
     Toolbar mToolbar;
     Button mButtonDialog;
     private EditText mTextInpuEmail;
@@ -55,7 +56,7 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
         mButtonDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alerta = new AlertDialog.Builder(loginActivity.this);
+                AlertDialog.Builder alerta = new AlertDialog.Builder(loginDriveActivity.this);
                 alerta.setMessage("Bienvenido a Registrarse en Nuestra Empresa FemTaxi, los datos que se solicitara y posterior ingresar seran administrados en confidencialidad por vuestra Gerencia. Sea usted Bienvenido.")  //ver si se cambia esta Opcion
                         .setCancelable(false)
                         .setPositiveButton("Estoy de Acuerdo", new DialogInterface.OnClickListener() {
@@ -114,10 +115,10 @@ public class loginActivity extends AppCompatActivity implements View.OnClickList
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (!task.isSuccessful()) {
-                                    Toast.makeText(loginActivity.this, "Ocurrio error Verifique porfavor", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(loginDriveActivity.this, "Ocurrio error Verifique porfavor", Toast.LENGTH_LONG).show();
                                 } else {
-                                    Toast.makeText(loginActivity.this, "Cuenta Registrada", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(loginActivity.this, MapDriverActivity.class);
+                                    Toast.makeText(loginDriveActivity.this, "Cuenta Registrada", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(loginDriveActivity.this, MapDriverActivity.class);
                                     startActivity(intent);
                                 }
 

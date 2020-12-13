@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
 import pe.com.android.femtaxi.R;
 import pe.com.android.femtaxi.databinding.ActivityLoginClienteBinding;
 import pe.com.android.femtaxi.databinding.ActivityMapClienteBinding;
@@ -168,20 +169,18 @@ public class ProfileClientActivity extends AppCompatActivity {
         mRequestObject = PermissionUtil.with(this)
                 .request(Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
-                .onAllGranted(
-                        new Func() {
-                            @Override
-                            protected void call() {
-                                FileUtils.pickImageGallery(ProfileClientActivity.this);
-                            }
-                        })
-                .onAnyDenied(
-                        new Func() {
-                            @Override
-                            protected void call() {
-                                checkPermissionGallery();
-                            }
-                        }).ask(Constants.REQUEST.REQUEST_CODE_GALLERY);
+                .onAllGranted(new Func() {
+                    @Override
+                    protected void call() {
+                        FileUtils.pickImageGallery(ProfileClientActivity.this);
+                    }
+                })
+                .onAnyDenied(new Func() {
+                    @Override
+                    protected void call() {
+                        checkPermissionGallery();
+                    }
+                }).ask(Constants.REQUEST.REQUEST_CODE_GALLERY);
     }
 
     private void checkPermissionCamera() {
@@ -189,21 +188,19 @@ public class ProfileClientActivity extends AppCompatActivity {
                 .request(Manifest.permission.CAMERA,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         Manifest.permission.READ_EXTERNAL_STORAGE)
-                .onAllGranted(
-                        new Func() {
-                            @Override
-                            protected void call() {
-                                mTempUri = FileUtils.pickImageCamera(ProfileClientActivity.this,
-                                        Constants.PERMISSION.PICK_CAMERA_REQUEST);
-                            }
-                        })
-                .onAnyDenied(
-                        new Func() {
-                            @Override
-                            protected void call() {
-                                checkPermissionCamera();
-                            }
-                        }).ask(Constants.REQUEST.REQUEST_CODE_CAMERA);
+                .onAllGranted(new Func() {
+                    @Override
+                    protected void call() {
+                        mTempUri = FileUtils.pickImageCamera(ProfileClientActivity.this,
+                                Constants.PERMISSION.PICK_CAMERA_REQUEST);
+                    }
+                })
+                .onAnyDenied(new Func() {
+                    @Override
+                    protected void call() {
+                        checkPermissionCamera();
+                    }
+                }).ask(Constants.REQUEST.REQUEST_CODE_CAMERA);
     }
 
     private void updateData() {
