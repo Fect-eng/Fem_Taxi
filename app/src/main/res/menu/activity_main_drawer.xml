@@ -7,36 +7,54 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_urbano"
-            android:icon="@drawable/urbano"
+            android:icon="@drawable/inc_intraurbano"
             android:title="Intraurbano" />
         <item
             android:id="@+id/nav_delivery"
-            android:icon="@drawable/delivery"
+            android:icon="@drawable/inc_delivery"
             android:title="Delivery" />
         <item
             android:id="@+id/nav_mensaje"
-            android:icon="@drawable/mensajeri"
+            android:icon="@drawable/inc_mensajeria"
             android:title="Mensajeria" />
 
         <item
             android:id="@+id/nav_carga"
-            android:icon="@drawable/carga"
+            android:icon="@drawable/inc_carga"
             android:title="Carga" />
 
         <item
             android:id="@+id/nav_mascota"
-            android:icon="@drawable/mascota"
+            android:icon="@drawable/inc_animalitos"
             android:title="Mascota" />
 
         <item
             android:id="@+id/nav_elegida"
-            android:icon="@drawable/amiga"
+            android:icon="@drawable/inc_amiga"
             android:title="Amiga Elegida" />
 
         <item
             android:id="@+id/nav_operador"
-            android:icon="@drawable/llamar"
+            android:icon="@drawable/inc_women"
             android:title="Llamar Operadora" />
 
+
     </group>
+
+    <item android:title="Configuraciones">
+        <menu>
+            <item
+                android:id="@+id/nav_historial"
+                android:icon="@drawable/inc_viajes"
+                android:title="Historial de Viajes"/>
+            <item
+                android:id="@+id/nav_perfil"
+                android:icon="@drawable/inc_perfil"
+                android:title="Editar Perfil"/>
+            <item
+                android:id="@+id/nav_cerrar"
+                android:icon="@drawable/inc_cerrar"
+                android:title="Cerrar Sesión"/>
+        </menu>
+    </item>
 </menu>

@@ -60,6 +60,7 @@ import com.google.android.libraries.places.api.model.RectangularBounds;
 import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseError;
 import com.google.maps.android.SphericalUtil;
 
@@ -95,6 +96,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private AutocompleteSupportFragment autocompleteOrigin;
     private AutocompleteSupportFragment autocompleteDestino;
 
+    private NavigationView navegacionview;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -129,6 +131,26 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
         mTokenProvider = new TokenProvider();
 
+        navegacionview = (NavigationView) findViewById(R.id.nav_view);
+
+        navegacionview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_cerrar:            //menu_exit
+                        logout();
+                        break;
+                    case R.id.nav_perfil:           //menu_edit_profile
+                        moveToEditProfile();
+                        break;
+                    case R.id.nav_historial :       //menu_history_booking
+                        moveToHistoryBooking();
+                        break;
+                }
+                return false;
+            }
+        });
+
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
@@ -142,6 +164,17 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 requestDriver();
             }
         });
+       /*
+        binding.rootLayout.btnMenu2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else {
+                    binding.drawerLayout.openDrawer(GravityCompat.START);
+                }
+            }
+        });*/
 
         binding.rootLayout.btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,7 +185,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     binding.drawerLayout.openDrawer(GravityCompat.START);
                 }
             }
-        });
+        }); //drawer
 
         if (!Places.isInitialized())
             Places.initialize(this, getResources().getString(R.string.google_api_key));
@@ -188,25 +221,26 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.client_menu, menu);
+        getMenuInflater().inflate(R.menu.activity_main_drawer, menu);           //client_menu
         return super.onCreateOptionsMenu(menu);
     }
 
-    @Override
+    //modificacion
+   /* @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_exit:
+            case R.id.nav_cerrar:            //menu_exit
                 logout();
                 break;
-            case R.id.menu_edit_profile:
+            case R.id.nav_perfil:           //menu_edit_profile
                 moveToEditProfile();
                 break;
-            case R.id.menu_history_booking:
+            case R.id.nav_historial :       //menu_history_booking
                 moveToHistoryBooking();
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
+    }*/
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -275,7 +309,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                         new CameraPosition.Builder()
                                 .target(mOriginLatLng)
-                                .zoom(16f)
+                                .zoom(14f)          //16f
                                 .build()));
             }
 
@@ -469,3 +503,4 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         autocompleteDestino.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
     }
 }
+

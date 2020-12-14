@@ -1,0 +1,18 @@
+Index: app/src/main/res/layout/nav_header_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"@dimen/nav_header_height\"\r\n   android:background=\"@color/colorPrimaryDark\"\r\n    android:gravity=\"bottom\"\r\n    android:orientation=\"vertical\"\r\n    android:paddingLeft=\"16dp\"\r\n    android:paddingTop=\"16dp\"\r\n    android:paddingRight=\"16dp\"\r\n    android:paddingBottom=\"16dp\"\r\n    android:theme=\"@style/ThemeOverlay.AppCompat.Dark\">\r\n\r\n    <ImageView\r\n        android:id=\"@+id/imageView\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:contentDescription=\"@string/nav_header_desc\"\r\n        android:paddingTop=\"8dp\"\r\n        app:srcCompat=\"@mipmap/ic_launcher_round\" />\r\n\r\n    <TextView\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:paddingTop=\"8dp\"\r\n        android:text=\"FEMTaxi \"\r\n        android:textAppearance=\"@style/TextAppearance.AppCompat.Body1\" />\r\n\r\n    <TextView\r\n        android:id=\"@+id/textView\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:text=\"Tu Taxi Femenino\" />\r\n</LinearLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/nav_header_main.xml	(revision fc4780b1e5986338acf1d2dff5d4891491a61dee)
++++ app/src/main/res/layout/nav_header_main.xml	(date 1607855033126)
+@@ -3,7 +3,7 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     android:layout_width="match_parent"
+     android:layout_height="@dimen/nav_header_height"
+-   android:background="@color/colorPrimaryDark"
++    android:background="@color/colorPrimaryDark"
+     android:gravity="bottom"
+     android:orientation="vertical"
+     android:paddingLeft="16dp"
