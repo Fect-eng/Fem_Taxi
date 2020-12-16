@@ -1,7 +1,10 @@
 package pe.com.android.femtaxi.models;
 
+import androidx.annotation.Keep;
+
 import java.io.Serializable;
 
+@Keep
 public class registroDriver1 implements Serializable {
     String id;
     String nombres; //textoNombresCom

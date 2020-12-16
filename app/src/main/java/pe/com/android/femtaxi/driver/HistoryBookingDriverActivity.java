@@ -8,18 +8,18 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import pe.com.android.femtaxi.client.MapClienteActivity;
-import pe.com.android.femtaxi.databinding.ActivityHistoryBookingClientBinding;
-import pe.com.android.femtaxi.databinding.ActivityHistoryBookingDriverBinding;
-import pe.com.android.femtaxi.driver.adapter.HistoryBookingDriverAdapter;
-import pe.com.android.femtaxi.models.HistoryBooking;
-import pe.com.android.femtaxi.providers.AuthProvider;
-import pe.com.android.femtaxi.providers.HistoryBookingProvider;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+
+import pe.com.android.femtaxi.client.MapClienteActivity;
+import pe.com.android.femtaxi.databinding.ActivityHistoryBookingDriverBinding;
+import pe.com.android.femtaxi.driver.adapter.HistoryBookingDriverAdapter;
+import pe.com.android.femtaxi.models.HistoryBooking;
+import pe.com.android.femtaxi.providers.AuthProvider;
+import pe.com.android.femtaxi.providers.HistoryBookingProvider;
 
 public class HistoryBookingDriverActivity extends AppCompatActivity {
 

@@ -1,7 +1,6 @@
 package pe.com.android.femtaxi.client;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,13 +10,13 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,21 +27,10 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-import pe.com.android.femtaxi.MainActivity;
-import pe.com.android.femtaxi.R;
-
-import pe.com.android.femtaxi.databinding.ActivityMapClienteBinding;
-import pe.com.android.femtaxi.driver.loginDriveActivity;
-import pe.com.android.femtaxi.helpers.Constants;
-import pe.com.android.femtaxi.helpers.PreferencesManager;
-import pe.com.android.femtaxi.providers.AuthProvider;
-import pe.com.android.femtaxi.providers.GeofireProvider;
-import pe.com.android.femtaxi.providers.TokenProvider;
-import pe.com.android.femtaxi.utils.Utils;
-
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
+import com.github.kayvannj.permission_utils.Func;
+import com.github.kayvannj.permission_utils.PermissionUtil;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -72,6 +60,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import pe.com.android.femtaxi.MainActivity;
+import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.databinding.ActivityMapClienteBinding;
+import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.helpers.PreferencesManager;
+import pe.com.android.femtaxi.providers.AuthProvider;
+import pe.com.android.femtaxi.providers.GeofireProvider;
+import pe.com.android.femtaxi.providers.TokenProvider;
+import pe.com.android.femtaxi.utils.Utils;
+
 public class MapClienteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     String TAG = MapClienteActivity.class.getSimpleName();
@@ -85,7 +83,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private FusedLocationProviderClient mFusedLocation;
     private GeofireProvider mGeofireProvider;
 
-    private final static int LOCATION_REQUEST_CODE = 1;
     private final static int SETTINGS_REQUEST_CODE = 2;
     private List<Marker> mDriversMarkers = new ArrayList<>();
     private boolean mISFirstTime = true;
@@ -100,11 +97,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private AutocompleteSupportFragment autocompleteOrigin;
     private AutocompleteSupportFragment autocompleteDestino;
 
-    private NavigationView navegacionview;
+    private PermissionUtil.PermissionRequestObject mRequestObject;
 
-    Button mButtonDialogElegida;            //falta utilizar
-
-   // private Button btn_llamada;  //error
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -138,47 +132,42 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
         mTokenProvider = new TokenProvider();
 
-
-        //supuesto error de cast
-        navegacionview = (NavigationView) findViewById(R.id.nav_view);
-       navegacionview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.nav_cerrar:            //menu_exit
-                        logout();
+                    case R.id.nav_urbano:
                         break;
-                    case R.id.nav_perfil:           //menu_edit_profile
-                        moveToEditProfile();
+                    case R.id.nav_delivery:
                         break;
-                    case R.id.nav_historial :       //menu_history_booking
+                    case R.id.nav_mensaje:
+                        break;
+                    case R.id.nav_carga:
+                        break;
+                    case R.id.nav_mascota:
+                        break;
+                    case R.id.nav_elegida:
+                        friend();
+                        break;
+                    case R.id.nav_historial:
                         moveToHistoryBooking();
                         break;
-                        //amiga elegida
-                    case R.id.nav_elegida:
-                        elegidaamiga();
+                    case R.id.nav_perfil:
+                        moveToEditProfile();
+                        break;
+                    case R.id.nav_cerrar:
+                        logout();
                         break;
                 }
-                return false;
-            }
-        });
-        //botoncircular de llamada
-        CircleImageView btnllamada = (CircleImageView) findViewById(R.id.btnllamada);
-        btnllamada.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+51 941174386"));
-                if (ActivityCompat.checkSelfPermission(MapClienteActivity.this, Manifest.permission.CALL_PHONE) !=
-                PackageManager.PERMISSION_GRANTED)
-                    return;
-                startActivity(i);
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
             }
         });
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
-        checkLocationPermissions();
+        checkPermissionsLocation();
 
         generateToken();
 
@@ -188,17 +177,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 requestDriver();
             }
         });
-       /*
-        binding.rootLayout.btn_llamada.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    binding.drawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    binding.drawerLayout.openDrawer(GravityCompat.START);
-                }
-            }
-        });*/
 
         binding.rootLayout.btnMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,7 +187,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     binding.drawerLayout.openDrawer(GravityCompat.START);
                 }
             }
-        }); //drawer
+        });
 
         if (!Places.isInitialized())
             Places.initialize(this, getResources().getString(R.string.google_api_key));
@@ -219,30 +197,14 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         instanceAutoCompleteOrigin();
         instanceAutoCompleteDestino();
         instanceCameraListener();
-    }
 
-    private void elegidaamiga() {
-        //elegida amiga dialog
-      //  mButtonDialogElegida = (Button) findViewById(R.id.nav_elegida);
-     /*   mButtonDialogElegida.setOnClickListener(new View.OnClickListener() {
+        binding.rootLayout.btnLlamada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alerta = new AlertDialog.Builder(MapClienteActivity.this);
-                alerta.setMessage("Bienvenido a Registrarse en Nuestra Empresa FemTaxi, los datos que se solicitara y posterior ingresar seran administrados en confidencialidad por vuestra Gerencia. Sea usted Bienvenido.")  //ver si se cambia esta Opcion
-                        .setCancelable(false)
-                        .setPositiveButton("Estoy de Acuerdo", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                               //
-                            }
-                        });
-                AlertDialog titulo = alerta.create();
-                titulo.setTitle("Compromiso Conductor");
-                titulo.show();
+                checkPermissionCall();
             }
-        });*/
+        });
     }
-
 
     @Override
     protected void onDestroy() {
@@ -272,43 +234,26 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         return super.onCreateOptionsMenu(menu);
     }
 
-    //modificacion
-   /* @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_cerrar:            //menu_exit
-                logout();
-                break;
-            case R.id.nav_perfil:           //menu_edit_profile
-                moveToEditProfile();
-                break;
-            case R.id.nav_historial :       //menu_history_booking
-                moveToHistoryBooking();
-                break;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SETTINGS_REQUEST_CODE && gpsActived()) {
+            if (ActivityCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                nMap.setMyLocationEnabled(true);
+            }
+        } else if (requestCode == SETTINGS_REQUEST_CODE && !gpsActived()) {
+            showAlertDialogNoGPS();
         }
-        return super.onOptionsItemSelected(item);
-    }*/
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == LOCATION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                    if (gpsActived()) {
-                        mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                        nMap.setMyLocationEnabled(true);
-                    } else {
-                        showAlertDialogNoGPS();
-                    }
-                else {
-                    checkLocationPermissions();
-                }
-            } else {
-                checkLocationPermissions();
-            }
-        }
+        mRequestObject.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void instanceCameraListener() {
@@ -441,16 +386,20 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 });
     }
 
-    @SuppressLint("MissingPermission")
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == SETTINGS_REQUEST_CODE && gpsActived()) {
-            mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-            nMap.setMyLocationEnabled(true);
-        } else if (requestCode == SETTINGS_REQUEST_CODE && !gpsActived()) {
-            showAlertDialogNoGPS();
-        }
+    private void friend() {
+        AlertDialog.Builder alerta = new AlertDialog.Builder(MapClienteActivity.this);
+        alerta.setTitle("Amiga elegida");
+        alerta.setMessage("Si tomas npo manejes.... te ponemos una conductora de reemplazo")
+                .setCancelable(false);
+        AlertDialog titulo = alerta.create();
+        titulo.show();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                titulo.dismiss();
+            }
+        }, 3000);
     }
 
     private void showAlertDialogNoGPS() {
@@ -475,7 +424,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     private void startLocation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 if (gpsActived()) {
                     mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                     nMap.setMyLocationEnabled(true);
@@ -483,7 +433,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     showAlertDialogNoGPS();
                 }
             } else {
-                checkLocationPermissions();
+                checkPermissionsLocation();
             }
         } else {
             if (gpsActived()) {
@@ -491,30 +441,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 nMap.setMyLocationEnabled(true);
             } else {
                 showAlertDialogNoGPS();
-            }
-        }
-    }
-
-    private void checkLocationPermissions() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Proporciona los permisos nesesarios")
-                        .setMessage("Esta Aplicacion requiere los permisos nesesarios para funcionar")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int i) {
-                                ActivityCompat.requestPermissions(MapClienteActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-                            }
-                        })
-                        .create()
-                        .show();
-            } else {
-                ActivityCompat.requestPermissions(MapClienteActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
             }
         }
     }
@@ -548,6 +474,64 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         autocompleteOrigin.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
         autocompleteDestino.setCountry("PE");
         autocompleteDestino.setLocationBias(RectangularBounds.newInstance(southSide, northSide));
+    }
+
+    private void checkPermissionsLocation() {
+        mRequestObject = PermissionUtil.with(this)
+                .request(Manifest.permission.ACCESS_FINE_LOCATION)
+                .onAllGranted(new Func() {
+                    @Override
+                    protected void call() {
+                        if (gpsActived()) {
+                            if (ActivityCompat.checkSelfPermission(MapClienteActivity.this,
+                                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                                    ActivityCompat.checkSelfPermission(MapClienteActivity.this,
+                                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                checkPermissionsLocation();
+                                return;
+                            } else {
+                                mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                                if (nMap != null)
+                                    nMap.setMyLocationEnabled(true);
+                            }
+                        } else {
+                            showAlertDialogNoGPS();
+                        }
+                    }
+                })
+                .onAnyDenied(new Func() {
+                    @Override
+                    protected void call() {
+                        checkPermissionsLocation();
+                    }
+                }).ask(Constants.REQUEST.REQUEST_CODE_LOCATION);
+    }
+
+    private void checkPermissionCall() {
+        mRequestObject = PermissionUtil.with(this)
+                .request(Manifest.permission.CALL_PHONE)
+                .onAllGranted(new Func() {
+                    @Override
+                    protected void call() {
+                        calling();
+                    }
+                })
+                .onAnyDenied(new Func() {
+                    @Override
+                    protected void call() {
+                        checkPermissionCall();
+                    }
+                }).ask(Constants.REQUEST.REQUEST_CODE_CALL);
+    }
+
+    private void calling() {
+        String dial = "tel:+51941174386";
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_CALL);
+        intent.setData(Uri.parse(dial));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }
 

@@ -21,17 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import pe.com.android.femtaxi.R;
-import pe.com.android.femtaxi.databinding.ActivityMapClientBookingBinding;
-import pe.com.android.femtaxi.databinding.ActivityMapClienteBinding;
-import pe.com.android.femtaxi.databinding.ActivityMapDriverBookingBinding;
-import pe.com.android.femtaxi.helpers.Constants;
-import pe.com.android.femtaxi.models.ClientBooking;
-import pe.com.android.femtaxi.providers.AuthProvider;
-import pe.com.android.femtaxi.providers.ClientBookingProvider;
-import pe.com.android.femtaxi.providers.GeofireProvider;
-import pe.com.android.femtaxi.providers.GoogleApiProvider;
-import pe.com.android.femtaxi.utils.DecodePoints;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -61,6 +50,15 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.databinding.ActivityMapClientBookingBinding;
+import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.models.ClientBooking;
+import pe.com.android.femtaxi.providers.AuthProvider;
+import pe.com.android.femtaxi.providers.ClientBookingProvider;
+import pe.com.android.femtaxi.providers.GeofireProvider;
+import pe.com.android.femtaxi.providers.GoogleApiProvider;
+import pe.com.android.femtaxi.utils.DecodePoints;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

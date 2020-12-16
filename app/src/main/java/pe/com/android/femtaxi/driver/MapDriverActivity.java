@@ -24,15 +24,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import pe.com.android.femtaxi.MainActivity;
-import pe.com.android.femtaxi.R;
-import pe.com.android.femtaxi.databinding.ActivityMapDriverBinding;
-import pe.com.android.femtaxi.helpers.Constants;
-import pe.com.android.femtaxi.helpers.PreferencesManager;
-import pe.com.android.femtaxi.providers.AuthProvider;
-import pe.com.android.femtaxi.providers.ClientBookingProvider;
-import pe.com.android.femtaxi.providers.GeofireProvider;
-import pe.com.android.femtaxi.providers.TokenProvider;
+import com.github.kayvannj.permission_utils.Func;
+import com.github.kayvannj.permission_utils.PermissionUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -51,6 +44,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import pe.com.android.femtaxi.MainActivity;
+import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.databinding.ActivityMapDriverBinding;
+import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.helpers.PreferencesManager;
+import pe.com.android.femtaxi.providers.AuthProvider;
+import pe.com.android.femtaxi.providers.ClientBookingProvider;
+import pe.com.android.femtaxi.providers.GeofireProvider;
+import pe.com.android.femtaxi.providers.TokenProvider;
+
 public class MapDriverActivity extends AppCompatActivity
         implements OnMapReadyCallback {
     String TAG = MapDriverActivity.class.getSimpleName();
@@ -63,7 +66,6 @@ public class MapDriverActivity extends AppCompatActivity
     private ClientBookingProvider mClientBookingProvider;
     private TokenProvider mTokenProvider;
     private AuthProvider mAuthProvider;
-    private final static int LOCATION_REQUEST_CODE = 100;
     private final static int SETTINGS_REQUEST_CODE = 200;
     private Marker nMarker;
     private boolean mIsconnect = false;
@@ -73,6 +75,7 @@ public class MapDriverActivity extends AppCompatActivity
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocation;
     private ValueEventListener mListener;
+    private PermissionUtil.PermissionRequestObject mRequestObject;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -132,7 +135,7 @@ public class MapDriverActivity extends AppCompatActivity
         });
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
-        checkLocationPermissions();
+        checkPermissionsLocation();
         generatedToken();
         isDriverWorking();
         Log.d(TAG, "onCreate savedInstanceState: " + savedInstanceState);
@@ -194,21 +197,7 @@ public class MapDriverActivity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    if (gpsActived()) {
-                        startLocation();
-                    } else {
-                        showAlertDialogNoGPS();    //mensaje DialogGPS
-                    }
-                } else {
-                    checkLocationPermissions();
-                }
-            } else {
-                checkLocationPermissions();
-            }
-        }
+        mRequestObject.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -225,28 +214,33 @@ public class MapDriverActivity extends AppCompatActivity
         }
     }
 
-    private void checkLocationPermissions() {
-        if (ContextCompat.checkSelfPermission(MapDriverActivity.this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Proporciona los permisos nesesarios")
-                        .setMessage("Esta Aplicacion requiere los permisos nesesarios para funcionar")
-                        .setPositiveButton("ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int i) {
-                                ActivityCompat.requestPermissions(MapDriverActivity.this,
-                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+    private void checkPermissionsLocation() {
+        mRequestObject = PermissionUtil.with(this)
+                .request(Manifest.permission.ACCESS_FINE_LOCATION)
+                .onAllGranted(new Func() {
+                    @Override
+                    protected void call() {
+                        if (gpsActived()) {
+                            if (ActivityCompat.checkSelfPermission(MapDriverActivity.this,
+                                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                                    ActivityCompat.checkSelfPermission(MapDriverActivity.this,
+                                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                return;
                             }
-                        })
-                        .create()
-                        .show();
-            } else {
-                ActivityCompat.requestPermissions(MapDriverActivity.this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
-            }
-        }
+                            mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
+                            if (nMap != null)
+                                nMap.setMyLocationEnabled(true);
+                        } else {
+                            showAlertDialogNoGPS();
+                        }
+                    }
+                })
+                .onAnyDenied(new Func() {
+                    @Override
+                    protected void call() {
+                        checkPermissionsLocation();
+                    }
+                }).ask(Constants.REQUEST.REQUEST_CODE_LOCATION);
     }
 
     private boolean gpsActived() {
@@ -299,7 +293,7 @@ public class MapDriverActivity extends AppCompatActivity
                     showAlertDialogNoGPS();
                 }
             } else {
-                checkLocationPermissions();
+                checkPermissionsLocation();
             }
         } else {
             Log.d(TAG, "startLocation menor a M");

@@ -1,5 +1,8 @@
 package pe.com.android.femtaxi.models;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class Driver {
     String UId;
     String name;

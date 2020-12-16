@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "802108111970-gogpc02jdhtguht5ereopddod7dbrs2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pe.com.android.femtaxi",
+            "certificate_hash": "b7386b78350f5c57d3fd79afcc2b41ab94c92e3b"
+          }
+        },
+        {
+          "client_id": "802108111970-k6uqsuu4dd6mp46actrhd479s4k4i6ed.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pe.com.android.femtaxi",
+            "certificate_hash": "28260fac9728985964d6a1fa99b70fb18439579a"
+          }
+        },
+        {
           "client_id": "802108111970-oh5gfind8r3en5v4v2bs2dh92m77fbhs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

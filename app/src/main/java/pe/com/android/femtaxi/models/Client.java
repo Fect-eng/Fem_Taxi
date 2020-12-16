@@ -1,5 +1,8 @@
 package pe.com.android.femtaxi.models;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class Client {
     String UId;
     String name;

@@ -1,7 +1,10 @@
 package pe.com.android.femtaxi.models;
 
+import androidx.annotation.Keep;
+
 import java.util.Map;
 
+@Keep
 public class FCMRequest {
     private String to;
     private String priority;

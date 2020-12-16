@@ -30,7 +30,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/btnllamada"
+            android:id="@+id/btn_llamada"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="80dp"
