@@ -33,12 +33,6 @@
             android:icon="@drawable/inc_amiga"
             android:title="Amiga Elegida" />
 
-        <item
-            android:id="@+id/nav_operador"
-            android:icon="@drawable/inc_women"
-            android:title="Llamar Operadora" />
-
-
     </group>
 
     <item android:title="Configuraciones">

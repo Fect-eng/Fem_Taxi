@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -16,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,10 +28,12 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import pe.com.android.femtaxi.MainActivity;
 import pe.com.android.femtaxi.R;
 
 import pe.com.android.femtaxi.databinding.ActivityMapClienteBinding;
+import pe.com.android.femtaxi.driver.loginDriveActivity;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.providers.AuthProvider;
@@ -98,6 +102,9 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     private NavigationView navegacionview;
 
+    Button mButtonDialogElegida;            //falta utilizar
+
+   // private Button btn_llamada;  //error
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -131,9 +138,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
         mTokenProvider = new TokenProvider();
 
-        navegacionview = (NavigationView) findViewById(R.id.nav_view);
 
-        navegacionview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        //supuesto error de cast
+        navegacionview = (NavigationView) findViewById(R.id.nav_view);
+       navegacionview.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
@@ -146,8 +154,24 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     case R.id.nav_historial :       //menu_history_booking
                         moveToHistoryBooking();
                         break;
+                        //amiga elegida
+                    case R.id.nav_elegida:
+                        elegidaamiga();
+                        break;
                 }
                 return false;
+            }
+        });
+        //botoncircular de llamada
+        CircleImageView btnllamada = (CircleImageView) findViewById(R.id.btnllamada);
+        btnllamada.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:+51 941174386"));
+                if (ActivityCompat.checkSelfPermission(MapClienteActivity.this, Manifest.permission.CALL_PHONE) !=
+                PackageManager.PERMISSION_GRANTED)
+                    return;
+                startActivity(i);
             }
         });
 
@@ -165,7 +189,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             }
         });
        /*
-        binding.rootLayout.btnMenu2.setOnClickListener(new View.OnClickListener() {
+        binding.rootLayout.btn_llamada.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -196,6 +220,29 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         instanceAutoCompleteDestino();
         instanceCameraListener();
     }
+
+    private void elegidaamiga() {
+        //elegida amiga dialog
+      //  mButtonDialogElegida = (Button) findViewById(R.id.nav_elegida);
+     /*   mButtonDialogElegida.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alerta = new AlertDialog.Builder(MapClienteActivity.this);
+                alerta.setMessage("Bienvenido a Registrarse en Nuestra Empresa FemTaxi, los datos que se solicitara y posterior ingresar seran administrados en confidencialidad por vuestra Gerencia. Sea usted Bienvenido.")  //ver si se cambia esta Opcion
+                        .setCancelable(false)
+                        .setPositiveButton("Estoy de Acuerdo", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                               //
+                            }
+                        });
+                AlertDialog titulo = alerta.create();
+                titulo.setTitle("Compromiso Conductor");
+                titulo.show();
+            }
+        });*/
+    }
+
 
     @Override
     protected void onDestroy() {
