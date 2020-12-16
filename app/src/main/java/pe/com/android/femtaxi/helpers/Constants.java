@@ -32,6 +32,8 @@ public class Constants {
     public class REQUEST {
         public static final int REQUEST_CODE_GALLERY = 100;
         public static final int REQUEST_CODE_CAMERA = 200;
+        public static final int REQUEST_CODE_CALL = 300;
+        public static final int REQUEST_CODE_LOCATION = 400;
     }
 
     public class Preferences {

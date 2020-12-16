@@ -1,7 +1,10 @@
 package pe.com.android.femtaxi.models;
 
+import androidx.annotation.Keep;
+
 import java.util.ArrayList;
 
+@Keep
 public class FCMResponse {
 
     private Long multicast_id;

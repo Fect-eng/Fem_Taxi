@@ -17,18 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import pe.com.android.femtaxi.R;
-import pe.com.android.femtaxi.client.MapClienteActivity;
-import pe.com.android.femtaxi.databinding.ActivityProfileClientBinding;
-import pe.com.android.femtaxi.databinding.ActivityProfileDriverBinding;
-import pe.com.android.femtaxi.helpers.Constants;
-import pe.com.android.femtaxi.models.Client;
-import pe.com.android.femtaxi.providers.AuthProvider;
-import pe.com.android.femtaxi.providers.DriverProvider;
-import pe.com.android.femtaxi.utils.CompressorBitmapImage;
-import pe.com.android.femtaxi.utils.FileUtils;
-
 import com.github.kayvannj.permission_utils.Func;
 import com.github.kayvannj.permission_utils.PermissionUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,6 +30,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.client.MapClienteActivity;
+import pe.com.android.femtaxi.databinding.ActivityProfileDriverBinding;
+import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.models.Client;
+import pe.com.android.femtaxi.providers.AuthProvider;
+import pe.com.android.femtaxi.providers.DriverProvider;
+import pe.com.android.femtaxi.utils.CompressorBitmapImage;
+import pe.com.android.femtaxi.utils.FileUtils;
 
 public class ProfileDriverActivity extends AppCompatActivity {
 
@@ -215,41 +213,55 @@ public class ProfileDriverActivity extends AppCompatActivity {
     }
 
     private void saveImage() {
-        byte[] imageByte = CompressorBitmapImage.getImage(this, mImageFile.getPath(), 1024, 1024);
-        StorageReference storageReference = FirebaseStorage.getInstance()
-                .getReference()
-                .child(Constants.Firebase.Nodo.IMAGE_DRIVER)
-                .child(mAuthProvider.getId());
-        UploadTask uploadTask = storageReference.putBytes(imageByte);
-        uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                if (task.isSuccessful()) {
-                    storageReference.getDownloadUrl()
-                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                @Override
-                                public void onSuccess(Uri uri) {
-                                    String image = uri.toString();
-                                    Map<String, Object> update = new HashMap<>();
-                                    update.put("photo", image);
-                                    update.put("name", binding.inputNameLastName.getText().toString());
-                                    update.put("phone", binding.inputPhone.getText().toString());
-                                    mClientProvider.getUpdateDataUser(mAuthProvider.getId(), update)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void aVoid) {
-                                                    mProgressDialog.dismiss();
-                                                    Toast.makeText(ProfileDriverActivity.this, "Informacion actualizada con exito", Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                }
-                            });
+        if (mImageFile != null) {
+            byte[] imageByte = CompressorBitmapImage.getImage(this, mImageFile.getPath(), 1024, 1024);
+            StorageReference storageReference = FirebaseStorage.getInstance()
+                    .getReference()
+                    .child(Constants.Firebase.Nodo.IMAGE_DRIVER)
+                    .child(mAuthProvider.getId());
+            UploadTask uploadTask = storageReference.putBytes(imageByte);
+            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        storageReference.getDownloadUrl()
+                                .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String image = uri.toString();
+                                        Map<String, Object> update = new HashMap<>();
+                                        update.put("photo", image);
+                                        update.put("name", binding.inputNameLastName.getText().toString());
+                                        update.put("phone", binding.inputPhone.getText().toString());
+                                        mClientProvider.getUpdateDataUser(mAuthProvider.getId(), update)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        mProgressDialog.dismiss();
+                                                        Toast.makeText(ProfileDriverActivity.this, "Informacion actualizada con exito", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+                                    }
+                                });
 
-                } else {
-                    Toast.makeText(ProfileDriverActivity.this, "Ocurrio un problema al subir la imagen", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(ProfileDriverActivity.this, "Ocurrio un problema al subir la imagen", Toast.LENGTH_SHORT).show();
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            Map<String, Object> update = new HashMap<>();
+            update.put("name", binding.inputNameLastName.getText().toString());
+            update.put("phone", binding.inputPhone.getText().toString());
+            mClientProvider.getUpdateDataUser(mAuthProvider.getId(), update)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            mProgressDialog.dismiss();
+                            Toast.makeText(ProfileDriverActivity.this, "Informacion actualizada con exito", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
 
     private void loadImage(String path) {

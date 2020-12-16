@@ -1,5 +1,6 @@
 package pe.com.android.femtaxi.driver;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import pe.com.android.femtaxi.RegistroDriverPrimerActivity;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.providers.AuthProvider;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -29,9 +31,8 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     EditText txtUsuario, txtPassword;
     Button btnlogearDriver;
     Button botonDualRegistro;
-    private Button bntMensajeB;
-    private Button authenticarLog;
     private AuthProvider mAuthProvider;
+    private ProgressDialog mProgressDialog;
 
     Button mButonLogin;
 
@@ -41,8 +42,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         setContentView(R.layout.activity_opcion_dual_driver);
         mButonLogin = findViewById(R.id.btnlogearDriver);
         mButtonDialog = findViewById(R.id.botonDualRegistro);
-
-
+        mProgressDialog = new ProgressDialog(this);
         mAuthProvider = new AuthProvider();
 
         mButtonDialog = (Button) findViewById(R.id.botonDualRegistro);
@@ -51,7 +51,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
             public void onClick(View v) {
                 AlertDialog.Builder alerta = new AlertDialog.Builder(OpcionDualDriverActivity.this);
                 alerta.setMessage("Bienvenido a Registrarse en Nuestra Empresa FemTaxi, los datos que se solicitara y posterior ingresar seran administrados en confidencialidad por vuestra Gerencia. Sea usted Bienvenido.")  //ver si se cambia esta Opcion
-                        .setCancelable(false) // true es para que se salte el no
+                        .setCancelable(false)
                         .setPositiveButton("Estoy de Acuerdo", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -69,7 +69,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
             }
         });
 
-        botonDualRegistro = findViewById(R.id.botonDualRegistro);  //instanciar objeto
+        botonDualRegistro = findViewById(R.id.botonDualRegistro);
 
         txtUsuario = findViewById(R.id.txtUsuario);
         txtPassword = findViewById(R.id.txtPassword);
@@ -79,6 +79,9 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: " + validarCampos());
                 if (validarCampos()) {
+                    mProgressDialog.setMessage("Espere un momento por favor...");
+                    mProgressDialog.setCanceledOnTouchOutside(false);
+                    mProgressDialog.show();
                     mAuthProvider.loginActivity(txtUsuario.getText().toString().trim(),
                             txtPassword.getText().toString().trim())
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -94,12 +97,13 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
                                     Log.d(TAG, "onFailure: " + e.getMessage());
+                                    mProgressDialog.dismiss();
+                                    Toast.makeText(OpcionDualDriverActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
             }
         });
-        botonDualRegistro = findViewById(R.id.botonDualRegistro);
     }
 
 
@@ -132,6 +136,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     }
 
     private void moveToMapDriver() {
+        mProgressDialog.dismiss();
         new PreferencesManager(this).setIsDriver(true);
         Intent intent = new Intent(OpcionDualDriverActivity.this, MapDriverActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
