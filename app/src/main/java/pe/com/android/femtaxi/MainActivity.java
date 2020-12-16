@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
     //cliente LoginClientActivity
     private void goToSelectClient() {
-        Intent intent = new Intent(MainActivity.this, MapClienteActivity.class);
+        Intent intent = new Intent(MainActivity.this, LoginClientActivity.class);
         startActivity(intent);
         MainActivity.this.finish();
     }
