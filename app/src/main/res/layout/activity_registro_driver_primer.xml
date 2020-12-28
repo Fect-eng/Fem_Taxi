@@ -165,6 +165,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
+                        android:enabled="false"
                         android:hint="Fecha Nacimiento"
                         android:inputType="datetime">
 
@@ -256,6 +257,20 @@
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="@color/colorPrimary"
                     android:text="Siguiente"
+                    android:textColor="@color/TextoDriver"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btninfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="70dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="70dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:text="Información"
                     android:textColor="@color/TextoDriver"
                     android:textSize="20dp"
                     android:textStyle="bold" />

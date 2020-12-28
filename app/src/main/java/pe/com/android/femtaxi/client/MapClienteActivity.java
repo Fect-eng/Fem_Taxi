@@ -146,6 +146,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                         break;
                     case R.id.nav_mascota:
                         break;
+
                     case R.id.nav_elegida:
                         friend();
                         break;
@@ -301,7 +302,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                         new CameraPosition.Builder()
                                 .target(mOriginLatLng)
-                                .zoom(14f)          //16f
+                                .zoom(16f)          //16f
                                 .build()));
             }
 
@@ -389,7 +390,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private void friend() {
         AlertDialog.Builder alerta = new AlertDialog.Builder(MapClienteActivity.this);
         alerta.setTitle("Amiga elegida");
-        alerta.setMessage("Si tomas npo manejes.... te ponemos una conductora de reemplazo")
+        alerta.setMessage("Si tomas no manejes.... te ponemos una conductora de reemplazo")
                 .setCancelable(false);
         AlertDialog titulo = alerta.create();
         titulo.show();
@@ -534,4 +535,3 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         }
     }
 }
-

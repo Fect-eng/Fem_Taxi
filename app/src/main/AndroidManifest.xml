@@ -28,7 +28,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".SetareActivity"></activity>
+        <activity android:name=".RevisionTecnicaActivity" />
+        <activity android:name=".IdentVehicularActivity" />
+        <activity android:name=".FotoConductoraActivity" />
+        <activity android:name=".SoatActivity" />
+        <activity android:name=".DNIActivity" />
+        <activity android:name=".PenalesActivity" />
+        <activity android:name=".ImagenStorageActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,56 +43,35 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".client.CalificationClientActivity" />
-
         <activity
             android:name=".driver.ProfileDriverActivity"
             android:parentActivityName=".driver.MapDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".driver.HistoryBookingDriverActivity"
             android:parentActivityName=".driver.MapDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".driver.CalificationDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".EnviarImagenSegundoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".client.RequestDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".llmadasDiariasActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".MapBoxPlaceActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".client.DetailRequestActivity"
             android:parentActivityName=".client.MapClienteActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".client.ProfileClientActivity"
             android:parentActivityName=".client.MapClienteActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".client.HistoryBookingClientActivity"
             android:parentActivityName=".client.MapClienteActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".pruebasAppActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
@@ -93,70 +79,40 @@
             android:resource="@xml/file_paths" />
 
         <activity
-            android:name=".imagenesCelularActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".RegisterActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
             android:name=".driver.loginDriveActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".EnviarImagenActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".ElegantDataActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".GpsDriverActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".client.MapClienteActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".client.LoginClientActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".driver.MapDriverActivity"
             android:parentActivityName=".driver.OpcionDualDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".RegistroDriverImageActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".RegistroDriverSegundoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".RegistroDriverPrimerActivity"
             android:parentActivityName=".driver.OpcionDualDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".driver.OpcionDualDriverActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".driver.NotificationBookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".driver.MapDriveBookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".client.MapClientBookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -191,7 +147,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
     </application>
 
 </manifest>

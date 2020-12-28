@@ -1,11 +1,13 @@
 package pe.com.android.femtaxi;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -39,7 +41,7 @@ public class RegistroDriverSegundoActivity extends AppCompatActivity {
     FirebaseAuth auth;
     //Creamos un button ALertaDialog
     private Button AlertBtn;
-
+    Button btninfo;
     Button btnnextmagen; //boton siguiente imagen
     registroDriver1 mRegistroDriver1;
 
@@ -63,8 +65,31 @@ public class RegistroDriverSegundoActivity extends AppCompatActivity {
         modelocarro = findViewById(R.id.txtmodelocarro);
         tipocarro = findViewById(R.id.txttipocarro);
 
-        btnConductorcar = findViewById(R.id.btnConductorcar);
+        btninfo = findViewById(R.id.btninfo);
+        btninfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alerta = new AlertDialog.Builder(RegistroDriverSegundoActivity.this);
+                alerta.setMessage("Buen dia Tenga Usted estimada Conductora, si usted es Personal Externo o desea usar la Aplicacion de Manera Conductora por favor Sirvase a Comunicar al siguiente numero de Empresa FEMTaxi para Mayor Información +51 941174386")  //ver si se cambia esta Opcion
+                        .setCancelable(false)
+                        .setPositiveButton("Se Agradece la Atención, La Gerencia", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                btninfo.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        //nada
+                                    }
+                                });
+                            }
+                        });
+                AlertDialog titulo = alerta.create();
+                titulo.setTitle("Información Personal Externo");
+                titulo.show();
+            }
+        });
 
+        btnConductorcar = findViewById(R.id.btnConductorcar);
         btnConductorcar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

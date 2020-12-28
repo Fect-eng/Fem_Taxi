@@ -1,6 +1,7 @@
 package pe.com.android.femtaxi;
 
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,9 +10,11 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import pe.com.android.femtaxi.driver.OpcionDualDriverActivity;
 import pe.com.android.femtaxi.models.registroDriver1;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -51,6 +54,7 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity implements V
     Button btnUpdatePrimer;
 
     //declaramos el boton para otro layout
+    Button btninfo;
     Button btnnextdriver;              //boton de layout que nos dirije a otra layout
     registroDriver1 registroDriver1;
     FirebaseAuth auth;
@@ -76,6 +80,31 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity implements V
         textocelular = findViewById(R.id.textocelular);
         textemail = findViewById(R.id.textemail);
 
+
+        btninfo = findViewById(R.id.btninfo);
+        btninfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder alerta = new AlertDialog.Builder(RegistroDriverPrimerActivity.this);
+                alerta.setMessage("Buen dia Tenga Usted estimada Conductora, si usted es Personal Externo o desea usar la Aplicacion de Manera Conductora por favor Sirvase a Comunicar al siguiente numero de Empresa FEMTaxi para Mayor Información +51 941174386")  //ver si se cambia esta Opcion
+                        .setCancelable(false)
+                        .setPositiveButton("Se Agradece la Atención, La Gerencia", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                btninfo.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                     //nada
+                                    }
+                                });
+                            }
+                        });
+                AlertDialog titulo = alerta.create();
+                titulo.setTitle("Información Personal Externo");
+                titulo.show();
+            }
+        });
+        //=======================================
 
         btnnextdriver = findViewById(R.id.btnnextdriver);
         btnnextdriver.setOnClickListener(new View.OnClickListener() {
@@ -160,7 +189,7 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity implements V
         return true;   //retornamos el valor de retorno
     }
 
-    private void goToSelectAuth() {
+    private void goToSelectAuth() {   //RegistroDriverSegundoActivity
         Intent intent = new Intent(RegistroDriverPrimerActivity.this, RegistroDriverSegundoActivity.class);
         intent.putExtra("driver", (Serializable) registroDriver1);
         startActivity(intent);

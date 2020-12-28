@@ -16,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import pe.com.android.femtaxi.R;
 import pe.com.android.femtaxi.RegistroDriverPrimerActivity;
+import pe.com.android.femtaxi.databinding.ActivityMapDriverBinding;
+import pe.com.android.femtaxi.databinding.ActivityOpcionDualDriverBinding;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.providers.AuthProvider;
@@ -34,16 +36,26 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     private AuthProvider mAuthProvider;
     private ProgressDialog mProgressDialog;
 
+    private ActivityOpcionDualDriverBinding binding;            //binding
+
     Button mButonLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_opcion_dual_driver);
+        //setContentView(R.layout.activity_opcion_dual_driver);
+        binding = ActivityOpcionDualDriverBinding.inflate(getLayoutInflater());             //1
+        setContentView(binding.getRoot());                                                  //2
+
+
         mButonLogin = findViewById(R.id.btnlogearDriver);
         mButtonDialog = findViewById(R.id.botonDualRegistro);
         mProgressDialog = new ProgressDialog(this);
         mAuthProvider = new AuthProvider();
+
+        setSupportActionBar(binding.includeToolbar.toolbar);
+        getSupportActionBar().setTitle("Elegir Opción Conductora");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mButtonDialog = (Button) findViewById(R.id.botonDualRegistro);
         mButtonDialog.setOnClickListener(new View.OnClickListener() {

@@ -18,10 +18,13 @@ import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import pe.com.android.femtaxi.databinding.ActivityMapClienteBinding;
+
+import pe.com.android.femtaxi.databinding.ActivityEnviarImagenBinding;
+
 import pe.com.android.femtaxi.models.registroDriver1;
 import pe.com.android.femtaxi.utils.FileUtils;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -40,9 +43,9 @@ public class EnviarImagenActivity extends AppCompatActivity {
     private int GALLERY_INTENT4 = 5;        //foto con SOAT
     //nuevos agregados
 
-    private ActivityMapClienteBinding binding;
+   // private ActivityEnviarImagenBinding binding;
     static final int PERMISSION_CAMERA = 1;
-    Toolbar mToolbar;
+   Toolbar mToolbar;
 
     private registroDriver1 mRegistroDriver1;
     private ImageView photo, photo1, photo2, photo3, photo4, photo5, photo6, photo7, photo8;
@@ -59,7 +62,6 @@ public class EnviarImagenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviar_imagen);
-        binding = ActivityMapClienteBinding.inflate(getLayoutInflater());
 
         /*setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Cliente");
@@ -70,7 +72,7 @@ public class EnviarImagenActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 
         mStorage = FirebaseStorage.getInstance().getReference();
-        mUploadBtn = (Button) findViewById(R.id.btnnextimg);       //aca estamos
+        mUploadBtn = (Button) findViewById(R.id.btnnextimg);
         photo = (ImageView) findViewById(R.id.iv_photo);
         photo1 = (ImageView) findViewById(R.id.iv_photo1);
         photo2 = (ImageView) findViewById(R.id.iv_photo2);
@@ -78,7 +80,7 @@ public class EnviarImagenActivity extends AppCompatActivity {
         photo4 = (ImageView) findViewById(R.id.iv_photo4);
         //new agregate
 
-        mRegistroDriver1 = (registroDriver1) getIntent().getSerializableExtra("Detalle_Driver");
+      //  mRegistroDriver1 = (registroDriver1) getIntent().getSerializableExtra("Detalle_Driver");
         mUploadBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,13 +117,7 @@ public class EnviarImagenActivity extends AppCompatActivity {
                 verifiedPermision(GALLERY_INTENT4);
             }
         });
-        //btnnextimg
-       /* mUploadBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                siguienteImagen();
-            }
-        });*/
+
     }
 
     private void siguienteImagen() {
@@ -131,11 +127,15 @@ public class EnviarImagenActivity extends AppCompatActivity {
 
     private void sendPhoto() {
         for (Uri uri : uriArrayList) {
-            StorageReference filepath = mStorage.child(mRegistroDriver1.getId()).child(uri.getLastPathSegment()); //storage
+
+            StorageReference filepath = mStorage.child(mRegistroDriver1.getId()).child(uri.getLastPathSegment());
+           // StorageReference filepath = mStorage.child("fotos").child(uri.getLastPathSegment());
+           //storage
             filepath.putFile(uri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                          //  Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl();
                             Toast.makeText(EnviarImagenActivity.this, "Se subio Correctamente la foto", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -144,8 +144,9 @@ public class EnviarImagenActivity extends AppCompatActivity {
 
     //camare
 //==
+    //permsissions
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permsissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == PERMISSION_CAMERA) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 FileUtils.pickImageCamera(this, GALLERY_INTENT_GLOBAL);
