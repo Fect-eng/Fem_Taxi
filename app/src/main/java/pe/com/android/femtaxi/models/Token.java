@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Keep
 public class Token implements Serializable {
-    String token;
+    private String token;
 
     public Token() {
     }

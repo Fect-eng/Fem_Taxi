@@ -2,17 +2,23 @@ package pe.com.android.femtaxi.models;
 
 import androidx.annotation.Keep;
 
+import java.io.Serializable;
 import java.util.Map;
 
 @Keep
-public class FCMRequest {
+public class FCMRequest implements Serializable {
     private String to;
     private String priority;
+    private String ttl;
     Map<String, String> data;
 
-    public FCMRequest(String to, String priority, Map<String, String> data) {
+    public FCMRequest() {
+    }
+
+    public FCMRequest(String to, String priority, String ttl, Map<String, String> data) {
         this.to = to;
         this.priority = priority;
+        this.ttl = ttl;
         this.data = data;
     }
 
@@ -32,6 +38,14 @@ public class FCMRequest {
         this.priority = priority;
     }
 
+    public String getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(String ttl) {
+        this.ttl = ttl;
+    }
+
     public Map<String, String> getData() {
         return data;
     }
@@ -45,6 +59,7 @@ public class FCMRequest {
         return "FCMRequest{" +
                 "to='" + to + '\'' +
                 ", priority='" + priority + '\'' +
+                ", ttl='" + ttl + '\'' +
                 ", data=" + data +
                 '}';
     }

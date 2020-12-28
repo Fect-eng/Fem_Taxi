@@ -5,13 +5,21 @@ apply plugin: 'com.google.firebase.crashlytics'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
+    signingConfigs {
+        config {
+            storeFile file('G:\\Trabajos\\EdgarPacheco\\KEY\\FemTaxi.jks')
+            storePassword 'FemTaxi159*'
+            keyAlias 'FemTaxi'
+            keyPassword 'FemTaxi159*'
+        }
+    }
 
     defaultConfig {
         applicationId "pe.com.android.femtaxi"
         minSdkVersion 17
         targetSdkVersion 30
-        versionCode 3
-        versionName "1.0.3"
+        versionCode 6
+        versionName "1.0.6"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,6 +30,10 @@ android {
         ndk {
             debugSymbolLevel 'FULL'
         }
+
+        signingConfig signingConfigs.config
+        testFunctionalTest true
+        testHandleProfiling true
     }
 
     buildTypes {

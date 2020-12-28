@@ -2,10 +2,12 @@ package pe.com.android.femtaxi.models;
 
 import androidx.annotation.Keep;
 
+import java.io.Serializable;
+
 @Keep
-public class Info {
-    double km;
-    double min;
+public class Info implements Serializable {
+    private double km;
+    private double min;
 
     public Info() {
     }

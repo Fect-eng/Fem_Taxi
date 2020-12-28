@@ -6,18 +6,21 @@ import java.io.Serializable;
 
 @Keep
 public class registroDriver1 implements Serializable {
-    String id;
-    String nombres; //textoNombresCom
-    String apellidos; // textoApe
-    String dni; //textodni
-    String direccion; //textodireccion
-    String nacimiento; //textoFechaNac
-    String celular; //textocelular
-    String email; //textemail
+    private String id;
+    private String nombres;
+    private String apellidos;
+    private String dni;
+    private String direccion;
+    private String nacimiento;
+    private String celular;
+    private String email;
 
-    //registro driver primera parte
+    public registroDriver1() {
+    }
 
-    public registroDriver1(String id, String nombres, String apellidos, String dni, String direccion, String nacimiento, String celular, String email) {
+    public registroDriver1(String id, String nombres, String apellidos, String dni,
+                           String direccion, String nacimiento, String celular,
+                           String email) {
         this.id = id;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -26,10 +29,6 @@ public class registroDriver1 implements Serializable {
         this.nacimiento = nacimiento;
         this.celular = celular;
         this.email = email;
-    }
-
-    public registroDriver1() {
-
     }
 
     public String getId() {

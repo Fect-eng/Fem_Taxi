@@ -2,16 +2,20 @@ package pe.com.android.femtaxi.models;
 
 import androidx.annotation.Keep;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 @Keep
-public class FCMResponse {
+public class FCMResponse implements Serializable {
 
     private Long multicast_id;
     private int success;
     private int failure;
     private int canonical_ids;
     private ArrayList<Object> results;
+
+    public FCMResponse() {
+    }
 
     public FCMResponse(Long multicast_id, int success, int failure, int canonical_ids, ArrayList<Object> results) {
         this.multicast_id = multicast_id;

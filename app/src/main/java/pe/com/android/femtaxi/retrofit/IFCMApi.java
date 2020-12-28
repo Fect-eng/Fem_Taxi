@@ -1,6 +1,6 @@
 package pe.com.android.femtaxi.retrofit;
 
-import pe.com.android.femtaxi.models.FCMBody;
+import pe.com.android.femtaxi.models.FCMRequest;
 import pe.com.android.femtaxi.models.FCMResponse;
 
 import retrofit2.Call;
@@ -15,5 +15,5 @@ public interface IFCMApi {
             "Authorization:key=AAAA8NjuTdM:APA91bELYUS8X2wYN4elK6V9KQAmOnPkxipLyZ51laI-5ZxXPpW7Uy12SiJe87LI5GRFVCYJ8Btb43QR9RKMq3PAlUbstmdEe4vMTG2j9yXsvNky93M87C40D1f67NoP41YEwdrE7wtF"
     })
     @POST("fcm/send")
-    Call<FCMResponse> send(@Body FCMBody body);
+    Call<FCMResponse> send(@Body FCMRequest fcmRequest);
 }

@@ -2,13 +2,26 @@ package pe.com.android.femtaxi.models;
 
 import androidx.annotation.Keep;
 
+import java.io.Serializable;
+
 @Keep
-public class Client {
-    String UId;
-    String name;
-    String email;
-    String photo;
-    String phone;
+public class Client implements Serializable {
+    private String UId;
+    private String name;
+    private String email;
+    private String photo;
+    private String phone;
+
+    public Client() {
+    }
+
+    public Client(String UId, String name, String email, String photo, String phone) {
+        this.UId = UId;
+        this.name = name;
+        this.email = email;
+        this.photo = photo;
+        this.phone = phone;
+    }
 
     public String getUId() {
         return UId;

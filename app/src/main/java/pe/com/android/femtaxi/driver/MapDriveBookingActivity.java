@@ -33,7 +33,7 @@ import pe.com.android.femtaxi.databinding.ActivityMapDriverBookingBinding;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.models.Client;
 import pe.com.android.femtaxi.models.ClientBooking;
-import pe.com.android.femtaxi.models.FCMBody;
+import pe.com.android.femtaxi.models.FCMRequest;
 import pe.com.android.femtaxi.models.FCMResponse;
 import pe.com.android.femtaxi.models.Info;
 import pe.com.android.femtaxi.models.Token;
@@ -532,7 +532,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                                 Map<String, String> map = new HashMap<>();
                                 map.put("title", "ESTADO DE TU VIAJE");
                                 map.put("body", "El estado de tu viaje es " + status);
-                                FCMBody fcmBody = new FCMBody(token.getToken(), "high", "4500s", map);
+                                FCMRequest fcmBody = new FCMRequest(token.getToken(), "high", "4500s", map);
                                 Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
                                 mNotificacionProvider.sendNotification(fcmBody)
                                         .enqueue(new Callback<FCMResponse>() {

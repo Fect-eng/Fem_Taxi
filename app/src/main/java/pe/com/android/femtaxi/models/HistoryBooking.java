@@ -2,8 +2,10 @@ package pe.com.android.femtaxi.models;
 
 import androidx.annotation.Keep;
 
+import java.io.Serializable;
+
 @Keep
-public class HistoryBooking {
+public class HistoryBooking implements Serializable {
     private String idHistory;
     private String destination;
     private Double destinationLat;

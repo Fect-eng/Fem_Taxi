@@ -2,13 +2,18 @@ package pe.com.android.femtaxi.models;
 
 import androidx.annotation.Keep;
 
+import java.io.Serializable;
+
 @Keep
-public class Driver {
-    String UId;
-    String name;
-    String email;
-    String photo;
-    String phone;
+public class Driver implements Serializable {
+    private String UId;
+    private String name;
+    private String email;
+    private String photo;
+    private String phone;
+
+    public Driver() {
+    }
 
     public String getUId() {
         return UId;
@@ -52,7 +57,7 @@ public class Driver {
 
     @Override
     public String toString() {
-        return "Client{" +
+        return "Driver{" +
                 "UId='" + UId + '\'' +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +

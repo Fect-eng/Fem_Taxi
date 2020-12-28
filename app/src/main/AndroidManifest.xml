@@ -62,14 +62,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".llmadasDiariasActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".MapBoxPlaceActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
             android:name=".client.DetailRequestActivity"
             android:parentActivityName=".client.MapClienteActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -84,21 +76,9 @@
             android:parentActivityName=".client.MapClienteActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity
-            android:name=".pruebasAppActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
-
-        <activity
-            android:name=".imagenesCelularActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".RegisterActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".driver.loginDriveActivity"
@@ -107,14 +87,6 @@
 
         <activity
             android:name=".EnviarImagenActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".ElegantDataActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".GpsDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -129,10 +101,6 @@
         <activity
             android:name=".driver.MapDriverActivity"
             android:parentActivityName=".driver.OpcionDualDriverActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".RegistroDriverImageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

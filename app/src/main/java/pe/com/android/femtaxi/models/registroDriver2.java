@@ -4,11 +4,11 @@ import androidx.annotation.Keep;
 
 @Keep
 public class registroDriver2 {
-    String numeroplaca; //txtnumeroplaca
-    String numerocarro; //txtnumerocarro
-    String modelocarro; //txtmodelocarro
-    String tipocarro; //txttipocarro
-    String userId;
+    private String numeroplaca;
+    private String numerocarro;
+    private String modelocarro;
+    private String tipocarro;
+    private String userId;
 
     public registroDriver2() {
     }
@@ -46,7 +46,6 @@ public class registroDriver2 {
     }
 
 
-
     public String getTipocarro() {
         return tipocarro;
     }
@@ -54,7 +53,6 @@ public class registroDriver2 {
     public void setTipocarro(String tipocarro) {
         this.tipocarro = tipocarro;
     }
-
 
 
     public String getUserId() {

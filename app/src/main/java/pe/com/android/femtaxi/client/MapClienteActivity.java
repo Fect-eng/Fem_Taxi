@@ -389,7 +389,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private void friend() {
         AlertDialog.Builder alerta = new AlertDialog.Builder(MapClienteActivity.this);
         alerta.setTitle("Amiga elegida");
-        alerta.setMessage("Si tomas npo manejes.... te ponemos una conductora de reemplazo")
+        alerta.setMessage("Si tomas no manejes.... \nTe colocamos una conductora de reemplazo")
                 .setCancelable(false);
         AlertDialog titulo = alerta.create();
         titulo.show();

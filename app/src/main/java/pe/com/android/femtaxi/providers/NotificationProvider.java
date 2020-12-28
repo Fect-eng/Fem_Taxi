@@ -1,6 +1,6 @@
 package pe.com.android.femtaxi.providers;
 
-import pe.com.android.femtaxi.models.FCMBody;
+import pe.com.android.femtaxi.models.FCMRequest;
 import pe.com.android.femtaxi.models.FCMResponse;
 import pe.com.android.femtaxi.retrofit.IFCMApi;
 import pe.com.android.femtaxi.retrofit.RetrofitUser;
@@ -14,7 +14,7 @@ public class NotificationProvider {
     public NotificationProvider() {
     }
 
-    public Call<FCMResponse> sendNotification(FCMBody fcmBody) {
-        return RetrofitUser.getClientObject(url).create(IFCMApi.class).send(fcmBody);
+    public Call<FCMResponse> sendNotification(FCMRequest fcmRequest) {
+        return RetrofitUser.getClientObject(url).create(IFCMApi.class).send(fcmRequest);
     }
 }
