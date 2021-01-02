@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import pe.com.android.femtaxi.R;
-import pe.com.android.femtaxi.RegistroDriverPrimerActivity;
+import pe.com.android.femtaxi.driver.registerDriver.RegistroDriverPrimerActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

@@ -37,7 +37,41 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".client.CalificationClientActivity" />
+        <activity
+            android:name=".SetareActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".RevisionTecnicaActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".IdentVehicularActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".FotoConductoraActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".SoatActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".DNIActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".PenalesActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".ImagenStorageActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".client.CalificationClientActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".driver.ProfileDriverActivity"
@@ -54,7 +88,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".EnviarImagenSegundoActivity"
+            android:name=".driver.registerDriver.EnviarImagenSegundoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -86,7 +120,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".EnviarImagenActivity"
+            android:name=".driver.registerDriver.EnviarImagenActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -104,11 +138,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".RegistroDriverSegundoActivity"
+            android:name=".driver.registerDriver.RegistroDriverSegundoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".RegistroDriverPrimerActivity"
+            android:name=".driver.registerDriver.RegistroDriverPrimerActivity"
             android:parentActivityName=".driver.OpcionDualDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 

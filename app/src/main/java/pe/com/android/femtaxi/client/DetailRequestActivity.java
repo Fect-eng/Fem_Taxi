@@ -13,12 +13,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.annotation.ServiceType;
 import pe.com.android.femtaxi.databinding.ActivityDetailRequestBinding;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.models.Info;
 import pe.com.android.femtaxi.providers.GoogleApiProvider;
 import pe.com.android.femtaxi.providers.InfoProvider;
 import pe.com.android.femtaxi.utils.DecodePoints;
+
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,6 +57,8 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
     private double mExtradestinoLng;
     private String mExtraOrigin;
     private String mExtraDestination;
+    @ServiceType
+    private int mServiceType;
 
     private LatLng mOriginLatLng;
     private LatLng mDestinationLatLng;
@@ -75,7 +79,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         mButtonRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToRequestDriver();
+                moveToRequestDriver();
 
             }
         });
@@ -92,6 +96,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         mExtraDestination = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO);
         mExtraDestinoLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LAT, 0);
         mExtradestinoLng = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LONG, 0);
+        mServiceType = getIntent().getIntExtra(Constants.Extras.EXTRA_SERVICE_TYPE, 0);
 
         mOriginLatLng = new LatLng(mExtraOriginLat, mExtraOriginLng);
         mDestinationLatLng = new LatLng(mExtraDestinoLat, mExtradestinoLng);
@@ -102,18 +107,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         binding.btnBackPresset.setOnClickListener(view -> {
             this.finish();
         });
-    }
-
-    private void goToRequestDriver() {
-        Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
-        intent.putExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN, mExtraOrigin);
-        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LAT, mExtraOriginLat);
-        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LONG, mExtraOriginLng);
-        intent.putExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO, mExtraDestination);
-        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mExtraDestinoLat);
-        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mExtradestinoLng);
-        startActivity(intent);
-        this.finish();
+        textBottonRequest(mServiceType);
     }
 
     @Override
@@ -144,6 +138,19 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         CameraUpdate camera = CameraUpdateFactory.newLatLngBounds(bounds, 100);
         nMap.animateCamera(camera);
         drawRoute();
+    }
+
+    private void moveToRequestDriver() {
+        Intent intent = new Intent(DetailRequestActivity.this, RequestDriverActivity.class);
+        intent.putExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN, mExtraOrigin);
+        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LAT, mExtraOriginLat);
+        intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LONG, mExtraOriginLng);
+        intent.putExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO, mExtraDestination);
+        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mExtraDestinoLat);
+        intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mExtradestinoLng);
+        intent.putExtra(Constants.Extras.EXTRA_SERVICE_TYPE, mServiceType);
+        startActivity(intent);
+        this.finish();
     }
 
     private void drawRoute() {
@@ -178,7 +185,6 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
                             String distanceText = distance.getString("text");
                             String durationText = duration.getString("text");
                             binding.txtTimeAndDistance.setText(durationText + " , " + distanceText);
-                            //mTextViewDistance.setText(distanceText);
 
                             String[] distanceAndKM = distanceText.split(" ");
                             double distanceValor = Double.parseDouble(distanceAndKM[0]);
@@ -203,14 +209,66 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
                 .addOnSuccessListener(snapshots -> {
                     if (snapshots.exists()) {
                         Info info = snapshots.toObject(Info.class);
+                        Log.d(TAG, "calcularPrice addOnSuccessListener info: " + info);
                         double totalDistance = distanceValor * info.getKm();
                         double totalMinutes = minutosValor * info.getMin();
                         double total = totalDistance + totalMinutes;
                         double minTotal = total - 0.50;
                         double maxTotal = total + 0.50;
-                        binding.txtPrice.setText("S/ " + String.format("%.2f", minTotal) + " - " + String.format("%.2f", maxTotal));
+                        viewPrice(minTotal, maxTotal);
+                    } else {
+                        Log.d(TAG, "calcularPrice addOnSuccessListener info vacia: ");
                     }
+                })
+                .addOnFailureListener((e) -> {
+                    Log.d(TAG, "calcularPrice addOnFailureListener Error: " + e.getMessage());
                 });
+    }
+
+    private void textBottonRequest(@ServiceType int serviceType) {
+        String message;
+        switch (serviceType) {
+            case ServiceType.TAXI:
+                message = "Solicitar Taxi";
+                break;
+            case ServiceType.INTRA_URBANO:
+                message = "Solicitar Intra-Urbano";
+                break;
+            case ServiceType.DELIVERY:
+                message = "Solicitar Delivery";
+                break;
+            case ServiceType.MESSAGING:
+                message = "Solicitar Mensajeria";
+                break;
+            case ServiceType.CARGA:
+                message = "Solicitar Carga";
+                break;
+            case ServiceType.PET:
+                message = "Solicitar Mascota";
+                break;
+            case ServiceType.FRIEND:
+                message = "Solicitar Amiga";
+                break;
+            default:
+                message = "Solicitar Taxi";
+                break;
+        }
+        binding.btnSolicitar.setText(message);
+    }
+
+    private void viewPrice(double minTotal, double maxTotal) {
+        switch (mServiceType) {
+            case ServiceType.INTRA_URBANO:
+            case ServiceType.DELIVERY:
+            case ServiceType.MESSAGING:
+            case ServiceType.CARGA:
+            case ServiceType.PET:
+            case ServiceType.FRIEND:
+                minTotal = minTotal + 5;
+                maxTotal = maxTotal + 5;
+                break;
+        }
+        binding.txtPrice.setText("S/ " + String.format("%.2f", minTotal) + " - " + String.format("%.2f", maxTotal));
     }
 }
 

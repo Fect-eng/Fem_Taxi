@@ -126,16 +126,16 @@ public class FileUtils {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        activity.startActivityForResult(Intent.createChooser(intent, "Select Imagen"), Constants.PERMISSION.PICK_IMAGE_REQUEST);
+        activity.startActivityForResult(Intent.createChooser(intent, "Select Imagen"), Constants.Permission.PICK_IMAGE_REQUEST);
     }
 
-    public static Uri pickImageCamera(Activity activity, int requestCode) {
+    public static Uri pickImageCamera(Activity activity, String prefix, int requestCode) {
         Intent intent = new Intent();
         intent.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION
                 | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-        Uri uriTemp = getMediaTempUri(activity, "IMG", "jpg");
+        Uri uriTemp = getMediaTempUri(activity, "IMG-" + prefix, "jpg");
         try {
             intent.putExtra(MediaStore.EXTRA_OUTPUT, uriTemp);
             intent.putExtra("return-data", true);

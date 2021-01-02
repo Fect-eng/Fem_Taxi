@@ -6,47 +6,43 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import pe.com.android.femtaxi.R;
-import pe.com.android.femtaxi.RegistroDriverPrimerActivity;
-import pe.com.android.femtaxi.helpers.Constants;
-import pe.com.android.femtaxi.helpers.PreferencesManager;
-import pe.com.android.femtaxi.providers.AuthProvider;
-
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+import pe.com.android.femtaxi.driver.registerDriver.RegistroDriverPrimerActivity;
+import pe.com.android.femtaxi.databinding.ActivityOpcionDualDriverBinding;
+import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.helpers.PreferencesManager;
+import pe.com.android.femtaxi.providers.AuthProvider;
+
 public class OpcionDualDriverActivity extends AppCompatActivity {
     String TAG = OpcionDualDriverActivity.class.getSimpleName();
-    Button mButtonDialog;
-    EditText txtUsuario, txtPassword;
-    Button btnlogearDriver;
-    Button botonDualRegistro;
     private AuthProvider mAuthProvider;
     private ProgressDialog mProgressDialog;
 
-    Button mButonLogin;
+    private ActivityOpcionDualDriverBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_opcion_dual_driver);
-        mButonLogin = findViewById(R.id.btnlogearDriver);
-        mButtonDialog = findViewById(R.id.botonDualRegistro);
+        binding = ActivityOpcionDualDriverBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         mProgressDialog = new ProgressDialog(this);
         mAuthProvider = new AuthProvider();
 
-        mButtonDialog = (Button) findViewById(R.id.botonDualRegistro);
-        mButtonDialog.setOnClickListener(new View.OnClickListener() {
+        setSupportActionBar(binding.includeToolbar.toolbar);
+        getSupportActionBar().setTitle("Elegir Opción Conductora");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        binding.btnRegisterDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder alerta = new AlertDialog.Builder(OpcionDualDriverActivity.this);
@@ -55,12 +51,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
                         .setPositiveButton("Estoy de Acuerdo", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                botonDualRegistro.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        goToSelectAuth();
-                                    }
-                                });
+                                moveToRegisterDriver();
                             }
                         });
                 AlertDialog titulo = alerta.create();
@@ -68,13 +59,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
                 titulo.show();
             }
         });
-
-        botonDualRegistro = findViewById(R.id.botonDualRegistro);
-
-        txtUsuario = findViewById(R.id.txtUsuario);
-        txtPassword = findViewById(R.id.txtPassword);
-        btnlogearDriver = findViewById(R.id.btnlogearDriver);
-        btnlogearDriver.setOnClickListener(new View.OnClickListener() {
+        binding.btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: " + validarCampos());
@@ -82,8 +67,8 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
                     mProgressDialog.setMessage("Espere un momento por favor...");
                     mProgressDialog.setCanceledOnTouchOutside(false);
                     mProgressDialog.show();
-                    mAuthProvider.loginActivity(txtUsuario.getText().toString().trim(),
-                            txtPassword.getText().toString().trim())
+                    mAuthProvider.loginActivity(binding.txtUsuario.getText().toString().trim(),
+                            binding.txtPassword.getText().toString().trim())
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -106,31 +91,20 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         });
     }
 
-
-    public void btnlogearDriver(View v) {
-        if (txtUsuario.getText().toString().isEmpty()) {
-            Toast.makeText(this, "Ingrese Email FemTaxi", Toast.LENGTH_SHORT).show();
-        } else {
-            if (txtPassword.getText().toString().isEmpty()) {
-                Toast.makeText(this, "Ingrese Password", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
     public boolean validarCampos() {
         boolean retorno = true;
-        if (txtPassword.getText().toString().isEmpty()) {
-            txtPassword.setError("Ingrese Contrasena");
+        if (binding.txtPassword.getText().toString().isEmpty()) {
+            binding.txtPassword.setError("Ingrese Contrasena");
             retorno = false;
         }
-        if (txtUsuario.getText().toString().isEmpty()) {
-            txtUsuario.setError("Ingrese Email FemTaxi");
+        if (binding.txtUsuario.getText().toString().isEmpty()) {
+            binding.txtUsuario.setError("Ingrese Email FemTaxi");
             retorno = false;
         }
         return retorno;
     }
 
-    private void goToSelectAuth() {
+    private void moveToRegisterDriver() {
         Intent intent = new Intent(OpcionDualDriverActivity.this, RegistroDriverPrimerActivity.class);
         startActivity(intent);
     }

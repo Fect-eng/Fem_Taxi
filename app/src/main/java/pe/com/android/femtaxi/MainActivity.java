@@ -61,14 +61,14 @@ public class MainActivity extends AppCompatActivity {
             MainActivity.this.finish();
         }
     }
-    //cliente LoginClientActivity
-    private void goToSelectClient() {
+
+    private void goToSelectClient() {     //LoginClientActivity
         Intent intent = new Intent(MainActivity.this, LoginClientActivity.class);
         startActivity(intent);
         MainActivity.this.finish();
     }
 
-    //driver
+
     private void goToSelectAuth() {
         Intent intent = new Intent(MainActivity.this, OpcionDualDriverActivity.class);
         startActivity(intent);

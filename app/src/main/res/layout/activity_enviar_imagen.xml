@@ -4,21 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EnviarImagenActivity">
+    tools:context=".driver.registerDriver.EnviarImagenActivity">
 
     <include
-        android:id="@+id/toolbar"
-        layout="@layout/action_bar_toolbar"/>
+        android:id="@+id/include_toolbar"
+        layout="@layout/action_bar_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnnextimg"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/include_toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:layout_marginTop="30dp">
 
             <ImageView
-                android:id="@+id/iv_photo"
+                android:id="@+id/image_pol"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -34,13 +34,13 @@
                 android:adjustViewBounds="true"
                 android:padding="32dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintEnd_toStartOf="@+id/iv_photo1"
+                app:layout_constraintEnd_toStartOf="@+id/image_pen"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/policial" />
 
             <ImageView
-                android:id="@+id/iv_photo1"
+                android:id="@+id/image_pen"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -48,15 +48,15 @@
                 android:adjustViewBounds="true"
                 android:padding="32dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_photo"
+                app:layout_constraintBottom_toBottomOf="@+id/image_pol"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_photo"
-                app:layout_constraintTop_toTopOf="@+id/iv_photo"
+                app:layout_constraintStart_toEndOf="@+id/image_pol"
+                app:layout_constraintTop_toTopOf="@+id/image_pol"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/penales" />
 
             <ImageView
-                android:id="@+id/iv_photo2"
+                android:id="@+id/image_dni"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -64,13 +64,13 @@
                 android:adjustViewBounds="true"
                 android:padding="32dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintEnd_toStartOf="@+id/iv_photo3"
-                app:layout_constraintStart_toStartOf="@+id/iv_photo"
-                app:layout_constraintTop_toBottomOf="@+id/iv_photo"
+                app:layout_constraintEnd_toStartOf="@+id/image_soat"
+                app:layout_constraintStart_toStartOf="@+id/image_pol"
+                app:layout_constraintTop_toBottomOf="@+id/image_pol"
                 app:srcCompat="@drawable/dniazul" />
 
             <ImageView
-                android:id="@+id/iv_photo3"
+                android:id="@+id/image_soat"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -78,14 +78,14 @@
                 android:adjustViewBounds="true"
                 android:padding="32dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_photo2"
+                app:layout_constraintBottom_toBottomOf="@+id/image_dni"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_photo2"
-                app:layout_constraintTop_toTopOf="@+id/iv_photo2"
+                app:layout_constraintStart_toEndOf="@+id/image_dni"
+                app:layout_constraintTop_toTopOf="@+id/image_dni"
                 app:srcCompat="@drawable/soat" />
 
             <ImageView
-                android:id="@+id/iv_photo4"
+                android:id="@+id/image_vehiculo"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -95,7 +95,7 @@
                 android:scaleType="centerCrop"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_photo2"
+                app:layout_constraintTop_toBottomOf="@+id/image_dni"
                 app:srcCompat="@drawable/ftdriver" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -103,13 +103,13 @@
     </androidx.core.widget.NestedScrollView>
 
     <Button
-        android:id="@+id/btnnextimg"
+        android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_margin="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginTop="16dp"
         android:layout_marginRight="40dp"
-        android:layout_margin="40dp"
         android:background="@drawable/rounded_button"
         android:backgroundTint="@color/colorPrimary"
         android:text="Guardar Imagenes"

@@ -4,20 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EnviarImagenSegundoActivity">
+    tools:context=".driver.registerDriver.EnviarImagenSegundoActivity">
 
     <include
-        android:id="@+id/toolbar"
+        android:id="@+id/include_toolbar"
         layout="@layout/action_bar_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nested"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnnextimg"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/include_toolbar">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             android:layout_marginTop="80dp">
 
             <ImageView
-                android:id="@+id/iv_photo"
+                android:id="@+id/image_tarj_prop"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -33,13 +33,13 @@
                 android:adjustViewBounds="true"
                 android:padding="32dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintEnd_toStartOf="@+id/iv_photo1"
+                app:layout_constraintEnd_toStartOf="@+id/image_rev_tec"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/propiedad" />
 
             <ImageView
-                android:id="@+id/iv_photo1"
+                android:id="@+id/image_rev_tec"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -47,14 +47,14 @@
                 android:adjustViewBounds="true"
                 android:padding="32dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_photo"
+                app:layout_constraintBottom_toBottomOf="@+id/image_tarj_prop"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_photo"
-                app:layout_constraintTop_toTopOf="@+id/iv_photo"
+                app:layout_constraintStart_toEndOf="@+id/image_tarj_prop"
+                app:layout_constraintTop_toTopOf="@+id/image_tarj_prop"
                 app:srcCompat="@drawable/revitec" />
 
             <ImageView
-                android:id="@+id/iv_photo2"
+                android:id="@+id/image_setare"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -63,13 +63,13 @@
                 android:adjustViewBounds="true"
                 android:padding="32dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintEnd_toStartOf="@+id/iv_photo3"
-                app:layout_constraintStart_toStartOf="@+id/iv_photo"
-                app:layout_constraintTop_toBottomOf="@+id/iv_photo"
+                app:layout_constraintEnd_toStartOf="@+id/image_driver"
+                app:layout_constraintStart_toStartOf="@+id/image_tarj_prop"
+                app:layout_constraintTop_toBottomOf="@+id/image_tarj_prop"
                 app:srcCompat="@drawable/setare" />
 
             <ImageView
-                android:id="@+id/iv_photo3"
+                android:id="@+id/image_driver"
                 android:layout_width="0dp"
                 android:layout_height="150dp"
                 android:layout_gravity="center"
@@ -77,10 +77,10 @@
                 android:adjustViewBounds="true"
                 android:padding="32dp"
                 android:scaleType="centerCrop"
-                app:layout_constraintBottom_toBottomOf="@+id/iv_photo2"
+                app:layout_constraintBottom_toBottomOf="@+id/image_setare"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/iv_photo2"
-                app:layout_constraintTop_toTopOf="@+id/iv_photo2"
+                app:layout_constraintStart_toEndOf="@+id/image_setare"
+                app:layout_constraintTop_toTopOf="@+id/image_setare"
                 app:srcCompat="@drawable/licencon" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -88,7 +88,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <Button
-        android:id="@+id/btnnextimg"
+        android:id="@+id/btn_next"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_margin="30dp"
@@ -104,4 +104,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nested" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

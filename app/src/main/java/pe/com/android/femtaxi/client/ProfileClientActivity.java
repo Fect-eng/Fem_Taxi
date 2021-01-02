@@ -105,7 +105,7 @@ public class ProfileClientActivity extends AppCompatActivity {
         if (resultCode != RESULT_OK)
             return;
         switch (requestCode) {
-            case Constants.PERMISSION.PICK_IMAGE_REQUEST:
+            case Constants.Permission.PICK_IMAGE_REQUEST:
                 try {
                     mImageFile = FileUtils.from(this, data.getData());
                     loadImage(mImageFile.getPath());
@@ -113,7 +113,7 @@ public class ProfileClientActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
-            case Constants.PERMISSION.PICK_CAMERA_REQUEST:
+            case Constants.Permission.PICK_CAMERA_REQUEST:
                 try {
                     mImageFile = FileUtils.from(this, mTempUri);
                     loadImage(mImageFile.getPath());
@@ -176,7 +176,7 @@ public class ProfileClientActivity extends AppCompatActivity {
                     protected void call() {
                         checkPermissionGallery();
                     }
-                }).ask(Constants.REQUEST.REQUEST_CODE_GALLERY);
+                }).ask(Constants.Request.REQUEST_CODE_GALLERY);
     }
 
     private void checkPermissionCamera() {
@@ -188,7 +188,8 @@ public class ProfileClientActivity extends AppCompatActivity {
                     @Override
                     protected void call() {
                         mTempUri = FileUtils.pickImageCamera(ProfileClientActivity.this,
-                                Constants.PERMISSION.PICK_CAMERA_REQUEST);
+                                "",
+                                Constants.Permission.PICK_CAMERA_REQUEST);
                     }
                 })
                 .onAnyDenied(new Func() {
@@ -196,7 +197,7 @@ public class ProfileClientActivity extends AppCompatActivity {
                     protected void call() {
                         checkPermissionCamera();
                     }
-                }).ask(Constants.REQUEST.REQUEST_CODE_CAMERA);
+                }).ask(Constants.Request.REQUEST_CODE_CAMERA);
     }
 
     private void updateData() {

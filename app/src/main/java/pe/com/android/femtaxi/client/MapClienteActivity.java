@@ -62,6 +62,7 @@ import java.util.List;
 
 import pe.com.android.femtaxi.MainActivity;
 import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.annotation.ServiceType;
 import pe.com.android.femtaxi.databinding.ActivityMapClienteBinding;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
@@ -98,6 +99,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private AutocompleteSupportFragment autocompleteDestino;
 
     private PermissionUtil.PermissionRequestObject mRequestObject;
+    @ServiceType
+    private int mServiceType = ServiceType.TAXI;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -136,17 +139,26 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.nav_taxi:
+                        mServiceType = ServiceType.TAXI;
+                        break;
                     case R.id.nav_urbano:
+                        mServiceType = ServiceType.INTRA_URBANO;
                         break;
                     case R.id.nav_delivery:
+                        mServiceType = ServiceType.DELIVERY;
                         break;
                     case R.id.nav_mensaje:
+                        mServiceType = ServiceType.MESSAGING;
                         break;
                     case R.id.nav_carga:
+                        mServiceType = ServiceType.CARGA;
                         break;
                     case R.id.nav_mascota:
+                        mServiceType = ServiceType.PET;
                         break;
                     case R.id.nav_elegida:
+                        mServiceType = ServiceType.FRIEND;
                         friend();
                         break;
                     case R.id.nav_historial:
@@ -159,10 +171,16 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                         logout();
                         break;
                 }
+                textBottonRequest(mServiceType);
                 binding.drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
         });
+
+        MenuItem menuItem = binding.navView.getMenu().getItem(0);
+        menuItem.setChecked(true);
+
+        textBottonRequest(mServiceType);
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -174,7 +192,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         binding.rootLayout.btnRequestDrive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                requestDriver();
+                moveToDetailRequestDriver();
             }
         });
 
@@ -301,7 +319,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                         new CameraPosition.Builder()
                                 .target(mOriginLatLng)
-                                .zoom(14f)          //16f
+                                .zoom(14f)
                                 .build()));
             }
 
@@ -310,21 +328,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
             }
         });
-    }
-
-    private void requestDriver() {
-        if (mOriginLatLng != null && mDestinationLatLng != null) {
-            Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
-            intent.putExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN, mOrigin);
-            intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
-            intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
-            intent.putExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO, mDestination);
-            intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mDestinationLatLng.latitude);
-            intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mDestinationLatLng.longitude);
-            startActivity(intent);
-        } else {
-            Toast.makeText(this, "Debe Seleccionar el lugar de recogida y el destino", Toast.LENGTH_SHORT).show();
-        }
     }
 
     private void getActiveDrivers() {
@@ -457,6 +460,22 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             mTokenProvider.createdToken(mAuthProvider.getId());
     }
 
+    private void moveToDetailRequestDriver() {
+        if (mOriginLatLng != null && mDestinationLatLng != null) {
+            Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
+            intent.putExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN, mOrigin);
+            intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LAT, mOriginLatLng.latitude);
+            intent.putExtra(Constants.Extras.EXTRA_ORIGIN_LONG, mOriginLatLng.longitude);
+            intent.putExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO, mDestination);
+            intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mDestinationLatLng.latitude);
+            intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mDestinationLatLng.longitude);
+            intent.putExtra(Constants.Extras.EXTRA_SERVICE_TYPE, mServiceType);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Debe Seleccionar el lugar de recogida y el destino", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void moveToEditProfile() {
         Intent intent = new Intent(MapClienteActivity.this, ProfileClientActivity.class);
         startActivity(intent);
@@ -504,7 +523,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     protected void call() {
                         checkPermissionsLocation();
                     }
-                }).ask(Constants.REQUEST.REQUEST_CODE_LOCATION);
+                }).ask(Constants.Request.REQUEST_CODE_LOCATION);
     }
 
     private void checkPermissionCall() {
@@ -521,7 +540,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                     protected void call() {
                         checkPermissionCall();
                     }
-                }).ask(Constants.REQUEST.REQUEST_CODE_CALL);
+                }).ask(Constants.Request.REQUEST_CODE_CALL);
     }
 
     private void calling() {
@@ -533,5 +552,35 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
             startActivity(intent);
         }
     }
-}
 
+    private void textBottonRequest(@ServiceType int serviceType) {
+        String message;
+        switch (serviceType) {
+            case ServiceType.TAXI:
+                message = "Solicitar Taxi";
+                break;
+            case ServiceType.INTRA_URBANO:
+                message = "Solicitar Intra-Urbano";
+                break;
+            case ServiceType.DELIVERY:
+                message = "Solicitar Delivery";
+                break;
+            case ServiceType.MESSAGING:
+                message = "Solicitar Mensajeria";
+                break;
+            case ServiceType.CARGA:
+                message = "Solicitar Carga";
+                break;
+            case ServiceType.PET:
+                message = "Solicitar Mascota";
+                break;
+            case ServiceType.FRIEND:
+                message = "Solicitar Amiga";
+                break;
+            default:
+                message = "Solicitar Taxi";
+                break;
+        }
+        binding.rootLayout.btnRequestDrive.setText(message);
+    }
+}

@@ -56,7 +56,7 @@ import pe.com.android.femtaxi.providers.TokenProvider;
 
 public class MapDriverActivity extends AppCompatActivity
         implements OnMapReadyCallback {
-    String TAG = MapDriverActivity.class.getSimpleName();
+        String TAG = MapDriverActivity.class.getSimpleName();
 
     private ActivityMapDriverBinding binding;
 
@@ -117,9 +117,11 @@ public class MapDriverActivity extends AppCompatActivity
         mAuthProvider = new AuthProvider();
         mClientBookingProvider = new ClientBookingProvider();
         mTokenProvider = new TokenProvider();
+
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Conductor");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         binding.btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -240,7 +242,7 @@ public class MapDriverActivity extends AppCompatActivity
                     protected void call() {
                         checkPermissionsLocation();
                     }
-                }).ask(Constants.REQUEST.REQUEST_CODE_LOCATION);
+                }).ask(Constants.Request.REQUEST_CODE_LOCATION);
     }
 
     private boolean gpsActived() {

@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import pe.com.android.femtaxi.annotation.ServiceType;
 import pe.com.android.femtaxi.databinding.ActivityRequestDriverBinding;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.models.ClientBooking;
@@ -22,6 +23,7 @@ import pe.com.android.femtaxi.providers.GeofireProvider;
 import pe.com.android.femtaxi.providers.GoogleApiProvider;
 import pe.com.android.femtaxi.providers.NotificationProvider;
 import pe.com.android.femtaxi.providers.TokenProvider;
+
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
@@ -68,6 +70,8 @@ public class RequestDriverActivity extends AppCompatActivity {
     private AuthProvider mAuthProvider;
     private GoogleApiProvider mGoogleApiProvider;
     private ListenerRegistration mListener;
+    @ServiceType
+    private int mServiceType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,6 +89,7 @@ public class RequestDriverActivity extends AppCompatActivity {
         mExtraDestination = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO);
         mExtraDestinoLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LAT, 0);
         mExtradestinoLng = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LONG, 0);
+        mServiceType = getIntent().getIntExtra(Constants.Extras.EXTRA_SERVICE_TYPE, 0);
         mTokenProvider = new TokenProvider();
         mClientBookingProvider = new ClientBookingProvider();
         mAuthProvider = new AuthProvider();
@@ -163,9 +168,41 @@ public class RequestDriverActivity extends AppCompatActivity {
                             if (documentSnapshot.exists()) {
                                 Token token = documentSnapshot.toObject(Token.class);
                                 Log.d(TAG, "sendNotification onSuccess token: " + token);
+                                String title, body;
+                                switch (mServiceType) {
+                                    case ServiceType.INTRA_URBANO:
+                                        title = "SOLICITUD DE SERVICIO DE INTRA-URBANO A " + time + " DE TU POSICION";
+                                        body = "Un cliente esta solicitando un servicio de intra-urbano a una distancia de " + distance + " KM";
+                                        break;
+                                    case ServiceType.DELIVERY:
+                                        title = "SOLICITUD DE SERVICIO DE DELIVERY A " + time + " DE TU POSICION";
+                                        body = "Un cliente esta solicitando un servicio de delivery a una distancia de " + distance + " KM";
+                                        break;
+                                    case ServiceType.MESSAGING:
+                                        title = "SOLICITUD DE SERVICIO DE MENSAJERIA A " + time + " DE TU POSICION";
+                                        body = "Un cliente esta solicitando un servicio de mensajeria a una distancia de " + distance + " KM";
+                                        break;
+                                    case ServiceType.CARGA:
+                                        title = "SOLICITUD DE SERVICIO DE CARGA A " + time + " DE TU POSICION";
+                                        body = "Un cliente esta solicitando un servicio de carga a una distancia de " + distance + " KM";
+                                        break;
+                                    case ServiceType.PET:
+                                        title = "SOLICITUD DE SERVICIO DE MASCOTAS A " + time + " DE TU POSICION";
+                                        body = "Un cliente esta solicitando un servicio de mascotas a una distancia de " + distance + " KM";
+                                        break;
+                                    case ServiceType.FRIEND:
+                                        title = "SOLICITUD DE SERVICIO DE AMIGA ELEGIDA A " + time + " DE TU POSICION";
+                                        body = "Un cliente esta solicitando un servicio de amiga elegida a una distancia de " + distance + " KM";
+                                        break;
+                                    case ServiceType.TAXI:
+                                    default:
+                                        title = "SOLICITUD DE SERVICIO DE TAXI A " + time + " DE TU POSICION";
+                                        body = "Un cliente esta solicitando un servicio de taxi a una distancia de " + distance + " KM";
+                                        break;
+                                }
                                 Map<String, String> map = new HashMap<>();
-                                map.put("title", "SOLICITUD DE SERVICIO A " + time + " DE TU POSICION");
-                                map.put("body", "Un cliente esta solicitando un servicio a una distancia de " + distance + " KM");
+                                map.put("title", title);
+                                map.put("body", body);
                                 map.put("idClient", mAuthProvider.getId());
                                 map.put("origin", mExtraOrigin);
                                 map.put("destination", mExtraDestination);

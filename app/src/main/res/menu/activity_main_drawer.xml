@@ -6,6 +6,10 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_taxi"
+            android:icon="@drawable/inc_carga"
+            android:title="Taxi" />
+        <item
             android:id="@+id/nav_urbano"
             android:icon="@drawable/inc_intraurbano"
             android:title="Intraurbano" />
