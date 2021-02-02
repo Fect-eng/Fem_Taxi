@@ -18,7 +18,7 @@ public class HistoryBookingProvider {
         dbFireBase = FirebaseFirestore.getInstance();
     }
 
-    public Task<Void> getCreateHistoryBooking(HistoryBooking historyBooking) {
+    public Task<Void> setCreateHistoryBooking(HistoryBooking historyBooking) {
         Map<String, Object> newStatus = new HashMap<>();
         newStatus.put("idHistory", historyBooking.getIdHistory());
         newStatus.put("destination", historyBooking.getDestination());
@@ -34,6 +34,8 @@ public class HistoryBookingProvider {
         newStatus.put("time", historyBooking.getTime());
         newStatus.put("calificationClient", historyBooking.getCalificationClient());
         newStatus.put("calificationDrive", historyBooking.getCalificationDrive());
+        newStatus.put("timesTamp", historyBooking.getTimesTamp());
+        newStatus.put("price", historyBooking.getPrice());
         return dbFireBase.collection(Constants.Firebase.Nodo.HISTORY_BOOKING)
                 .document(historyBooking.getIdHistory())
                 .set(newStatus);

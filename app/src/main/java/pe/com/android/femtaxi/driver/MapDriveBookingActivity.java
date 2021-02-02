@@ -28,24 +28,6 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import pe.com.android.femtaxi.R;
-import pe.com.android.femtaxi.databinding.ActivityMapDriverBookingBinding;
-import pe.com.android.femtaxi.helpers.Constants;
-import pe.com.android.femtaxi.models.Client;
-import pe.com.android.femtaxi.models.ClientBooking;
-import pe.com.android.femtaxi.models.FCMRequest;
-import pe.com.android.femtaxi.models.FCMResponse;
-import pe.com.android.femtaxi.models.Info;
-import pe.com.android.femtaxi.models.Token;
-import pe.com.android.femtaxi.providers.AuthProvider;
-import pe.com.android.femtaxi.providers.ClientBookingProvider;
-import pe.com.android.femtaxi.providers.ClientProvider;
-import pe.com.android.femtaxi.providers.GeofireProvider;
-import pe.com.android.femtaxi.providers.GoogleApiProvider;
-import pe.com.android.femtaxi.providers.InfoProvider;
-import pe.com.android.femtaxi.providers.NotificationProvider;
-import pe.com.android.femtaxi.providers.TokenProvider;
-import pe.com.android.femtaxi.utils.DecodePoints;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -64,17 +46,32 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.SquareCap;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.databinding.ActivityMapDriverBookingBinding;
+import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.models.Client;
+import pe.com.android.femtaxi.models.ClientBooking;
+import pe.com.android.femtaxi.models.FCMResponse;
+import pe.com.android.femtaxi.models.FieldNotification;
+import pe.com.android.femtaxi.models.Info;
+import pe.com.android.femtaxi.models.PushNotification;
+import pe.com.android.femtaxi.models.ServiceNotification;
+import pe.com.android.femtaxi.providers.AuthProvider;
+import pe.com.android.femtaxi.providers.ClientBookingProvider;
+import pe.com.android.femtaxi.providers.ClientProvider;
+import pe.com.android.femtaxi.providers.GeofireProvider;
+import pe.com.android.femtaxi.providers.GoogleApiProvider;
+import pe.com.android.femtaxi.providers.InfoProvider;
+import pe.com.android.femtaxi.providers.NotificationProvider;
+import pe.com.android.femtaxi.utils.DecodePoints;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -94,7 +91,6 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
     private ClientProvider mClientProvider;
     private GeofireProvider mGeofireProvider;
     private AuthProvider mAuthProvider;
-    private TokenProvider mTokenProvider;
     private ClientBookingProvider mClientBookingProvider;
     private NotificationProvider mNotificacionProvider;
     private InfoProvider mInfoProvider;
@@ -108,7 +104,6 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
 
     private boolean mIsFistTime = true;
     private boolean mClientBoarding = false;
-    private boolean mRideStart = false;
 
     private List<LatLng> mPolyLinesList;
     private PolylineOptions mPolylineOptions;
@@ -122,6 +117,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
     private Handler mHandler = new Handler();
     private Info mInfo;
     private Location mPreviusLocation = new Location("");
+    private String statusBooking = "create";
 
     Runnable runnable = new Runnable() {
         @Override
@@ -153,9 +149,11 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                         nMarker.remove();
                     }
 
-                    if (mRideStart) {
-                        mDistanceAndMeters = mDistanceAndMeters + mPreviusLocation.distanceTo(location);
-
+                    switch (statusBooking) {
+                        case "start":
+                            mDistanceAndMeters = mDistanceAndMeters + mPreviusLocation.distanceTo(location);
+                            Log.d(TAG, "mLocationCallback mDistanceAndMeters: " + mDistanceAndMeters);
+                            break;
                     }
                     mPreviusLocation = location;
                     Log.d(TAG, "mLocationCallback mCurrentLatLng: " + mCurrentLatLng);
@@ -215,7 +213,6 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
         mClientBookingProvider = new ClientBookingProvider();
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_WORKING);
         mAuthProvider = new AuthProvider();
-        mTokenProvider = new TokenProvider();
         mNotificacionProvider = new NotificationProvider();
         mInfoProvider = new InfoProvider();
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
@@ -223,6 +220,9 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
         nMapFragment.getMapAsync(this);
         checkLocationPermissions();
         getClient();
+        getInfo();
+        updateLocation();
+
         binding.btnStartBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -233,14 +233,14 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                 }
             }
         });
+
         binding.btnEndBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finishBooking();
             }
         });
-        getInfo();
-        updateLocation();
+
     }
 
     @Override
@@ -379,9 +379,13 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
             mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
             if (mOriginLatLng != null) {
                 double distance = getDistanceOrigin(mOriginLatLng, mCurrentLatLng);
-                if (distance <= 100) {
-                    mClientBoarding = true;
-                    Toast.makeText(this, "Ya puedes iniciar tu viaje", Toast.LENGTH_SHORT).show();
+                switch (statusBooking) {
+                    case "create":
+                        if (distance <= 100) {
+                            mClientBoarding = true;
+                            Toast.makeText(this, "Ya puedes iniciar tu viaje", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
                 }
             }
         }
@@ -494,10 +498,10 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
     }
 
     private void startBooking() {
-        mRideStart = true;
         mHandler.postDelayed(runnable, 1000);
         sendNotification("Viaje iniciado");
-        mClientBookingProvider.getUpdateStatus(mExtraClientId, "start");
+        statusBooking = "start";
+        mClientBookingProvider.getUpdateStatus(mExtraClientId, statusBooking);
         binding.btnEndBooking.setVisibility(View.VISIBLE);
         binding.btnStartBooking.setVisibility(View.GONE);
         nMap.clear();
@@ -510,58 +514,61 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
 
     private void finishBooking() {
         sendNotification("Viaje Finalizado");
-        mClientBookingProvider.getUpdateHistoryBooking(mExtraClientId);
+        statusBooking = "finish";
+        mClientBookingProvider.getUpdateStatus(mExtraClientId, statusBooking);
         if (mFusedLocation != null)
             mFusedLocation.removeLocationUpdates(mLocationCallback);
         mGeofireProvider.removeLocation(mAuthProvider.getId());
         if (mHandler != null)
             mHandler.removeCallbacks(runnable);
-        calculateRide();
+        //calculateRide();
+        moveToCalificationDriverActivity();
     }
 
     private void sendNotification(String status) {
         Log.i(TAG, "sendNotification");
         if (!TextUtils.isEmpty(mExtraClientId)) {
-            mTokenProvider.getTokenUser(mExtraClientId)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            String title = "ESTADO DE TU VIAJE";
+            String body = "El estado de tu viaje es " + status;
+            ServiceNotification serviceNotification = new ServiceNotification(
+                    title,
+                    body,
+                    mExtraClientId,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            FieldNotification fieldNotification = new FieldNotification(
+                    "/topics/" + mExtraClientId,
+                    title,
+                    body,
+                    -1,
+                    "high",
+                    "4500s",
+                    serviceNotification
+            );
+            PushNotification pushNotification = new PushNotification(
+                    "/topics/" + mExtraClientId,
+                    fieldNotification
+            );
+            mNotificacionProvider.sendNotification(pushNotification)
+                    .enqueue(new Callback<FCMResponse>() {
                         @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.exists()) {
-                                Token token = documentSnapshot.toObject(Token.class);
-                                Log.d(TAG, "sendNotification onSuccess token: " + token);
-                                Map<String, String> map = new HashMap<>();
-                                map.put("title", "ESTADO DE TU VIAJE");
-                                map.put("body", "El estado de tu viaje es " + status);
-                                FCMRequest fcmBody = new FCMRequest(token.getToken(), "high", "4500s", map);
-                                Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
-                                mNotificacionProvider.sendNotification(fcmBody)
-                                        .enqueue(new Callback<FCMResponse>() {
-                                            @Override
-                                            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                                                Log.d(TAG, "sendNotification onResponse: " + response);
-                                                if (response.body() != null) {
-                                                    if (response.body().getSuccess() == 1) {
-                                                        Toast.makeText(MapDriveBookingActivity.this, "Notificacion enviada con exito", Toast.LENGTH_SHORT).show();
-                                                    } else {
-                                                        Toast.makeText(MapDriveBookingActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<FCMResponse> call, Throwable t) {
-                                                Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
-                                            }
-                                        });
-                            } else {
-                                Toast.makeText(MapDriveBookingActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                            Log.d(TAG, "sendNotification onResponse: " + response);
+                            if (response.body() != null) {
+                                if (!response.body().getMessage_id().isEmpty()) {
+                                    Toast.makeText(MapDriveBookingActivity.this, "Notificacion enviada con exito", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(MapDriveBookingActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
+
                         @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "sendNotification onFailure: " + e.getMessage());
+                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+                            Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
                         }
                     });
         } else {
@@ -578,18 +585,29 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                 });
     }
 
-    private void calculateRide() {
+    private void moveToCalificationDriverActivity() {
+        Intent intent = new Intent(MapDriveBookingActivity.this, CalificationDriverActivity.class);
+        intent.putExtra(Constants.Extras.EXTRA_CLIENT_ID, mExtraClientId);
+        startActivity(intent);
+        MapDriveBookingActivity.this.finish();
+    }
+
+    /*private void calculateRide() {
         if (mMinutes == 0) {
             mMinutes = 1;
         }
+        Log.d(TAG, "calculateRide mMinutes: " + mMinutes);
+        Log.d(TAG, "calculateRide mSeconds: " + mSeconds);
         double priceMin = mMinutes * mInfo.getMin();
+        Log.d(TAG, "calculateRide priceMin: " + priceMin);
         double pricekm = (mDistanceAndMeters / 1000) * mInfo.getKm();
+        Log.d(TAG, "calculateRide pricekm: " + pricekm);
         double total = priceMin + pricekm;
+        Log.d(TAG, "calculateRide total: " + total);
         mClientBookingProvider.getUpdatePrice(mExtraClientId, total)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        mClientBookingProvider.getUpdateStatus(mExtraClientId, "finish");
                         Intent intent = new Intent(MapDriveBookingActivity.this, CalificationDriverActivity.class);
                         intent.putExtra(Constants.Extras.EXTRA_CLIENT_ID, mExtraClientId);
                         intent.putExtra(Constants.Extras.EXTRA_PRICE, total);
@@ -597,5 +615,5 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                         MapDriveBookingActivity.this.finish();
                     }
                 });
-    }
+    }*/
 }

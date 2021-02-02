@@ -3,11 +3,18 @@ buildscript {
         google()
         jcenter()
         mavenCentral()
+
+        maven {
+            url 'https://maven.google.com'
+        }
+        
         maven {
             url 'https://api.mapbox.com/downloads/v2/releases/maven'
+
             authentication {
                 basic(BasicAuthentication)
             }
+
             credentials {
                 // Do not change the username below.
                 // This should always be `mapbox` (not your username).
@@ -18,7 +25,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         classpath 'com.google.gms:google-services:4.3.4'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
     }
@@ -28,6 +35,26 @@ allprojects {
     repositories {
         google()
         jcenter()
+
+        maven {
+            url 'https://maven.google.com'
+        }
+
+        maven {
+            url 'https://api.mapbox.com/downloads/v2/releases/maven'
+
+            authentication {
+                basic(BasicAuthentication)
+            }
+
+            credentials {
+                // Do not change the username below.
+                // This should always be `mapbox` (not your username).
+                username = 'mapbox'
+                // Use the secret token you stored in gradle.properties as the password
+                password = project.properties['MAPBOX_DOWNLOADS_TOKEN'] ?: ""
+            }
+        }
     }
 }
 

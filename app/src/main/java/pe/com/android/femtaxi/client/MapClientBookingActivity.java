@@ -371,7 +371,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
                                 nMarkerDriver.remove();
                             nMarkerDriver = nMap.addMarker(new MarkerOptions()
                                     .position(mDriverLatLng)
-                                    .title("Tu condictor")
+                                    .title("Tu conductor")
                                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
 
                             drawRoute(mOriginLatLng);

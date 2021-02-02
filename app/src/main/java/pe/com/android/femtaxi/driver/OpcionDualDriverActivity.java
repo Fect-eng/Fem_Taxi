@@ -22,13 +22,14 @@ import pe.com.android.femtaxi.databinding.ActivityOpcionDualDriverBinding;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.providers.AuthProvider;
+import pe.com.android.femtaxi.providers.TopicProvider;
 
 public class OpcionDualDriverActivity extends AppCompatActivity {
     String TAG = OpcionDualDriverActivity.class.getSimpleName();
-    private AuthProvider mAuthProvider;
-    private ProgressDialog mProgressDialog;
-
     private ActivityOpcionDualDriverBinding binding;
+    private ProgressDialog mProgressDialog;
+    private AuthProvider mAuthProvider;
+    private TopicProvider mTopicProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +38,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         mProgressDialog = new ProgressDialog(this);
         mAuthProvider = new AuthProvider();
+        mTopicProvider = new TopicProvider();
 
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Elegir Opción Conductora");
@@ -112,6 +114,10 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     private void moveToMapDriver() {
         mProgressDialog.dismiss();
         new PreferencesManager(this).setIsDriver(true);
+        mTopicProvider.registerTopic(mAuthProvider.getId())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "subscrito: ");
+                });
         Intent intent = new Intent(OpcionDualDriverActivity.this, MapDriverActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.setAction(Intent.ACTION_RUN);

@@ -29,8 +29,6 @@ import androidx.core.view.GravityCompat;
 
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
-import com.github.kayvannj.permission_utils.Func;
-import com.github.kayvannj.permission_utils.PermissionUtil;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -55,6 +53,7 @@ import com.google.android.libraries.places.widget.listener.PlaceSelectionListene
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.database.DatabaseError;
 import com.google.maps.android.SphericalUtil;
+import com.permissionx.guolindev.PermissionX;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,7 +67,6 @@ import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.GeofireProvider;
-import pe.com.android.femtaxi.providers.TokenProvider;
 import pe.com.android.femtaxi.utils.Utils;
 
 public class MapClienteActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -93,12 +91,10 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     private String mDestination;
     private LatLng mDestinationLatLng;
     private GoogleMap.OnCameraIdleListener mCameraListener;
-    private TokenProvider mTokenProvider;
     private PlacesClient mPlacesClient;
     private AutocompleteSupportFragment autocompleteOrigin;
     private AutocompleteSupportFragment autocompleteDestino;
 
-    private PermissionUtil.PermissionRequestObject mRequestObject;
     @ServiceType
     private int mServiceType = ServiceType.TAXI;
 
@@ -109,6 +105,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                 Log.d(TAG, "mLocationCallback location: " + location);
                 if (getApplicationContext() != null) {
                     Log.d(TAG, "mLocationCallback getApplicationContext!=null: ");
+                    Log.d(TAG, "mLocationCallback getLatitude: " + location.getLatitude());
+                    Log.d(TAG, "mLocationCallback getLongitude: " + location.getLongitude());
                     mOriginLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                     nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
                             new CameraPosition.Builder()
@@ -133,8 +131,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         setContentView(binding.getRoot());
         mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
-        mTokenProvider = new TokenProvider();
-
         binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -186,8 +182,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkPermissionsLocation();
-
-        generateToken();
 
         binding.rootLayout.btnRequestDrive.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -266,12 +260,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         } else if (requestCode == SETTINGS_REQUEST_CODE && !gpsActived()) {
             showAlertDialogNoGPS();
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mRequestObject.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void instanceCameraListener() {
@@ -455,11 +443,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         MapClienteActivity.this.finish();
     }
 
-    private void generateToken() {
-        if (mAuthProvider.existSession())
-            mTokenProvider.createdToken(mAuthProvider.getId());
-    }
-
     private void moveToDetailRequestDriver() {
         if (mOriginLatLng != null && mDestinationLatLng != null) {
             Intent intent = new Intent(MapClienteActivity.this, DetailRequestActivity.class);
@@ -496,11 +479,26 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
     }
 
     private void checkPermissionsLocation() {
-        mRequestObject = PermissionUtil.with(this)
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .onAllGranted(new Func() {
-                    @Override
-                    protected void call() {
+        Log.i(TAG, "checkPermissionLocation: ");
+        PermissionX.init(this)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .onExplainRequestReason((scope, deniedList, beforeRequest) -> {
+                    scope.showRequestReasonDialog(deniedList,
+                            "Para un buen uso de la apolicación es necesario que habilite los permisos correspodientes",
+                            "Aceptar",
+                            "Cancelar");
+                })
+
+                .onForwardToSettings((scope, deniedList) -> {
+                    scope.showForwardToSettingsDialog(deniedList,
+                            "Para continuar con el uso de la apolicación es necesario que habilite los permisos de manera manual",
+                            "Config. manual",
+                            "Cancelar");
+                })
+                .request((allGranted, grantedList, deniedList) -> {
+                    if (allGranted) {
+                        Log.i(TAG, "checkPermissionLocation si tiene permisos: ");
                         if (gpsActived()) {
                             if (ActivityCompat.checkSelfPermission(MapClienteActivity.this,
                                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -517,30 +515,32 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                             showAlertDialogNoGPS();
                         }
                     }
-                })
-                .onAnyDenied(new Func() {
-                    @Override
-                    protected void call() {
-                        checkPermissionsLocation();
-                    }
-                }).ask(Constants.Request.REQUEST_CODE_LOCATION);
+                });
     }
 
     private void checkPermissionCall() {
-        mRequestObject = PermissionUtil.with(this)
-                .request(Manifest.permission.CALL_PHONE)
-                .onAllGranted(new Func() {
-                    @Override
-                    protected void call() {
+        Log.i(TAG, "checkPermissionCall: ");
+        PermissionX.init(this)
+                .permissions(Manifest.permission.CALL_PHONE)
+                .onExplainRequestReason((scope, deniedList, beforeRequest) -> {
+                    scope.showRequestReasonDialog(deniedList,
+                            "Para un buen uso de la apolicación es necesario que habilite los permisos correspodientes",
+                            "Aceptar",
+                            "Cancelar");
+                })
+
+                .onForwardToSettings((scope, deniedList) -> {
+                    scope.showForwardToSettingsDialog(deniedList,
+                            "Para continuar con el uso de la apolicación es necesario que habilite los permisos de manera manual",
+                            "Config. manual",
+                            "Cancelar");
+                })
+                .request((allGranted, grantedList, deniedList) -> {
+                    if (allGranted) {
+                        Log.i(TAG, "checkPermissionCall si tiene permisos: ");
                         calling();
                     }
-                })
-                .onAnyDenied(new Func() {
-                    @Override
-                    protected void call() {
-                        checkPermissionCall();
-                    }
-                }).ask(Constants.Request.REQUEST_CODE_CALL);
+                });
     }
 
     private void calling() {

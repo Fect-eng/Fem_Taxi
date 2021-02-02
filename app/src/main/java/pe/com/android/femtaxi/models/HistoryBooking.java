@@ -21,6 +21,7 @@ public class HistoryBooking implements Serializable {
     private double calificationClient;
     private double calificationDrive;
     private long timesTamp;
+    private double price;
 
     public HistoryBooking() {
     }
@@ -28,7 +29,7 @@ public class HistoryBooking implements Serializable {
     public HistoryBooking(String idHistory, String destination, Double destinationLat,
                           Double destinationLong, String idClient, String idDriver, String km,
                           String origin, Double originLat, Double originLong, String status,
-                          String time) {
+                          String time, double price) {
         this.idHistory = idHistory;
         this.destination = destination;
         this.destinationLat = destinationLat;
@@ -41,6 +42,7 @@ public class HistoryBooking implements Serializable {
         this.originLong = originLong;
         this.status = status;
         this.time = time;
+        this.price = price;
     }
 
     public String getIdHistory() {
@@ -163,6 +165,14 @@ public class HistoryBooking implements Serializable {
         this.timesTamp = timesTamp;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "HistoryBooking{" +
@@ -181,6 +191,7 @@ public class HistoryBooking implements Serializable {
                 ", calificationClient=" + calificationClient +
                 ", calificationDrive=" + calificationDrive +
                 ", timesTamp=" + timesTamp +
+                ", price=" + price +
                 '}';
     }
 }

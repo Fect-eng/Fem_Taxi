@@ -80,7 +80,8 @@ public class CalificationClientActivity extends AppCompatActivity {
                                     clientBooking.getOriginLat(),
                                     clientBooking.getOriginLong(),
                                     clientBooking.getStatus(),
-                                    clientBooking.getTime());
+                                    clientBooking.getTime(),
+                                    clientBooking.getPrice());
                         }
                     }
                 });
@@ -88,32 +89,28 @@ public class CalificationClientActivity extends AppCompatActivity {
 
     private void callificate() {
         if (mCalification > 0) {
-            mHistoryBooking.setCalificationClient(mCalification);
+            mHistoryBooking.setCalificationDrive(mCalification);
             mHistoryBooking.setTimesTamp(new Date().getTime());
             mHistoryBookingProvider.getHistoryBooking(mHistoryBooking.getIdHistory())
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             if (documentSnapshot.exists()) {
-                                mHistoryBookingProvider.getUpdateCalificationClient(
+                                mHistoryBookingProvider.getUpdateCalificationDriver(
                                         mHistoryBooking.getIdHistory(),
                                         mCalification)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Intent intent = new Intent(CalificationClientActivity.this, MapClienteActivity.class);
-                                                startActivity(intent);
-                                                finish();
+                                                moveToMapClientActivity();
                                             }
                                         });
                             } else {
-                                mHistoryBookingProvider.getCreateHistoryBooking(mHistoryBooking)
+                                mHistoryBookingProvider.setCreateHistoryBooking(mHistoryBooking)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                Intent intent = new Intent(CalificationClientActivity.this, MapClienteActivity.class);
-                                                startActivity(intent);
-                                                finish();
+                                                moveToMapClientActivity();
                                             }
                                         });
                             }
@@ -122,5 +119,11 @@ public class CalificationClientActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Debe colocar su calificacion", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    private void moveToMapClientActivity() {
+        Intent intent = new Intent(CalificationClientActivity.this, MapClienteActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

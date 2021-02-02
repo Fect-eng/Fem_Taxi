@@ -7,30 +7,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import pe.com.android.femtaxi.annotation.ServiceType;
-import pe.com.android.femtaxi.databinding.ActivityRequestDriverBinding;
-import pe.com.android.femtaxi.helpers.Constants;
-import pe.com.android.femtaxi.models.ClientBooking;
-import pe.com.android.femtaxi.models.FCMRequest;
-import pe.com.android.femtaxi.models.FCMResponse;
-import pe.com.android.femtaxi.models.Token;
-import pe.com.android.femtaxi.providers.AuthProvider;
-import pe.com.android.femtaxi.providers.ClientBookingProvider;
-import pe.com.android.femtaxi.providers.GeofireProvider;
-import pe.com.android.femtaxi.providers.GoogleApiProvider;
-import pe.com.android.femtaxi.providers.NotificationProvider;
-import pe.com.android.femtaxi.providers.TokenProvider;
 
 import com.firebase.geofire.GeoLocation;
 import com.firebase.geofire.GeoQueryEventListener;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.ListenerRegistration;
 
 import org.json.JSONArray;
@@ -38,10 +21,21 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
+import pe.com.android.femtaxi.annotation.ServiceType;
+import pe.com.android.femtaxi.databinding.ActivityRequestDriverBinding;
+import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.models.ClientBooking;
+import pe.com.android.femtaxi.models.FCMResponse;
+import pe.com.android.femtaxi.models.FieldNotification;
+import pe.com.android.femtaxi.models.PushNotification;
+import pe.com.android.femtaxi.models.ServiceNotification;
+import pe.com.android.femtaxi.providers.AuthProvider;
+import pe.com.android.femtaxi.providers.ClientBookingProvider;
+import pe.com.android.femtaxi.providers.GeofireProvider;
+import pe.com.android.femtaxi.providers.GoogleApiProvider;
+import pe.com.android.femtaxi.providers.NotificationProvider;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -64,7 +58,6 @@ public class RequestDriverActivity extends AppCompatActivity {
     private boolean mDriverFound = false;
     private String mIdDriverFound = "";
     private NotificationProvider mNotificacionProvider;
-    private TokenProvider mTokenProvider;
 
     private ClientBookingProvider mClientBookingProvider;
     private AuthProvider mAuthProvider;
@@ -72,17 +65,15 @@ public class RequestDriverActivity extends AppCompatActivity {
     private ListenerRegistration mListener;
     @ServiceType
     private int mServiceType;
+    private double mPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRequestDriverBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-
         binding.animation.playAnimation();
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
-
         mExtraOrigin = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_ORIGIN);
         mExtraOriginLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_ORIGIN_LAT, 0);
         mExtraOriginLng = getIntent().getDoubleExtra(Constants.Extras.EXTRA_ORIGIN_LONG, 0);
@@ -90,7 +81,7 @@ public class RequestDriverActivity extends AppCompatActivity {
         mExtraDestinoLat = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LAT, 0);
         mExtradestinoLng = getIntent().getDoubleExtra(Constants.Extras.EXTRA_DESTINO_LONG, 0);
         mServiceType = getIntent().getIntExtra(Constants.Extras.EXTRA_SERVICE_TYPE, 0);
-        mTokenProvider = new TokenProvider();
+        mPrice = getIntent().getDoubleExtra(Constants.Extras.EXTRA_PRICE, 0);
         mClientBookingProvider = new ClientBookingProvider();
         mAuthProvider = new AuthProvider();
         mGoogleApiProvider = new GoogleApiProvider(RequestDriverActivity.this);
@@ -98,6 +89,7 @@ public class RequestDriverActivity extends AppCompatActivity {
         binding.btnCancelViaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "Cancelar viaje: ");
                 cancelRequest();
             }
         });
@@ -161,109 +153,105 @@ public class RequestDriverActivity extends AppCompatActivity {
     private void sendNotification(String time, String distance) {
         Log.i(TAG, "sendNotification");
         if (!TextUtils.isEmpty(mIdDriverFound)) {
-            mTokenProvider.getTokenUser(mIdDriverFound)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            String title, body;
+            switch (mServiceType) {
+                case ServiceType.INTRA_URBANO:
+                    title = "SOLICITUD DE SERVICIO DE INTRA-URBANO A " + time + " DE TU POSICION";
+                    body = "Un cliente esta solicitando un servicio de intra-urbano a una distancia de " + distance + " KM";
+                    break;
+                case ServiceType.DELIVERY:
+                    title = "SOLICITUD DE SERVICIO DE DELIVERY A " + time + " DE TU POSICION";
+                    body = "Un cliente esta solicitando un servicio de delivery a una distancia de " + distance + " KM";
+                    break;
+                case ServiceType.MESSAGING:
+                    title = "SOLICITUD DE SERVICIO DE MENSAJERIA A " + time + " DE TU POSICION";
+                    body = "Un cliente esta solicitando un servicio de mensajeria a una distancia de " + distance + " KM";
+                    break;
+                case ServiceType.CARGA:
+                    title = "SOLICITUD DE SERVICIO DE CARGA A " + time + " DE TU POSICION";
+                    body = "Un cliente esta solicitando un servicio de carga a una distancia de " + distance + " KM";
+                    break;
+                case ServiceType.PET:
+                    title = "SOLICITUD DE SERVICIO DE MASCOTAS A " + time + " DE TU POSICION";
+                    body = "Un cliente esta solicitando un servicio de mascotas a una distancia de " + distance + " KM";
+                    break;
+                case ServiceType.FRIEND:
+                    title = "SOLICITUD DE SERVICIO DE AMIGA ELEGIDA A " + time + " DE TU POSICION";
+                    body = "Un cliente esta solicitando un servicio de amiga elegida a una distancia de " + distance + " KM";
+                    break;
+                case ServiceType.TAXI:
+                default:
+                    title = "SOLICITUD DE SERVICIO DE TAXI A " + time + " DE TU POSICION";
+                    body = "Un cliente esta solicitando un servicio de taxi a una distancia de " + distance + " KM";
+                    break;
+            }
+
+            ServiceNotification serviceNotification = new ServiceNotification(
+                    title,
+                    body,
+                    mAuthProvider.getId(),
+                    mExtraOrigin,
+                    mExtraDestination,
+                    time,
+                    distance + " KM"
+            );
+            FieldNotification fieldNotification = new FieldNotification(
+                    "/topics/" + mIdDriverFound,
+                    title,
+                    body,
+                    mPrice,
+                    "high",
+                    "4500s",
+                    serviceNotification
+            );
+            PushNotification pushNotification = new PushNotification(
+                    "/topics/" + mIdDriverFound,
+                    fieldNotification
+            );
+
+            mNotificacionProvider.sendNotification(pushNotification)
+                    .enqueue(new Callback<FCMResponse>() {
                         @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.exists()) {
-                                Token token = documentSnapshot.toObject(Token.class);
-                                Log.d(TAG, "sendNotification onSuccess token: " + token);
-                                String title, body;
-                                switch (mServiceType) {
-                                    case ServiceType.INTRA_URBANO:
-                                        title = "SOLICITUD DE SERVICIO DE INTRA-URBANO A " + time + " DE TU POSICION";
-                                        body = "Un cliente esta solicitando un servicio de intra-urbano a una distancia de " + distance + " KM";
-                                        break;
-                                    case ServiceType.DELIVERY:
-                                        title = "SOLICITUD DE SERVICIO DE DELIVERY A " + time + " DE TU POSICION";
-                                        body = "Un cliente esta solicitando un servicio de delivery a una distancia de " + distance + " KM";
-                                        break;
-                                    case ServiceType.MESSAGING:
-                                        title = "SOLICITUD DE SERVICIO DE MENSAJERIA A " + time + " DE TU POSICION";
-                                        body = "Un cliente esta solicitando un servicio de mensajeria a una distancia de " + distance + " KM";
-                                        break;
-                                    case ServiceType.CARGA:
-                                        title = "SOLICITUD DE SERVICIO DE CARGA A " + time + " DE TU POSICION";
-                                        body = "Un cliente esta solicitando un servicio de carga a una distancia de " + distance + " KM";
-                                        break;
-                                    case ServiceType.PET:
-                                        title = "SOLICITUD DE SERVICIO DE MASCOTAS A " + time + " DE TU POSICION";
-                                        body = "Un cliente esta solicitando un servicio de mascotas a una distancia de " + distance + " KM";
-                                        break;
-                                    case ServiceType.FRIEND:
-                                        title = "SOLICITUD DE SERVICIO DE AMIGA ELEGIDA A " + time + " DE TU POSICION";
-                                        body = "Un cliente esta solicitando un servicio de amiga elegida a una distancia de " + distance + " KM";
-                                        break;
-                                    case ServiceType.TAXI:
-                                    default:
-                                        title = "SOLICITUD DE SERVICIO DE TAXI A " + time + " DE TU POSICION";
-                                        body = "Un cliente esta solicitando un servicio de taxi a una distancia de " + distance + " KM";
-                                        break;
-                                }
-                                Map<String, String> map = new HashMap<>();
-                                map.put("title", title);
-                                map.put("body", body);
-                                map.put("idClient", mAuthProvider.getId());
-                                map.put("origin", mExtraOrigin);
-                                map.put("destination", mExtraDestination);
-                                map.put("min", time);
-                                map.put("distance", distance + " KM");
-                                FCMRequest fcmBody = new FCMRequest(token.getToken(), "high", "4500s", map);
-                                Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
-                                mNotificacionProvider.sendNotification(fcmBody)
-                                        .enqueue(new Callback<FCMResponse>() {
-                                            @Override
-                                            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                                                Log.d(TAG, "sendNotification onResponse: " + response);
-                                                if (response.body() != null) {
-                                                    if (response.body().getSuccess() == 1) {
-                                                        Toast.makeText(RequestDriverActivity.this, "Notificacion enviada con exito", Toast.LENGTH_SHORT).show();
-                                                        String idHistory = new SimpleDateFormat("HHmmssddmmyyyy").format(
-                                                                Calendar.getInstance(Locale.getDefault()).getTime());
-                                                        ClientBooking clientBooking = new ClientBooking(
-                                                                idHistory,
-                                                                mExtraDestination,
-                                                                mExtraDestinoLat,
-                                                                mExtradestinoLng,
-                                                                mAuthProvider.getId(),
-                                                                mIdDriverFound,
-                                                                distance,
-                                                                mExtraOrigin,
-                                                                mExtraOriginLat,
-                                                                mExtraOriginLng,
-                                                                "create",
-                                                                time,
-                                                                0
-                                                        );
-                                                        mClientBookingProvider.createClentBooking(clientBooking)
-                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                    @Override
-                                                                    public void onSuccess(Void aVoid) {
-                                                                        Toast.makeText(RequestDriverActivity.this, "Peticion creada con exito", Toast.LENGTH_SHORT).show();
-                                                                        checkStatusClientBooking();
-                                                                    }
-                                                                });
-
-                                                    } else {
-                                                        Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
-                                                    }
+                        public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
+                            Log.d(TAG, "sendNotification onResponse: " + response);
+                            if (response.body() != null) {
+                                if (!response.body().getMessage_id().isEmpty()) {
+                                    Toast.makeText(RequestDriverActivity.this, "Notificacion enviada con exito", Toast.LENGTH_SHORT).show();
+                                    String idHistory = new SimpleDateFormat("HHmmssddmmyyyy").format(
+                                            Calendar.getInstance(Locale.getDefault()).getTime());
+                                    ClientBooking clientBooking = new ClientBooking(
+                                            idHistory,
+                                            mExtraDestination,
+                                            mExtraDestinoLat,
+                                            mExtradestinoLng,
+                                            mAuthProvider.getId(),
+                                            mIdDriverFound,
+                                            distance,
+                                            mExtraOrigin,
+                                            mExtraOriginLat,
+                                            mExtraOriginLng,
+                                            "create",
+                                            time,
+                                            mPrice
+                                    );
+                                    mClientBookingProvider.createClentBooking(clientBooking)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(RequestDriverActivity.this, "Peticion creada con exito", Toast.LENGTH_SHORT).show();
+                                                    checkStatusClientBooking();
                                                 }
-                                            }
+                                            });
 
-                                            @Override
-                                            public void onFailure(Call<FCMResponse> call, Throwable t) {
-                                                Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
-                                            }
-                                        });
-                            } else {
-                                Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
+
                         @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "sendNotification onFailure: " + e.getMessage());
+                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+                            Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
                         }
                     });
         } else {
@@ -274,49 +262,56 @@ public class RequestDriverActivity extends AppCompatActivity {
     private void sendNotificationCancel() {
         Log.i(TAG, "sendNotification");
         if (!TextUtils.isEmpty(mIdDriverFound)) {
-            mTokenProvider.getTokenUser(mIdDriverFound)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            Log.d(TAG, "sendNotificationCancel mIdDriverFound: " + mIdDriverFound);
+            String title = "VIAJE CANCELADO";
+            String body = "Un cliente cancelo la solicitud";
+            ServiceNotification serviceNotification = new ServiceNotification(
+                    title,
+                    body,
+                    mAuthProvider.getId(),
+                    null,
+                    null,
+                    null,
+                    null
+            );
+            Log.d(TAG, "sendNotificationCancel serviceNotification: " + serviceNotification);
+            FieldNotification fieldNotification = new FieldNotification(
+                    "/topics/" + mIdDriverFound,
+                    title,
+                    body,
+                    mPrice,
+                    "high",
+                    "4500s",
+                    serviceNotification
+            );
+            Log.d(TAG, "sendNotificationCancel fieldNotification: " + fieldNotification);
+            PushNotification pushNotification = new PushNotification(
+                    "/topics/" + mIdDriverFound,
+                    fieldNotification
+            );
+            Log.d(TAG, "sendNotificationCancel pushNotification: " + pushNotification);
+            mNotificacionProvider.sendNotification(pushNotification)
+                    .enqueue(new Callback<FCMResponse>() {
                         @Override
-                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                            if (documentSnapshot.exists()) {
-                                Token token = documentSnapshot.toObject(Token.class);
-                                Log.d(TAG, "sendNotification onSuccess token: " + token);
-                                Map<String, String> map = new HashMap<>();
-                                map.put("title", "VIAJE CANCELADO");
-                                map.put("body", "Un cliente cancelo la solicitud");
-                                FCMRequest fcmBody = new FCMRequest(token.getToken(), "high", "4500s", map);
-                                Log.d(TAG, "sendNotification onSuccess fcmBody: " + fcmBody);
-                                mNotificacionProvider.sendNotification(fcmBody)
-                                        .enqueue(new Callback<FCMResponse>() {
-                                            @Override
-                                            public void onResponse(Call<FCMResponse> call, Response<FCMResponse> response) {
-                                                Log.d(TAG, "sendNotification onResponse: " + response);
-                                                if (response.body() != null) {
-                                                    if (response.body().getSuccess() == 1) {
-                                                        moveToMapClient("Viaje cancelado con exito");
-                                                    } else {
-                                                        Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<FCMResponse> call, Throwable t) {
-                                                Log.d(TAG, "sendNotification onFailure: " + t.getMessage());
-                                            }
-                                        });
-                            } else {
-                                Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
+                        public void onResponse(Call<FCMResponse> call,
+                                               Response<FCMResponse> response) {
+                            Log.d(TAG, "sendNotification onResponse: " + response);
+                            if (response.body() != null) {
+                                if (!response.body().getMessage_id().isEmpty()) {
+                                    moveToMapClient("Viaje cancelado con exito");
+                                } else {
+                                    Toast.makeText(RequestDriverActivity.this, "error al enviar la notificacion", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
+
                         @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(TAG, "sendNotification onFailure: " + e.getMessage());
+                        public void onFailure(Call<FCMResponse> call, Throwable t) {
+                            Toast.makeText(RequestDriverActivity.this, "No existe el token", Toast.LENGTH_SHORT).show();
                         }
                     });
         } else {
+            Log.d(TAG, "sendNotificationCancel:");
             moveToMapClient("Viaje cancelado");
         }
     }
@@ -384,12 +379,18 @@ public class RequestDriverActivity extends AppCompatActivity {
     }
 
     private void cancelRequest() {
+        Log.d(TAG, "cancelRequest: ");
         mClientBookingProvider.deleteClientBooking(mAuthProvider.getId())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "cancelRequest onSuccess: ");
                         sendNotificationCancel();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d(TAG, "cancelRequest addOnFailureListener: " + e.getMessage());
+                    sendNotificationCancel();
                 });
     }
 }

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -17,14 +18,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.github.kayvannj.permission_utils.Func;
-import com.github.kayvannj.permission_utils.PermissionUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.permissionx.guolindev.PermissionX;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,12 +41,10 @@ import pe.com.android.femtaxi.utils.CompressorBitmapImage;
 import pe.com.android.femtaxi.utils.FileUtils;
 
 public class ProfileClientActivity extends AppCompatActivity {
-
+    String TAG = ProfileClientActivity.class.getSimpleName();
     private ActivityProfileClientBinding binding;
     private AuthProvider mAuthProvider;
     private ClientProvider mClientProvider;
-    private PermissionUtil.PermissionRequestObject mRequestObject;
-
     private File mImageFile;
     private Uri mTempUri;
     private ProgressDialog mProgressDialog;
@@ -94,18 +92,12 @@ public class ProfileClientActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mRequestObject.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != RESULT_OK)
             return;
         switch (requestCode) {
-            case Constants.Permission.PICK_IMAGE_REQUEST:
+            case Constants.Request.REQUEST_CODE_GALLERY:
                 try {
                     mImageFile = FileUtils.from(this, data.getData());
                     loadImage(mImageFile.getPath());
@@ -113,7 +105,7 @@ public class ProfileClientActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 break;
-            case Constants.Permission.PICK_CAMERA_REQUEST:
+            case Constants.Request.REQUEST_CODE_CAMERA:
                 try {
                     mImageFile = FileUtils.from(this, mTempUri);
                     loadImage(mImageFile.getPath());
@@ -162,42 +154,55 @@ public class ProfileClientActivity extends AppCompatActivity {
     }
 
     private void checkPermissionGallery() {
-        mRequestObject = PermissionUtil.with(this)
-                .request(Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .onAllGranted(new Func() {
-                    @Override
-                    protected void call() {
+        PermissionX.init(this)
+                .permissions(Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .onExplainRequestReason((scope, deniedList, beforeRequest) -> {
+                    scope.showRequestReasonDialog(deniedList,
+                            "Para un buen uso de la apolicación es necesario que habilite los permisos correspodientes",
+                            "Aceptar",
+                            "Cancelar");
+                })
+                .onForwardToSettings((scope, deniedList) -> {
+                    scope.showForwardToSettingsDialog(deniedList,
+                            "Para continuar con el uso de la apolicación es necesario que habilite los permisos de manera manual",
+                            "Config. manual",
+                            "Cancelar");
+                })
+                .request((allGranted, grantedList, deniedList) -> {
+                    if (allGranted) {
+                        Log.i(TAG, "checkPermissionStorageCamera si tiene permisos: ");
                         FileUtils.pickImageGallery(ProfileClientActivity.this);
                     }
-                })
-                .onAnyDenied(new Func() {
-                    @Override
-                    protected void call() {
-                        checkPermissionGallery();
-                    }
-                }).ask(Constants.Request.REQUEST_CODE_GALLERY);
+                });
     }
 
     private void checkPermissionCamera() {
-        mRequestObject = PermissionUtil.with(this)
-                .request(Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.READ_EXTERNAL_STORAGE)
-                .onAllGranted(new Func() {
-                    @Override
-                    protected void call() {
+        Log.i(TAG, "checkPermissionStorageCamera: ");
+        PermissionX.init(this)
+                .permissions(Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .onExplainRequestReason((scope, deniedList, beforeRequest) -> {
+                    scope.showRequestReasonDialog(deniedList,
+                            "Para un buen uso de la apolicación es necesario que habilite los permisos correspodientes",
+                            "Aceptar",
+                            "Cancelar");
+                })
+                .onForwardToSettings((scope, deniedList) -> {
+                    scope.showForwardToSettingsDialog(deniedList,
+                            "Para continuar con el uso de la apolicación es necesario que habilite los permisos de manera manual",
+                            "Config. manual",
+                            "Cancelar");
+                })
+                .request((allGranted, grantedList, deniedList) -> {
+                    if (allGranted) {
+                        Log.i(TAG, "checkPermissionStorageCamera si tiene permisos: ");
                         mTempUri = FileUtils.pickImageCamera(ProfileClientActivity.this,
                                 "",
-                                Constants.Permission.PICK_CAMERA_REQUEST);
+                                Constants.Request.REQUEST_CODE_CAMERA);
                     }
-                })
-                .onAnyDenied(new Func() {
-                    @Override
-                    protected void call() {
-                        checkPermissionCamera();
-                    }
-                }).ask(Constants.Request.REQUEST_CODE_CAMERA);
+                });
     }
 
     private void updateData() {

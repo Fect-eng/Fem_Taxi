@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.models.Client;
 import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.ClientProvider;
+import pe.com.android.femtaxi.providers.TopicProvider;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,12 +37,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LoginClientActivity extends AppCompatActivity {
-
+    String TAG = LoginClientActivity.class.getSimpleName();
     private ActivityLoginClienteBinding binding;
     private GoogleSignInOptions gso;
     private GoogleSignInClient mGoogleSignInClient;
     private AuthProvider mAuthProvider;
     private ClientProvider mClientProvider;
+    private TopicProvider mTopicProvider;
     private ProgressDialog mProgressDialog;
 
     @Override
@@ -52,6 +55,7 @@ public class LoginClientActivity extends AppCompatActivity {
         initGoogle();
         mAuthProvider = new AuthProvider();
         mClientProvider = new ClientProvider();
+        mTopicProvider = new TopicProvider();
 
         binding.btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +75,7 @@ public class LoginClientActivity extends AppCompatActivity {
         }
 
         switch (requestCode) {
-            case 666:
+            case Constants.Request.REQUEST_CODE_LOGIN_GGOGLE:
                 if (data != null) {
                     Task<GoogleSignInAccount> completedTask = GoogleSignIn.getSignedInAccountFromIntent(data);
                     if (completedTask.isSuccessful()) {
@@ -104,7 +108,7 @@ public class LoginClientActivity extends AppCompatActivity {
         mProgressDialog.show();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         final Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, 666);
+        startActivityForResult(signInIntent, Constants.Request.REQUEST_CODE_LOGIN_GGOGLE);
     }
 
     public void signInWithCredential(GoogleSignInAccount acct) {
@@ -119,12 +123,15 @@ public class LoginClientActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             getDataUser(mAuthProvider.getCurrentUser());
                                         } else {
+                                            Log.d(TAG, "subscrito ocurrio un error: ");
                                         }
                                     }
                                 });
             } else {
+                Log.d(TAG, "subscrito credential es null: ");
             }
         } else {
+            Log.d(TAG, "subscrito acct.getIdToken() es null: ");
         }
     }
 
@@ -163,6 +170,10 @@ public class LoginClientActivity extends AppCompatActivity {
     private void moveToMain() {
         mProgressDialog.dismiss();
         new PreferencesManager(this).setIsClient(true);
+        mTopicProvider.registerTopic(mAuthProvider.getId())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "subscrito: ");
+                });
         Intent intent = new Intent(LoginClientActivity.this, MapClienteActivity.class);
         startActivity(intent);
         LoginClientActivity.this.finish();

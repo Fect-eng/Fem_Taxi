@@ -126,7 +126,7 @@ public class FileUtils {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        activity.startActivityForResult(Intent.createChooser(intent, "Select Imagen"), Constants.Permission.PICK_IMAGE_REQUEST);
+        activity.startActivityForResult(Intent.createChooser(intent, "Select Imagen"), Constants.Request.REQUEST_CODE_GALLERY);
     }
 
     public static Uri pickImageCamera(Activity activity, String prefix, int requestCode) {

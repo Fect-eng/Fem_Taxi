@@ -139,7 +139,7 @@ public class RegistroDriverSegundoActivity extends AppCompatActivity {
     }
 
     private void moveToSendImage() {
-        Intent intent = new Intent(RegistroDriverSegundoActivity.this, EnviarImagenActivity.class);
+        Intent intent = new Intent(RegistroDriverSegundoActivity.this, UploadPolicialActivity.class);
         intent.putExtra(Constants.Extras.EXTRA_DRIVE, (Serializable) mRegistroDriver1);
         startActivity(intent);
     }

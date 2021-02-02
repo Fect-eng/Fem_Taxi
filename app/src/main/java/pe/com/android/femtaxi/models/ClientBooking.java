@@ -26,7 +26,7 @@ public class ClientBooking implements Serializable {
     public ClientBooking(String idHistory, String destination, double destinationLat,
                          double destinationLong, String idClient, String idDriver, String km,
                          String origin, double originLat, double originLong, String status,
-                         String time,double price) {
+                         String time, double price) {
         this.idHistory = idHistory;
         this.destination = destination;
         this.destinationLat = destinationLat;

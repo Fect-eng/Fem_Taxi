@@ -15,6 +15,7 @@ import pe.com.android.femtaxi.models.ClientBooking;
 import pe.com.android.femtaxi.models.HistoryBooking;
 import pe.com.android.femtaxi.providers.ClientBookingProvider;
 import pe.com.android.femtaxi.providers.HistoryBookingProvider;
+
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -30,7 +31,6 @@ public class CalificationDriverActivity extends AppCompatActivity {
     private HistoryBooking mHistoryBooking;
     private HistoryBookingProvider mHistoryBookingProvider;
     private float mCalification = 0;
-    private double mExtraPrice = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,9 +41,6 @@ public class CalificationDriverActivity extends AppCompatActivity {
 
         mClientBookingProvider = new ClientBookingProvider();
         mClientId = getIntent().getStringExtra(Constants.Extras.EXTRA_CLIENT_ID);
-        mExtraPrice = getIntent().getDoubleExtra(Constants.Extras.EXTRA_PRICE, 0);
-
-        binding.txtPrice.setText("S/ " + String.format("%.2f", mExtraPrice));
 
         getClientBooking();
 
@@ -71,6 +68,7 @@ public class CalificationDriverActivity extends AppCompatActivity {
                             ClientBooking clientBooking = documentSnapshot.toObject(ClientBooking.class);
                             binding.txtAddressInit.setText(clientBooking.getOrigin());
                             binding.txtAddressEnd.setText(clientBooking.getDestination());
+                            binding.txtPrice.setText("S/ " + String.format("%.2f", clientBooking.getPrice()));
                             mHistoryBooking = new HistoryBooking(
                                     clientBooking.getIdHistory(),
                                     clientBooking.getDestination(),
@@ -83,7 +81,8 @@ public class CalificationDriverActivity extends AppCompatActivity {
                                     clientBooking.getOriginLat(),
                                     clientBooking.getOriginLong(),
                                     clientBooking.getStatus(),
-                                    clientBooking.getTime());
+                                    clientBooking.getTime(),
+                                    clientBooking.getPrice());
                         }
                     }
                 });
@@ -108,7 +107,7 @@ public class CalificationDriverActivity extends AppCompatActivity {
                                             }
                                         });
                             } else {
-                                mHistoryBookingProvider.getCreateHistoryBooking(mHistoryBooking)
+                                mHistoryBookingProvider.setCreateHistoryBooking(mHistoryBooking)
                                         .addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {

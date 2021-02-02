@@ -2,6 +2,8 @@ package pe.com.android.femtaxi.providers;
 
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.models.ClientBooking;
+import pe.com.android.femtaxi.utils.Utils;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -13,9 +15,11 @@ import java.util.Map;
 public class ClientBookingProvider {
 
     CollectionReference collectionReference;
+    FirebaseFirestore firebaseFirestore;
 
     public ClientBookingProvider() {
-        collectionReference = FirebaseFirestore.getInstance()
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        collectionReference = firebaseFirestore
                 .collection(Constants.Firebase.Nodo.CLIENT_BOOKING);
     }
 
@@ -51,6 +55,7 @@ public class ClientBookingProvider {
         mapClientBooking.put("originLong", clientBooking.getOriginLong());
         mapClientBooking.put("status", clientBooking.getStatus());
         mapClientBooking.put("time", clientBooking.getTime());
+        mapClientBooking.put("price", clientBooking.getPrice());
 
         return collectionReference.document(clientBooking.getIdClient())
                 .set(mapClientBooking);
@@ -59,9 +64,5 @@ public class ClientBookingProvider {
     public Task<Void> deleteClientBooking(String clientId) {
         return collectionReference.document(clientId)
                 .delete();
-    }
-
-    public void getUpdateHistoryBooking(String clientId) {
-
     }
 }

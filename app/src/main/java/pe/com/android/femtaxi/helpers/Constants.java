@@ -2,6 +2,8 @@ package pe.com.android.femtaxi.helpers;
 
 public class Constants {
 
+    public static final String URL_FCM = "https://fcm.googleapis.com";
+
     public class Firebase {
         public class Nodo {
             public static final String DRIVER_ACTIVE = "drive_active";
@@ -10,7 +12,6 @@ public class Constants {
             public static final String DRIVER = "driver";
             public static final String CLIENT_BOOKING = "clientBooking";
             public static final String HISTORY_BOOKING = "historyBooking";
-            public static final String TOKEN = "tokens";
             public static final String INFO = "info";
             public static final String IMAGE_CLIENT = "image_client";
             public static final String IMAGE_DRIVER = "image_driver";
@@ -22,11 +23,6 @@ public class Constants {
             public static final String EMAIL = "email";
             public static final String PHOTO = "photo";
         }
-    }
-
-    public class Permission {
-        public static final int PICK_IMAGE_REQUEST = 1000;
-        public static final int PICK_CAMERA_REQUEST = 2000;
     }
 
     public class Request {
@@ -43,6 +39,7 @@ public class Constants {
         public static final int REQUEST_CODE_CAMERA_DRIVER = 209;
         public static final int REQUEST_CODE_CALL = 300;
         public static final int REQUEST_CODE_LOCATION = 400;
+        public static final int REQUEST_CODE_LOGIN_GGOGLE = 500;
     }
 
     public class Preferences {
@@ -61,9 +58,9 @@ public class Constants {
         public static final String EXTRA_ADDRESS_DESTINO = "EXTRA_ADDRESS_DESTINO";
         public static final String EXTRA_DESTINO_LAT = "EXTRA_DESTINO_LAT";
         public static final String EXTRA_DESTINO_LONG = "EXTRA_DESTINO_LONG";
-        public static final String EXTRA_PRICE = "EXTRA_PRICE";
         public static final String EXTRA_IS_CONNECTED = "EXTRA_IS_CONNECTED";
         public static final String EXTRA_DRIVE = "EXTRA_DRIVE";
         public static final String EXTRA_SERVICE_TYPE = "EXTRA_DRIVE";
+        public static final String EXTRA_PRICE = "EXTRA_PRICE";
     }
 }

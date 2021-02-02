@@ -17,6 +17,7 @@ import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.ClientBookingProvider;
 import pe.com.android.femtaxi.providers.GeofireProvider;
+
 import com.google.firebase.firestore.ListenerRegistration;
 
 public class NotificationBookingActivity extends AppCompatActivity {
@@ -27,6 +28,7 @@ public class NotificationBookingActivity extends AppCompatActivity {
     private String mExtraAddressDetino;
     private String mExtraMinutes;
     private String mExtraKM;
+    private double mPrice;
     private ClientBookingProvider mClientBookingProvider;
     private int mCounter = 10;
     private Handler mHandler;
@@ -55,11 +57,13 @@ public class NotificationBookingActivity extends AppCompatActivity {
         mExtraAddressDetino = getIntent().getStringExtra(Constants.Extras.EXTRA_ADDRESS_DESTINO);
         mExtraMinutes = getIntent().getStringExtra(Constants.Extras.EXTRA_MINUT);
         mExtraKM = getIntent().getStringExtra(Constants.Extras.EXTRA_KM);
+        mPrice = getIntent().getDoubleExtra(Constants.Extras.EXTRA_PRICE, -1);
 
         binding.txtAddressInit.setText(mExtraAddressOrigin);
         binding.txtAddressEnd.setText(mExtraAddressDetino);
-        binding.txtTimeArrive.setText(mExtraMinutes);
-        binding.txtKmArrive.setText(mExtraKM);
+        binding.txtTime.setText(mExtraMinutes);
+        binding.txtKm.setText(mExtraKM);
+        binding.txtPrice.setText("Precio a cobrar: S/" + String.format("%.2f", mPrice));
 
         getWindow().addFlags(
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |

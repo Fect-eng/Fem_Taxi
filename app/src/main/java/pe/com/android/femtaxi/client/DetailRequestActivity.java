@@ -68,6 +68,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
     private PolylineOptions mPolylineOptions;
     private LatLngBounds.Builder builder = LatLngBounds.builder();
     private LatLngBounds bounds = null;
+    private double mPrice;
 
 
     @Override
@@ -79,8 +80,10 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         mButtonRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                moveToRequestDriver();
-
+                if (mPrice > 0)
+                    moveToRequestDriver();
+                else
+                    drawRoute();
             }
         });
 
@@ -149,6 +152,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         intent.putExtra(Constants.Extras.EXTRA_DESTINO_LAT, mExtraDestinoLat);
         intent.putExtra(Constants.Extras.EXTRA_DESTINO_LONG, mExtradestinoLng);
         intent.putExtra(Constants.Extras.EXTRA_SERVICE_TYPE, mServiceType);
+        intent.putExtra(Constants.Extras.EXTRA_PRICE, mPrice);
         startActivity(intent);
         this.finish();
     }
@@ -212,10 +216,8 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
                         Log.d(TAG, "calcularPrice addOnSuccessListener info: " + info);
                         double totalDistance = distanceValor * info.getKm();
                         double totalMinutes = minutosValor * info.getMin();
-                        double total = totalDistance + totalMinutes;
-                        double minTotal = total - 0.50;
-                        double maxTotal = total + 0.50;
-                        viewPrice(minTotal, maxTotal);
+                        mPrice = totalDistance + totalMinutes;
+                        viewPrice(mPrice);
                     } else {
                         Log.d(TAG, "calcularPrice addOnSuccessListener info vacia: ");
                     }
@@ -256,7 +258,7 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
         binding.btnSolicitar.setText(message);
     }
 
-    private void viewPrice(double minTotal, double maxTotal) {
+    private void viewPrice(double price) {
         switch (mServiceType) {
             case ServiceType.INTRA_URBANO:
             case ServiceType.DELIVERY:
@@ -264,11 +266,10 @@ public class DetailRequestActivity extends AppCompatActivity implements OnMapRea
             case ServiceType.CARGA:
             case ServiceType.PET:
             case ServiceType.FRIEND:
-                minTotal = minTotal + 5;
-                maxTotal = maxTotal + 5;
+                price = price + 5;
                 break;
         }
-        binding.txtPrice.setText("S/ " + String.format("%.2f", minTotal) + " - " + String.format("%.2f", maxTotal));
+        binding.txtPrice.setText("S/ " + String.format("%.2f", price));
     }
 }
 

@@ -24,8 +24,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.github.kayvannj.permission_utils.Func;
-import com.github.kayvannj.permission_utils.PermissionUtil;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -43,6 +41,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.permissionx.guolindev.PermissionX;
 
 import pe.com.android.femtaxi.MainActivity;
 import pe.com.android.femtaxi.R;
@@ -52,7 +51,6 @@ import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.ClientBookingProvider;
 import pe.com.android.femtaxi.providers.GeofireProvider;
-import pe.com.android.femtaxi.providers.TokenProvider;
 
 public class MapDriverActivity extends AppCompatActivity
         implements OnMapReadyCallback {
@@ -64,7 +62,6 @@ public class MapDriverActivity extends AppCompatActivity
     private SupportMapFragment nMapFragment;
     private GeofireProvider mGeofireProvider;
     private ClientBookingProvider mClientBookingProvider;
-    private TokenProvider mTokenProvider;
     private AuthProvider mAuthProvider;
     private final static int SETTINGS_REQUEST_CODE = 200;
     private Marker nMarker;
@@ -75,7 +72,6 @@ public class MapDriverActivity extends AppCompatActivity
     private LocationRequest mLocationRequest;
     private FusedLocationProviderClient mFusedLocation;
     private ValueEventListener mListener;
-    private PermissionUtil.PermissionRequestObject mRequestObject;
 
     LocationCallback mLocationCallback = new LocationCallback() {
         @Override
@@ -116,7 +112,6 @@ public class MapDriverActivity extends AppCompatActivity
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
         mAuthProvider = new AuthProvider();
         mClientBookingProvider = new ClientBookingProvider();
-        mTokenProvider = new TokenProvider();
 
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Conductor");
@@ -138,7 +133,6 @@ public class MapDriverActivity extends AppCompatActivity
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkPermissionsLocation();
-        generatedToken();
         isDriverWorking();
         Log.d(TAG, "onCreate savedInstanceState: " + savedInstanceState);
         Log.d(TAG, "onCreate mIsconnect: " + mIsconnect);
@@ -196,13 +190,6 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mRequestObject.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == SETTINGS_REQUEST_CODE) {
@@ -217,11 +204,26 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     private void checkPermissionsLocation() {
-        mRequestObject = PermissionUtil.with(this)
-                .request(Manifest.permission.ACCESS_FINE_LOCATION)
-                .onAllGranted(new Func() {
-                    @Override
-                    protected void call() {
+        Log.i(TAG, "checkPermissionLocation: ");
+        PermissionX.init(this)
+                .permissions(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION)
+                .onExplainRequestReason((scope, deniedList, beforeRequest) -> {
+                    scope.showRequestReasonDialog(deniedList,
+                            "Para un buen uso de la apolicación es necesario que habilite los permisos correspodientes",
+                            "Aceptar",
+                            "Cancelar");
+                })
+
+                .onForwardToSettings((scope, deniedList) -> {
+                    scope.showForwardToSettingsDialog(deniedList,
+                            "Para continuar con el uso de la apolicación es necesario que habilite los permisos de manera manual",
+                            "Config. manual",
+                            "Cancelar");
+                })
+                .request((allGranted, grantedList, deniedList) -> {
+                    if (allGranted) {
+                        Log.i(TAG, "checkPermissionLocation si tiene permisos: ");
                         if (gpsActived()) {
                             if (ActivityCompat.checkSelfPermission(MapDriverActivity.this,
                                     Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -236,13 +238,7 @@ public class MapDriverActivity extends AppCompatActivity
                             showAlertDialogNoGPS();
                         }
                     }
-                })
-                .onAnyDenied(new Func() {
-                    @Override
-                    protected void call() {
-                        checkPermissionsLocation();
-                    }
-                }).ask(Constants.Request.REQUEST_CODE_LOCATION);
+                });
     }
 
     private boolean gpsActived() {
@@ -347,10 +343,6 @@ public class MapDriverActivity extends AppCompatActivity
 
                     }
                 });
-    }
-
-    private void generatedToken() {
-        mTokenProvider.createdToken(mAuthProvider.getId());
     }
 
     private void moveToEditProfile() {

@@ -38,11 +38,11 @@
         </activity>
 
         <activity
-            android:name=".SetareActivity"
+            android:name=".driver.registerDriver.UploadSetareActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".RevisionTecnicaActivity"
+            android:name=".driver.registerDriver.UploadRevTecActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -50,23 +50,23 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".FotoConductoraActivity"
+            android:name=".driver.registerDriver.UploadDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".SoatActivity"
+            android:name=".driver.registerDriver.UploadSoatActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".DNIActivity"
+            android:name=".driver.registerDriver.UploadDNIActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".PenalesActivity"
+            android:name=".driver.registerDriver.UploadPenalesActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name=".ImagenStorageActivity"
+            android:name=".driver.registerDriver.UploadPolicialActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -85,10 +85,6 @@
 
         <activity
             android:name=".driver.CalificationDriverActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".driver.registerDriver.EnviarImagenSegundoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
@@ -117,10 +113,6 @@
         <activity
             android:name=".driver.loginDriveActivity"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".driver.registerDriver.EnviarImagenActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity

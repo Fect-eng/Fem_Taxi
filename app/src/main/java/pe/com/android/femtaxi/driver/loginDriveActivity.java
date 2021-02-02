@@ -82,7 +82,7 @@ public class loginDriveActivity extends AppCompatActivity implements View.OnClic
         startActivity(intent);
     }
 
-    public boolean validarCamposLogin(){    //validar campos vacios y que aparezca un mensajito
+    public boolean validarCamposLogin(){
         if (mTextInpuEmail.getText().toString().isEmpty()) {
             mTextInpuEmail.setError("Ingrese Correo Electronico");
             return false;
@@ -110,7 +110,6 @@ public class loginDriveActivity extends AppCompatActivity implements View.OnClic
                 String password = mTextInputPassword.getText().toString();
                 FirebaseAuth.getInstance()
                         .signInWithEmailAndPassword(username, password)
-
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
