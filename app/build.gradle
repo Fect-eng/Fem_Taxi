@@ -20,7 +20,7 @@ android {
         buildConfigField "String", "PATH_NAME_APP", "\"femtaxi\""
 
         ndk {
-            debugSymbolLevel 'FULL'
+           // debugSymbolLevel 'FULL'
         }
 
         testFunctionalTest true

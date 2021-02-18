@@ -17,6 +17,8 @@ import androidx.appcompat.widget.Toolbar;
 import pe.com.android.femtaxi.R;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.models.registroDriver1;
+import pe.com.android.femtaxi.webRegistroActivity;
+
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -138,8 +140,8 @@ public class RegistroDriverPrimerActivity extends AppCompatActivity implements V
         return true;
     }
 
-    private void movetToRegistroSegundo() {
-        Intent intent = new Intent(RegistroDriverPrimerActivity.this, RegistroDriverSegundoActivity.class);
+    private void movetToRegistroSegundo() {//RegistroDriverSegundoActivity
+        Intent intent = new Intent(RegistroDriverPrimerActivity.this, webRegistroActivity.class);
         intent.putExtra(Constants.Extras.EXTRA_DRIVE, (Serializable) registroDriver1);
         startActivity(intent);
     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 
+import pe.com.android.femtaxi.R;
+import pe.com.android.femtaxi.admiSoft.OptionDesarrolloActivity;
 import pe.com.android.femtaxi.driver.registerDriver.RegistroDriverPrimerActivity;
 import pe.com.android.femtaxi.databinding.ActivityOpcionDualDriverBinding;
 import pe.com.android.femtaxi.helpers.Constants;
@@ -31,6 +34,8 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
     private AuthProvider mAuthProvider;
     private TopicProvider mTopicProvider;
 
+    Button btnMapaVer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +48,14 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Elegir Opción Conductora");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        btnMapaVer = findViewById(R.id.btnMapaVer);
+        btnMapaVer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                administracion();
+            }
+        });
 
         binding.btnRegisterDriver.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +106,11 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         });
     }
 
+    private void administracion() {
+    Intent intent = new Intent(getApplicationContext(), OptionDesarrolloActivity.class);
+    startActivity(intent);
+    }
+
     public boolean validarCampos() {
         boolean retorno = true;
         if (binding.txtPassword.getText().toString().isEmpty()) {
@@ -106,7 +124,7 @@ public class OpcionDualDriverActivity extends AppCompatActivity {
         return retorno;
     }
 
-    private void moveToRegisterDriver() {
+    private void moveToRegisterDriver() {   //no mover
         Intent intent = new Intent(OpcionDualDriverActivity.this, RegistroDriverPrimerActivity.class);
         startActivity(intent);
     }
