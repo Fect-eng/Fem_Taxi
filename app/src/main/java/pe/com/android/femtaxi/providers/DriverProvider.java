@@ -1,6 +1,7 @@
 package pe.com.android.femtaxi.providers;
 
 import pe.com.android.femtaxi.helpers.Constants;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -12,16 +13,11 @@ import java.util.Map;
 public class DriverProvider {
     FirebaseFirestore firebaseFirestore;
 
-    public DocumentReference getClientId(String clienId) {
-        return firebaseFirestore.collection(Constants.Firebase.Nodo.DRIVER)
-                .document(clienId);
-    }
-
     public DriverProvider() {
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
-    public Task<DocumentSnapshot> getDataUser(FirebaseUser firebaseUser) {
+    public Task<DocumentSnapshot> getDataDriver(FirebaseUser firebaseUser) {
         return firebaseFirestore.collection(Constants.Firebase.Nodo.DRIVER)
                 .document(firebaseUser.getUid())
                 .get();

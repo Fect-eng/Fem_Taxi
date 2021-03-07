@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
@@ -21,6 +22,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
@@ -52,10 +55,14 @@ import java.util.List;
 
 import pe.com.android.femtaxi.R;
 import pe.com.android.femtaxi.databinding.ActivityMapClientBookingBinding;
+import pe.com.android.femtaxi.driver.MapDriveBookingActivity;
 import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.models.Client;
 import pe.com.android.femtaxi.models.ClientBooking;
+import pe.com.android.femtaxi.models.Driver;
 import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.ClientBookingProvider;
+import pe.com.android.femtaxi.providers.DriverProvider;
 import pe.com.android.femtaxi.providers.GeofireProvider;
 import pe.com.android.femtaxi.providers.GoogleApiProvider;
 import pe.com.android.femtaxi.utils.DecodePoints;
@@ -78,6 +85,7 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
     private ClientBookingProvider mClientBookingProvider;
     private GoogleApiProvider mGoogleApiProvider;
     private GeofireProvider mGeofireProvider;
+    private DriverProvider mDriverProvider ;
     private final static int LOCATION_REQUEST_CODE = 100;
     private final static int SETTINGS_REQUEST_CODE = 200;
     private LocationRequest mLocationRequest;
@@ -138,11 +146,13 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         mClientBookingProvider = new ClientBookingProvider();
         mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_WORKING);
+        mDriverProvider = new DriverProvider();
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         nMapFragment.getMapAsync(this);
         checkLocationPermissions();
         checkStatusClientBooking();
+        getDriver();
     }
 
     @Override
@@ -419,5 +429,27 @@ public class MapClientBookingActivity extends AppCompatActivity implements OnMap
         Intent intent = new Intent(MapClientBookingActivity.this, CalificationClientActivity.class);
         startActivity(intent);
         this.finish();
+    }
+
+    private void getDriver() {
+        mDriverProvider.getDataUser(idDriver)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            Driver driver = documentSnapshot.toObject(Driver.class);
+                            Drawable placeholder = getResources().getDrawable(R.drawable.ic_login_user);
+                            Glide.with(MapClientBookingActivity.this)
+                                    .load(driver.getPhoto())
+                                    .placeholder(placeholder)
+                                    .error(placeholder)
+                                    .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                                    .into(binding.imgUser);
+                            binding.txtNameUser.setText(driver.getName()+" "+driver.getApellido());
+                            binding.txtEmailUser.setText(driver.getCorreo());
+                        }
+                    }
+                });
     }
 }

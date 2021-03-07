@@ -378,13 +378,13 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
         if (mAuthProvider.existSession() && mCurrentLatLng != null) {
             mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
             if (mOriginLatLng != null) {
-                double distance = getDistanceOrigin(mOriginLatLng, mCurrentLatLng);
+                //double distance = getDistanceOrigin(mOriginLatLng, mCurrentLatLng);
                 switch (statusBooking) {
                     case "create":
-                        if (distance <= 100) {
-                            mClientBoarding = true;
-                            Toast.makeText(this, "Ya puedes iniciar tu viaje", Toast.LENGTH_SHORT).show();
-                        }
+                        //if (distance <= 100) {
+                        mClientBoarding = true;
+                        Toast.makeText(this, "Ya puedes iniciar tu viaje", Toast.LENGTH_SHORT).show();
+                        //}
                         break;
                 }
             }
@@ -484,7 +484,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                 });
     }
 
-    private double getDistanceOrigin(LatLng clientLatLng, LatLng driverLatLng) {
+    /*private double getDistanceOrigin(LatLng clientLatLng, LatLng driverLatLng) {
         double distance = 0;
         Location clientLocation = new Location("");
         Location driveLocation = new Location("");
@@ -495,7 +495,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
         distance = clientLocation.distanceTo(driveLocation);
         return distance;
 
-    }
+    }*/
 
     private void startBooking() {
         mHandler.postDelayed(runnable, 1000);

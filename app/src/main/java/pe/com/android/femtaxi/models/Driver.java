@@ -6,21 +6,40 @@ import java.io.Serializable;
 
 @Keep
 public class Driver implements Serializable {
-    private String UId;
+    private String id;
+    private String Telefono;
+    private String address;
     private String name;
-    private String email;
+    private String apellido;
+    private String correo;
+    private String fech_nac;
     private String photo;
-    private String phone;
 
     public Driver() {
     }
 
-    public String getUId() {
-        return UId;
+    public String getId() {
+        return id;
     }
 
-    public void setUId(String UId) {
-        this.UId = UId;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTelefono() {
+        return Telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        Telefono = telefono;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getName() {
@@ -31,12 +50,28 @@ public class Driver implements Serializable {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getApellido() {
+        return apellido;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setApellido(String apellido) {
+        this.apellido = apellido;
+    }
+
+    public String getCorreo() {
+        return correo;
+    }
+
+    public void setCorreo(String correo) {
+        this.correo = correo;
+    }
+
+    public String getFech_nac() {
+        return fech_nac;
+    }
+
+    public void setFech_nac(String fech_nac) {
+        this.fech_nac = fech_nac;
     }
 
     public String getPhoto() {
@@ -47,22 +82,17 @@ public class Driver implements Serializable {
         this.photo = photo;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     @Override
     public String toString() {
         return "Driver{" +
-                "UId='" + UId + '\'' +
+                "id='" + id + '\'' +
+                ", Telefono='" + Telefono + '\'' +
+                ", address='" + address + '\'' +
                 ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
+                ", apellido='" + apellido + '\'' +
+                ", correo='" + correo + '\'' +
+                ", fech_nac='" + fech_nac + '\'' +
                 ", photo='" + photo + '\'' +
-                ", phone='" + phone + '\'' +
                 '}';
     }
 }

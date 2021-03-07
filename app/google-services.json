@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "802108111970-0pi88sdc210m2lpre8295jdjq68bg7to.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pe.com.android.femtaxi",
+            "certificate_hash": "dd710389d19ad7eb0da3308094af32cd3425c2cd"
+          }
+        },
+        {
           "client_id": "802108111970-gogpc02jdhtguht5ereopddod7dbrs2e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
