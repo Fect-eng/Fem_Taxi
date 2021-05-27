@@ -1,47 +1,49 @@
 package pe.com.android.femtaxi.driver;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Looper;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
+import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
+import com.mapbox.mapboxsdk.geometry.LatLng;
+import com.mapbox.mapboxsdk.location.LocationComponent;
+import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
+import com.mapbox.mapboxsdk.location.OnIndicatorPositionChangedListener;
+import com.mapbox.mapboxsdk.location.modes.CameraMode;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
+import com.mapbox.mapboxsdk.maps.MapboxMap;
+import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
+import com.mapbox.mapboxsdk.plugins.annotation.SymbolOptions;
 import com.permissionx.guolindev.PermissionX;
+
+import org.jetbrains.annotations.NotNull;
 
 import pe.com.android.femtaxi.MainActivity;
 import pe.com.android.femtaxi.R;
@@ -49,58 +51,58 @@ import pe.com.android.femtaxi.databinding.ActivityMapDriverBinding;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.providers.AuthProvider;
-import pe.com.android.femtaxi.providers.ClientBookingProvider;
 import pe.com.android.femtaxi.providers.GeofireProvider;
 
 public class MapDriverActivity extends AppCompatActivity
         implements OnMapReadyCallback {
-        String TAG = MapDriverActivity.class.getSimpleName();
+    String TAG = MapDriverActivity.class.getSimpleName();
 
     private ActivityMapDriverBinding binding;
 
-    private GoogleMap nMap;
-    private SupportMapFragment nMapFragment;
     private GeofireProvider mGeofireProvider;
-    private ClientBookingProvider mClientBookingProvider;
     private AuthProvider mAuthProvider;
     private final static int SETTINGS_REQUEST_CODE = 200;
-    private Marker nMarker;
     private boolean mIsconnect = false;
 
     private LatLng mCurrentLatLng;
 
-    private LocationRequest mLocationRequest;
-    private FusedLocationProviderClient mFusedLocation;
     private ValueEventListener mListener;
 
-    LocationCallback mLocationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            for (Location location : locationResult.getLocations()) {
-                //Log.d(TAG, "mLocationCallback location: " + location);
-                if (getApplicationContext() != null) {
-                    //Log.d(TAG, "mLocationCallback getApplicationContext!=null: ");
-                    mCurrentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    if (nMarker != null) {
-                        nMarker.remove();
-                    }
-                    //Log.d(TAG, "mLocationCallback mCurrentLatLng: " + mCurrentLatLng);
-                    nMarker = nMap.addMarker(new MarkerOptions().position(
-                            new LatLng(location.getLatitude(), location.getLongitude()))
-                            .title("Posición Actual")
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.iconogps)));
+    private MapboxMap mMapboxMap;
+    private LocationComponent mLocationComponent;
+    private SymbolManager mSymbolManager;
+    private SymbolOptions mSymbolOptionsLocation;
+    private Style mStyle;
+    private Bitmap iconLocation;
 
-                    nMap.moveCamera(CameraUpdateFactory.newCameraPosition(
-                            new CameraPosition.Builder()
-                                    .target(mCurrentLatLng)
-                                    .zoom(16f)
-                                    .build()));
-                    if (mIsconnect)
-                        updateLocation();
-                    //Log.d(TAG, "mLocationCallback getLatitude: " + location.getLatitude() + ", getLongitude: " + location.getLongitude());
-                }
-            }
+    OnIndicatorPositionChangedListener positionChangedListener = point -> {
+        Log.i(TAG, "addOnIndicatorPositionChangedListener point: " + point);
+        mCurrentLatLng = new LatLng(point.latitude(), point.longitude());
+        LocationTheMap(mCurrentLatLng.getLatitude(), mCurrentLatLng.getLongitude());
+
+        if (mSymbolOptionsLocation == null) {
+            mSymbolOptionsLocation = new SymbolOptions()
+                    .withLatLng(mCurrentLatLng)
+                    .withIconImage("location")
+                    //set the below attributes according to your requirements
+                    .withIconSize(1.5f)
+                    .withIconOffset(new Float[]{0f, -1.5f})
+                    .withTextField("Posición Actual")
+                    .withTextHaloColor("rgba(255, 255, 255, 100)")
+                    .withTextHaloWidth(5.0f)
+                    .withTextAnchor("top")
+                    .withTextOffset(new Float[]{0f, 1.5f});
+            if (mSymbolManager == null)
+                if (mMapboxMap != null)
+                    if (mStyle != null)
+                        mSymbolManager = new SymbolManager(binding.mapView, mMapboxMap, mStyle);
+            mSymbolManager.create(mSymbolOptionsLocation);
+        } else {
+            mSymbolOptionsLocation.withLatLng(mCurrentLatLng);
         }
+
+        if (mIsconnect)
+            updateLocation();
     };
 
     @Override
@@ -111,27 +113,25 @@ public class MapDriverActivity extends AppCompatActivity
         mIsconnect = getIntent().getBooleanExtra(Constants.Extras.EXTRA_IS_CONNECTED, false);
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
         mAuthProvider = new AuthProvider();
-        mClientBookingProvider = new ClientBookingProvider();
 
         setSupportActionBar(binding.includeToolbar.toolbar);
         getSupportActionBar().setTitle("Mapa Conductor");
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
-        binding.btnConnect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mIsconnect) {
-                    disconnect();
-                } else {
-                    startLocation();
-                }
-                mIsconnect = !mIsconnect;
-                binding.btnConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
+        iconLocation = BitmapFactory.decodeResource(getResources(), R.drawable.iconogps);
+
+        //mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
+        binding.btnConnect.setOnClickListener((v) -> {
+            if (mIsconnect) {
+                disconnect();
+            } else {
+                startLocation();
             }
+            mIsconnect = !mIsconnect;
+            binding.btnConnect.setText(!mIsconnect ? "CONECTAR" : "DESCONECTAR");
         });
-        nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        nMapFragment.getMapAsync(this);
+        /*nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        nMapFragment.getMapAsync(this);*/
         checkPermissionsLocation();
         isDriverWorking();
         Log.d(TAG, "onCreate savedInstanceState: " + savedInstanceState);
@@ -142,29 +142,50 @@ public class MapDriverActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        binding.mapView.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.mapView.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        binding.mapView.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        binding.mapView.onPause();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        binding.mapView.onLowMemory();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy");
+
+        if (positionChangedListener != null) {
+            mLocationComponent.removeOnIndicatorPositionChangedListener(positionChangedListener);
+            positionChangedListener = null;
+        }
+
         if (mListener != null) {
             Log.d(TAG, "onDestroy mListener: " + mListener);
             mGeofireProvider.isDriverWorking(mAuthProvider.getId())
                     .removeEventListener(mListener);
+            mListener = null;
         }
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        nMap = googleMap;
-        nMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        nMap.getUiSettings().setZoomControlsEnabled(true);
-
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(1000);
-        mLocationRequest.setFastestInterval(1000);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(5);
-
-        startLocation();
     }
 
     @Override
@@ -203,6 +224,43 @@ public class MapDriverActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    @SuppressLint("MissingPermission")
+    public void onMapReady(@NonNull @NotNull MapboxMap mapboxMap) {
+        mMapboxMap = mapboxMap;
+        mMapboxMap.setStyle(Style.MAPBOX_STREETS, (style) -> {
+            mStyle = style;
+            mLocationComponent = mMapboxMap.getLocationComponent();
+            mLocationComponent.activateLocationComponent(
+                    LocationComponentActivationOptions.builder(this, mStyle)
+                            .build());
+            mLocationComponent.setLocationComponentEnabled(true);
+            mLocationComponent.setCameraMode(CameraMode.TRACKING);
+            mLocationComponent.setRenderMode(RenderMode.NORMAL);
+
+            mMapboxMap.getUiSettings().setLogoEnabled(false);
+            mMapboxMap.getUiSettings().setAttributionEnabled(false);
+            mMapboxMap.getUiSettings().setAllGesturesEnabled(false);
+
+            mSymbolManager = new SymbolManager(binding.mapView, mMapboxMap, mStyle);
+            mMapboxMap.getStyle().addImage("location", iconLocation);
+
+            /*hoveringMarker = new ImageView(getContext());
+
+            hoveringMarker.setImageDrawable(drawableOnMoveEnd);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER);
+            hoveringMarker.setLayoutParams(params);
+            binding.mapView.addView(hoveringMarker);*/
+
+            new Handler().postDelayed(() -> {
+                myLocation();
+                mLocationComponent.addOnIndicatorPositionChangedListener(positionChangedListener);
+            }, 500);
+        });
+    }
+
     private void checkPermissionsLocation() {
         Log.i(TAG, "checkPermissionLocation: ");
         PermissionX.init(this)
@@ -225,15 +283,7 @@ public class MapDriverActivity extends AppCompatActivity
                     if (allGranted) {
                         Log.i(TAG, "checkPermissionLocation si tiene permisos: ");
                         if (gpsActived()) {
-                            if (ActivityCompat.checkSelfPermission(MapDriverActivity.this,
-                                    Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                                    ActivityCompat.checkSelfPermission(MapDriverActivity.this,
-                                            Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                                return;
-                            }
-                            mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                            if (nMap != null)
-                                nMap.setMyLocationEnabled(true);
+                            binding.mapView.getMapAsync(this::onMapReady);
                         } else {
                             showAlertDialogNoGPS();
                         }
@@ -263,9 +313,8 @@ public class MapDriverActivity extends AppCompatActivity
 
     private void disconnect() {
         Log.d(TAG, "disconnect");
-        if (mFusedLocation != null) {
-            Log.d(TAG, "disconnect");
-            mFusedLocation.removeLocationUpdates(mLocationCallback);
+        if (mLocationComponent != null) {
+            mLocationComponent.removeOnIndicatorPositionChangedListener(positionChangedListener);
             if (mAuthProvider.existSession()) {
                 Log.d(TAG, "disconnect");
                 mGeofireProvider.removeLocation(mAuthProvider.getId());
@@ -284,9 +333,8 @@ public class MapDriverActivity extends AppCompatActivity
                 //Log.d(TAG, "startLocation permiso activado");
                 if (gpsActived()) {
                     //Log.d(TAG, "startLocation gps activado");
-                    mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                    if (nMap != null)
-                        nMap.setMyLocationEnabled(true);
+                    if (mLocationComponent != null)
+                        mLocationComponent.addOnIndicatorPositionChangedListener(positionChangedListener);
                 } else {
                     showAlertDialogNoGPS();
                 }
@@ -297,8 +345,8 @@ public class MapDriverActivity extends AppCompatActivity
             Log.d(TAG, "startLocation menor a M");
             if (gpsActived()) {
                 Log.d(TAG, "startLocation gps activado");
-                mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
-                nMap.setMyLocationEnabled(true);
+                if (mLocationComponent != null)
+                    mLocationComponent.addOnIndicatorPositionChangedListener(positionChangedListener);
             } else {
                 showAlertDialogNoGPS();
             }
@@ -312,7 +360,11 @@ public class MapDriverActivity extends AppCompatActivity
             if (mAuthProvider.existSession() && mCurrentLatLng != null) {
                 Log.d(TAG, "updateLocation mAuthProvider.existSession(): " + mAuthProvider.existSession());
                 isDriverWorking();
-                mGeofireProvider.saveLocation(mAuthProvider.getId(), mCurrentLatLng);
+                mGeofireProvider.saveLocation(mAuthProvider.getId(),
+                        new com.google.android.gms.maps.model.LatLng(
+                                mCurrentLatLng.getLatitude(),
+                                mCurrentLatLng.getLongitude()
+                        ));
             }
         }
     }
@@ -353,5 +405,28 @@ public class MapDriverActivity extends AppCompatActivity
     private void moveToHistoryBooking() {
         Intent intent = new Intent(MapDriverActivity.this, HistoryBookingDriverActivity.class);
         startActivity(intent);
+    }
+
+    private void myLocation() {
+        if (mMapboxMap != null) {
+            Location lastKnownLocation = mMapboxMap.getLocationComponent().getLastKnownLocation();
+            if (lastKnownLocation != null) {
+                LocationTheMap(lastKnownLocation.getLatitude(),
+                        lastKnownLocation.getLongitude());
+            }
+        }
+    }
+
+    private void LocationTheMap(Double latitude, Double longitude) {
+        LatLng latLng = new LatLng(latitude, longitude);
+        CameraPosition position = new CameraPosition.Builder()
+                .target(latLng)
+                .zoom(15)
+                .bearing(0)
+                .tilt(0)
+                .build();
+
+        mMapboxMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(position), 5000);
     }
 }

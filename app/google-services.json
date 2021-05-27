@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "802108111970-emi1ns29ajbduplftfib3i1beel08ouv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pe.com.android.femtaxi",
+            "certificate_hash": "8254cd4b1bfb9e3be8c2101aeadaf27d15f6845e"
+          }
+        },
+        {
           "client_id": "802108111970-gogpc02jdhtguht5ereopddod7dbrs2e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

@@ -1,12 +1,12 @@
 <resources>
     <string name="access_token">pk.eyJ1IjoiZWR3YXJkc3Rhcm90aDEyNDUiLCJhIjoiY2tpMTltNjM0MTMyYjJ4cGRqd2IzcWx4ZCJ9.4Kz4Dg79YratofmHJ0Ekfg</string>
+    <!--<string name="access_token">sk.eyJ1IjoiZWR3YXJkc3Rhcm90aDEyNDUiLCJhIjoiY2twNjR4am9nMGFscTJubnM3a2pidmNmcSJ9.Bk6IJmIlStH1kHplUg1iwQ</string>-->
 
     <string name="app_name">Fem Taxi</string>
 
     <string name="btnFoto">Abrir camera</string>
     <string name="lblName">Estado Permiso</string>
     <string name="lblCamera">Camara Selección</string>
-    >
     <string name="selected_place_info" />
     <string name="title_activity_llamada_directa">llamadaDirectaActivity</string>
     <!-- Strings used for fragments for navigation -->

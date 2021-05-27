@@ -22,6 +22,7 @@ import pe.com.android.femtaxi.broadcast.CancelReceiver;
 import pe.com.android.femtaxi.channel.NotificationHelpers;
 import pe.com.android.femtaxi.driver.NotificationBookingActivity;
 import pe.com.android.femtaxi.helpers.Constants;
+import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.models.ServiceNotification;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -40,8 +41,10 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
     MediaPlayer mediaPlayer = null;
 
     @Override
-    public void onNewToken(@NonNull String s) {
-        super.onNewToken(s);
+    public void onNewToken(@NonNull String token) {
+        super.onNewToken(token);
+        Log.d(TAG, "onNewToken token: " + token);
+        storeRegIdInPref(token);
     }
 
     @Override
@@ -110,6 +113,12 @@ public class MyFirebaseMessagingUser extends FirebaseMessagingService {
                 }
             }
         }
+    }
+
+    private void storeRegIdInPref(String token) {
+        Log.e(TAG, "storeRegIdInPref token: " + token);
+        PreferencesManager preferenceManager = new PreferencesManager(getApplication());
+        preferenceManager.setToken(token);
     }
 
     private void showNotificationActivity(String idClient, String origin, String destino,

@@ -41,21 +41,13 @@ public class PreferencesManager {
         return mPreferences.getBoolean(Constants.Preferences.PREF_IS_DRIVER, false);
     }
 
-    /*public void guardarUsuario(User user) {
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
-        mEditor = mPreferences.edit();
-        mEditor.putString(KEY_USER, json);
-        mEditor.apply();
+    public void setToken(String token) {
+        //LogUtils.e(TAG, "setToken token: " + token);
+        mEditor.putString(Constants.Preferences.PREF_TOKEN, token).commit();
     }
 
-    public User guardarUsuario() {
-        Gson gson = new Gson();
-        String json = mPreferences.getString(KEY_USER, "");
-        if (json.equals("")) {
-            guardarUsuario(null);
-            json = mPreferences.getString(KEY_USER, null);
-        }
-        return gson.fromJson(json, User.class);
-    }*/
+    public String getToken() {
+        //LogUtils.e(TAG, "getToken : " + mPreferences.getString(Constants.Preferences.PREF_TOKEN, null));
+        return mPreferences.getString(Constants.Preferences.PREF_TOKEN, null);
+    }
 }

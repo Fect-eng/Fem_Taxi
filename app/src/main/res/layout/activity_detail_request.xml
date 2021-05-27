@@ -5,19 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/colorPrimary"
     tools:context=".client.DetailRequestActivity">
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+    <FrameLayout
+        android:id="@+id/container_map"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="170dp"
-        app:layout_constraintBottom_toTopOf="@+id/container_info_booking"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.mapbox.mapboxsdk.maps.MapView
+            android:id="@+id/map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/btn_solicitar"
@@ -58,7 +63,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="190dp"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -66,20 +71,27 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/line_center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.5" />
 
             <TextView
                 android:id="@+id/title_origin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="30dp"
                 android:gravity="center"
                 android:text="Origen:"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/txt_origin"
-                app:layout_constraintEnd_toStartOf="@+id/title_destino"
+                app:layout_constraintEnd_toStartOf="@+id/line_center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -87,42 +99,14 @@
                 android:id="@+id/txt_origin"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:layout_margin="5dp"
                 android:gravity="center"
                 android:textColor="@color/white"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 app:layout_constraintBottom_toTopOf="@+id/img_time_and_distance"
-                app:layout_constraintEnd_toEndOf="@+id/title_origin"
-                app:layout_constraintStart_toStartOf="@+id/title_origin"
+                app:layout_constraintEnd_toStartOf="@+id/line_center"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title_origin"
-                tools:text="direccion" />
-
-            <TextView
-                android:id="@+id/title_destino"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Destino:"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/title_origin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/title_origin"
-                app:layout_constraintTop_toTopOf="@+id/title_origin" />
-
-            <TextView
-                android:id="@+id/txt_destino"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:gravity="center"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/img_price"
-                app:layout_constraintEnd_toEndOf="@+id/title_destino"
-                app:layout_constraintStart_toStartOf="@+id/title_destino"
-                app:layout_constraintTop_toBottomOf="@+id/title_destino"
                 tools:text="direccion" />
 
             <ImageView
@@ -131,8 +115,9 @@
                 android:layout_height="20dp"
                 android:src="@drawable/ic_action_time"
                 app:layout_constraintBottom_toTopOf="@+id/txt_title_time_and_distance"
-                app:layout_constraintEnd_toEndOf="@+id/txt_title_time_and_distance"
-                app:layout_constraintStart_toStartOf="@+id/txt_title_time_and_distance"
+                app:layout_constraintEnd_toStartOf="@+id/line_center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_origin"
                 app:tint="@color/white" />
 
             <TextView
@@ -145,8 +130,9 @@
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/txt_time_and_distance"
-                app:layout_constraintEnd_toEndOf="@+id/txt_time_and_distance"
-                app:layout_constraintStart_toStartOf="@+id/txt_time_and_distance" />
+                app:layout_constraintEnd_toStartOf="@+id/line_center"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/img_time_and_distance" />
 
             <TextView
                 android:id="@+id/txt_time_and_distance"
@@ -157,18 +143,48 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/txt_price"
+                app:layout_constraintEnd_toStartOf="@+id/line_center"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/txt_title_time_and_distance"
                 tools:text="3 km , 3 minutos" />
+
+            <TextView
+                android:id="@+id/title_destino"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Destino:"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/title_origin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/line_center"
+                app:layout_constraintTop_toTopOf="@+id/title_origin" />
+
+            <TextView
+                android:id="@+id/txt_destino"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/txt_origin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/line_center"
+                app:layout_constraintTop_toTopOf="@+id/txt_origin"
+                tools:text="direccion" />
 
             <ImageView
                 android:id="@+id/img_price"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:src="@drawable/ic_action_money"
-                app:layout_constraintBottom_toTopOf="@+id/txt_title_price"
-                app:layout_constraintEnd_toEndOf="@+id/txt_title_price"
-                app:layout_constraintStart_toStartOf="@+id/txt_title_price"
+                app:layout_constraintBottom_toBottomOf="@+id/img_time_and_distance"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/line_center"
+                app:layout_constraintTop_toTopOf="@+id/img_time_and_distance"
                 app:tint="@color/white" />
 
             <TextView
@@ -180,9 +196,10 @@
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@+id/txt_price"
-                app:layout_constraintEnd_toEndOf="@+id/txt_price"
-                app:layout_constraintStart_toStartOf="@+id/txt_price" />
+                app:layout_constraintBottom_toBottomOf="@+id/txt_title_time_and_distance"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/line_center"
+                app:layout_constraintTop_toTopOf="@+id/txt_title_time_and_distance" />
 
             <TextView
                 android:id="@+id/txt_price"
@@ -193,7 +210,7 @@
                 android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="@+id/txt_time_and_distance"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/txt_time_and_distance"
+                app:layout_constraintStart_toEndOf="@+id/line_center"
                 app:layout_constraintTop_toTopOf="@+id/txt_time_and_distance"
                 tools:text="50 soles" />
 

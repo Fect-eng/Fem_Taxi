@@ -1,12 +1,15 @@
 package pe.com.android.femtaxi;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.widget.Button;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.multidex.MultiDex;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.mapbox.mapboxsdk.Mapbox;
 
 import pe.com.android.femtaxi.client.LoginClientActivity;
 import pe.com.android.femtaxi.client.MapClienteActivity;
@@ -26,19 +29,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         MultiDex.install(this);
         btndriverDual = findViewById(R.id.btndriverDual);
-        btndriverDual.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToSelectAuth();
-            }
+        btndriverDual.setOnClickListener((view) -> {
+            goToSelectAuth();
         });
         btnncliente = findViewById(R.id.btnncliente);
-        btnncliente.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                goToSelectClient();
-            }
+        btnncliente.setOnClickListener((view) -> {
+            goToSelectClient();
         });
+        Mapbox.getInstance(this, getString(R.string.access_token));
+        FirebaseApp.initializeApp(this);
     }
 
     @Override
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void goToSelectClient() {     //LoginClientActivity
+    private void goToSelectClient() {
         Intent intent = new Intent(MainActivity.this, LoginClientActivity.class);
         startActivity(intent);
         MainActivity.this.finish();

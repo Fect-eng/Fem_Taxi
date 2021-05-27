@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorPrimary"
     tools:context=".client.MapClientBookingActivity">
 
     <include
@@ -26,9 +25,8 @@
 
     </androidx.cardview.widget.CardView>
 
-    <fragment
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/map_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="110dp"
@@ -127,6 +125,5 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </com.github.florent37.shapeofview.shapes.BubbleView>
-    >
 
 </androidx.constraintlayout.widget.ConstraintLayout>

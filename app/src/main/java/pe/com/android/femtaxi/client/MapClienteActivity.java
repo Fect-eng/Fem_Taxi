@@ -75,7 +75,6 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
     private ActivityMapClienteBinding binding;
 
-    private AuthProvider mAuthProvider;
     private GoogleMap nMap;
     private SupportMapFragment nMapFragment;
     private LocationRequest mLocationRequest;
@@ -129,48 +128,44 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         super.onCreate(savedInstanceState);
         binding = ActivityMapClienteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        mAuthProvider = new AuthProvider();
         mGeofireProvider = new GeofireProvider(Constants.Firebase.Nodo.DRIVER_ACTIVE);
-        binding.navView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nav_taxi:
-                        mServiceType = ServiceType.TAXI;
-                        break;
-                    case R.id.nav_urbano:
-                        mServiceType = ServiceType.INTRA_URBANO;
-                        break;
-                    case R.id.nav_delivery:
-                        mServiceType = ServiceType.DELIVERY;
-                        break;
-                    case R.id.nav_mensaje:
-                        mServiceType = ServiceType.MESSAGING;
-                        break;
-                    case R.id.nav_carga:
-                        mServiceType = ServiceType.CARGA;
-                        break;
-                    case R.id.nav_mascota:
-                        mServiceType = ServiceType.PET;
-                        break;
-                    case R.id.nav_elegida:
-                        mServiceType = ServiceType.FRIEND;
-                        friend();
-                        break;
-                    case R.id.nav_historial:
-                        moveToHistoryBooking();
-                        break;
-                    case R.id.nav_perfil:
-                        moveToEditProfile();
-                        break;
-                    case R.id.nav_cerrar:
-                        logout();
-                        break;
-                }
-                textBottonRequest(mServiceType);
-                binding.drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
+        binding.navView.setNavigationItemSelectedListener((item) -> {
+            switch (item.getItemId()) {
+                case R.id.nav_taxi:
+                    mServiceType = ServiceType.TAXI;
+                    break;
+                case R.id.nav_urbano:
+                    mServiceType = ServiceType.INTRA_URBANO;
+                    break;
+                case R.id.nav_delivery:
+                    mServiceType = ServiceType.DELIVERY;
+                    break;
+                case R.id.nav_mensaje:
+                    mServiceType = ServiceType.MESSAGING;
+                    break;
+                case R.id.nav_carga:
+                    mServiceType = ServiceType.CARGA;
+                    break;
+                case R.id.nav_mascota:
+                    mServiceType = ServiceType.PET;
+                    break;
+                case R.id.nav_elegida:
+                    mServiceType = ServiceType.FRIEND;
+                    friend();
+                    break;
+                case R.id.nav_historial:
+                    moveToHistoryBooking();
+                    break;
+                case R.id.nav_perfil:
+                    moveToEditProfile();
+                    break;
+                case R.id.nav_cerrar:
+                    logout();
+                    break;
             }
+            textBottonRequest(mServiceType);
+            binding.drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         });
 
         MenuItem menuItem = binding.navView.getMenu().getItem(0);
@@ -180,24 +175,17 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
 
         mFusedLocation = LocationServices.getFusedLocationProviderClient(this);
         nMapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        nMapFragment.getMapAsync(this);
         checkPermissionsLocation();
 
-        binding.rootLayout.btnRequestDrive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                moveToDetailRequestDriver();
-            }
+        binding.rootLayout.btnRequestDrive.setOnClickListener((view) -> {
+            moveToDetailRequestDriver();
         });
 
-        binding.rootLayout.btnMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    binding.drawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    binding.drawerLayout.openDrawer(GravityCompat.START);
-                }
+        binding.rootLayout.btnMenu.setOnClickListener((view) -> {
+            if (binding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                binding.drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                binding.drawerLayout.openDrawer(GravityCompat.START);
             }
         });
 
@@ -210,11 +198,8 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
         instanceAutoCompleteDestino();
         instanceCameraListener();
 
-        binding.rootLayout.btnLlamada.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkPermissionCall();
-            }
+        binding.rootLayout.btnLlamada.setOnClickListener((v) -> {
+            checkPermissionCall();
         });
     }
 
@@ -485,14 +470,14 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                         Manifest.permission.ACCESS_COARSE_LOCATION)
                 .onExplainRequestReason((scope, deniedList, beforeRequest) -> {
                     scope.showRequestReasonDialog(deniedList,
-                            "Para un buen uso de la apolicación es necesario que habilite los permisos correspodientes",
+                            "Para un buen uso de la aplicación es necesario que habilite los permisos correspodientes",
                             "Aceptar",
                             "Cancelar");
                 })
 
                 .onForwardToSettings((scope, deniedList) -> {
                     scope.showForwardToSettingsDialog(deniedList,
-                            "Para continuar con el uso de la apolicación es necesario que habilite los permisos de manera manual",
+                            "Para continuar con el uso de la aplicación es necesario que habilite los permisos de manera manual",
                             "Config. manual",
                             "Cancelar");
                 })
@@ -507,6 +492,7 @@ public class MapClienteActivity extends AppCompatActivity implements OnMapReadyC
                                 checkPermissionsLocation();
                                 return;
                             } else {
+                                nMapFragment.getMapAsync(this);
                                 mFusedLocation.requestLocationUpdates(mLocationRequest, mLocationCallback, Looper.myLooper());
                                 if (nMap != null)
                                     nMap.setMyLocationEnabled(true);

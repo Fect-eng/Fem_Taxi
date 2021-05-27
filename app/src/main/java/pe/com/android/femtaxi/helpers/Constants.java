@@ -4,6 +4,19 @@ public class Constants {
 
     public static final String URL_FCM = "https://fcm.googleapis.com";
 
+    //mapbox
+    public static final float NAVIGATION_LINE_WIDTH = 6;
+    public static final float NAVIGATION_LINE_OPACITY = .8f;
+    public static final String DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID = "DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID";
+    public static final String DRIVING_ROUTE_POLYLINE_SOURCE_ID = "DRIVING_ROUTE_POLYLINE_SOURCE_ID";
+    public static final String DESTINATION_ICON_ID = "DESTINATION_ICON_ID";
+    public static final String ICON_ID = "ICON_ID";
+    public static final String SOURCE_ID = "SOURCE_ID";
+    public static final String LAYER_ID = "LAYER_ID";
+    public static final String DESTINATION_SOURCE_ID = "DESTINATION_SOURCE_ID";
+    public static final String DESTINATION_SYMBOL_LAYER_ID = "DESTINATION_SYMBOL_LAYER_ID";
+    public static final int DRAW_SPEED_MILLISECONDS = 100;
+
     public class Firebase {
         public class Nodo {
             public static final String DRIVER_ACTIVE = "drive_active";
@@ -46,6 +59,7 @@ public class Constants {
         public static final String SHARED_PREF_NAME = "SHARED_PREF_NAME";
         public static final String PREF_IS_CLIENT = "PREF_IS_CLIENT";
         public static final String PREF_IS_DRIVER = "PREF_IS_DRIVER";
+        public static final String PREF_TOKEN = "PREF_TOKEN";
     }
 
     public class Extras {

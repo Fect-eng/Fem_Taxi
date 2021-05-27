@@ -6,11 +6,25 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import pe.com.android.femtaxi.R;
 import pe.com.android.femtaxi.databinding.ActivityLoginClienteBinding;
@@ -21,78 +35,60 @@ import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.ClientProvider;
 import pe.com.android.femtaxi.providers.TopicProvider;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.GoogleAuthProvider;
-
-import java.util.HashMap;
-import java.util.Map;
-
 public class LoginClientActivity extends AppCompatActivity {
     String TAG = LoginClientActivity.class.getSimpleName();
     private ActivityLoginClienteBinding binding;
     private GoogleSignInOptions gso;
-    private GoogleSignInClient mGoogleSignInClient;
     private AuthProvider mAuthProvider;
     private ClientProvider mClientProvider;
     private TopicProvider mTopicProvider;
     private ProgressDialog mProgressDialog;
+    private ActivityResultLauncher<Intent> signInWithGoogleResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         binding = ActivityLoginClienteBinding.inflate(getLayoutInflater());
+        super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-        mProgressDialog = new ProgressDialog(this);
+        FirebaseApp.initializeApp(this);
         initGoogle();
+        mProgressDialog = new ProgressDialog(this);
         mAuthProvider = new AuthProvider();
         mClientProvider = new ClientProvider();
         mTopicProvider = new TopicProvider();
 
-        binding.btnLoginGoogle.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signInWithGoogle();
-            }
+        binding.btnLoginGoogle.setOnClickListener((v) -> {
+            signInWithGoogle();
         });
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK) {
-            mProgressDialog.dismiss();
-            Toast.makeText(LoginClientActivity.this, "Error desconocido", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        switch (requestCode) {
-            case Constants.Request.REQUEST_CODE_LOGIN_GGOGLE:
-                if (data != null) {
-                    Task<GoogleSignInAccount> completedTask = GoogleSignIn.getSignedInAccountFromIntent(data);
-                    if (completedTask.isSuccessful()) {
-                        try {
-                            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-                            signInWithCredential(account);
-                        } catch (ApiException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
+        signInWithGoogleResult = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), (resultCode) -> {
+            Log.i(TAG, "registerForresult requestCode: " + resultCode);
+            if (resultCode.getResultCode() != Activity.RESULT_OK) {
+                mProgressDialog.dismiss();
+                Toast.makeText(LoginClientActivity.this, "Error desconocido", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (resultCode.getData() != null) {
+                Log.d(TAG, "registerForresult data != null");
+                Task<GoogleSignInAccount> completedTask = GoogleSignIn.getSignedInAccountFromIntent(resultCode.getData());
+                Log.d(TAG, "registerForresult completedTask: " + completedTask.toString());
+                if (completedTask.isSuccessful()) {
+                    try {
+                        GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+                        Log.d(TAG, "registerForresult account: " + account.toString());
+                        signInWithCredential(account);
+                    } catch (ApiException e) {
+                        e.printStackTrace();
+                        Log.d(TAG, "registerForresult ApiException: " + e.getMessage());
                     }
                 } else {
-                    mProgressDialog.dismiss();
-                    Toast.makeText(LoginClientActivity.this, "Sin informacion para mostrar", Toast.LENGTH_SHORT).show();
+                    Log.d(TAG, "registerForresult error: ");
                 }
-                break;
-        }
+            } else {
+                mProgressDialog.dismiss();
+                Toast.makeText(LoginClientActivity.this, "Sin informacion para mostrar", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initGoogle() {
@@ -103,30 +99,31 @@ public class LoginClientActivity extends AppCompatActivity {
     }
 
     private void signInWithGoogle() {
+        Log.i(TAG, "signInWithGoogle");
         mProgressDialog.setMessage("Espere un momento por favor...");
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.show();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        GoogleSignInClient mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Log.i(TAG, "signInWithGoogle mGoogleSignInClient: " + mGoogleSignInClient.toString());
         final Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, Constants.Request.REQUEST_CODE_LOGIN_GGOGLE);
+        Log.i(TAG, "signInWithGoogle signInIntent: " + signInIntent);
+        signInWithGoogleResult.launch(signInIntent);
     }
 
     public void signInWithCredential(GoogleSignInAccount acct) {
+        Log.d(TAG, "signInWithCredential acct: " + acct.toString());
         if (acct.getIdToken() != null) {
             AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
             if (credential != null) {
                 mAuthProvider.signInWithCredential(credential)
-                        .addOnCompleteListener(this,
-                                new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            getDataUser(mAuthProvider.getCurrentUser());
-                                        } else {
-                                            Log.d(TAG, "subscrito ocurrio un error: ");
-                                        }
-                                    }
-                                });
+                        .addOnCompleteListener(this, (task) -> {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "signInWithCredential acct: " + task.toString());
+                                getDataUser(mAuthProvider.getCurrentUser());
+                            } else {
+                                Log.d(TAG, "subscrito ocurrio un error: ");
+                            }
+                        });
             } else {
                 Log.d(TAG, "subscrito credential es null: ");
             }
@@ -136,6 +133,7 @@ public class LoginClientActivity extends AppCompatActivity {
     }
 
     public void getDataUser(FirebaseUser firebaseUser) {
+        Log.d(TAG, "getDataUser firebaseUser: " + firebaseUser.toString());
         mClientProvider.getDataUser(firebaseUser.getUid())
                 .get()
                 .addOnSuccessListener((documentSnapshot) -> {
