@@ -236,7 +236,7 @@ public class MapDriveBookingActivity extends AppCompatActivity implements OnMapR
                                 lineColor(getResources().getColor(R.color.colorRed))
                         ), "layer-id"), (style) -> {
             mMapboxMap.getUiSettings().setLogoEnabled(false);
-            mMapboxMap.getUiSettings().setAllGesturesEnabled(false);
+            mMapboxMap.getUiSettings().setAllGesturesEnabled(true);
             mMapboxMap.getUiSettings().setAllVelocityAnimationsEnabled(true);
 
             mLocationComponent = mMapboxMap.getLocationComponent();

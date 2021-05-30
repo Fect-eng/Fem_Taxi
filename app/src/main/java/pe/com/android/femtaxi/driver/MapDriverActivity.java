@@ -240,7 +240,7 @@ public class MapDriverActivity extends AppCompatActivity
 
             mMapboxMap.getUiSettings().setLogoEnabled(false);
             mMapboxMap.getUiSettings().setAttributionEnabled(false);
-            mMapboxMap.getUiSettings().setAllGesturesEnabled(false);
+            mMapboxMap.getUiSettings().setAllGesturesEnabled(true);
 
             mSymbolManager = new SymbolManager(binding.mapView, mMapboxMap, mStyle);
             mMapboxMap.getStyle().addImage("location", iconLocation);
