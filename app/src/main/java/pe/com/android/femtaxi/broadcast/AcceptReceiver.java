@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import pe.com.android.femtaxi.driver.MapDriveBookingActivity;
+import pe.com.android.femtaxi.ui.driver.MapDriveBookingActivity;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.providers.AuthProvider;
 import pe.com.android.femtaxi.providers.ClientBookingProvider;

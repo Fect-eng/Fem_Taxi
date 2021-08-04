@@ -28,9 +28,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         android:usesCleartextTraffic="true">
-        <activity android:name=".admiSoft.LoginAdmiActivity"></activity>
+        <activity android:name=".ui.admiSoft.LoginAdmiActivity"/>
         <activity android:name=".webRegistroActivity" />
-        <activity android:name=".admiSoft.OptionDesarrolloActivity" />
+        <activity android:name=".ui.admiSoft.OptionDesarrolloActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -39,57 +39,57 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".driver.registerDriver.UploadSetareActivity"
+            android:name=".ui.driver.registerDriver.UploadSetareActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.registerDriver.UploadRevTecActivity"
+            android:name=".ui.driver.registerDriver.UploadRevTecActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".IdentVehicularActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.registerDriver.UploadDriverActivity"
+            android:name=".ui.driver.registerDriver.UploadDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.registerDriver.UploadSoatActivity"
+            android:name=".ui.driver.registerDriver.UploadSoatActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.registerDriver.UploadDNIActivity"
+            android:name=".ui.driver.registerDriver.UploadDNIActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.registerDriver.UploadPenalesActivity"
+            android:name=".ui.driver.registerDriver.UploadPenalesActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.registerDriver.UploadPolicialActivity"
+            android:name=".ui.driver.registerDriver.UploadPolicialActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".client.CalificationClientActivity"
+            android:name=".ui.client.CalificationClientActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.ProfileDriverActivity"
-            android:parentActivityName=".driver.MapDriverActivity"
+            android:name=".ui.driver.ProfileDriverActivity"
+            android:parentActivityName=".ui.driver.MapDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.HistoryBookingDriverActivity"
-            android:parentActivityName=".driver.MapDriverActivity"
+            android:name=".ui.driver.HistoryBookingDriverActivity"
+            android:parentActivityName=".ui.driver.MapDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.CalificationDriverActivity"
+            android:name=".ui.driver.CalificationDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".client.RequestDriverActivity"
+            android:name=".ui.client.RequestDriverActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".client.DetailRequestActivity"
-            android:parentActivityName=".client.MapClienteActivity"
+            android:name=".ui.client.DetailRequestActivity"
+            android:parentActivityName=".ui.client.MapClienteActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".client.ProfileClientActivity"
-            android:parentActivityName=".client.MapClienteActivity"
+            android:name=".ui.client.ProfileClientActivity"
+            android:parentActivityName=".ui.client.MapClienteActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".client.HistoryBookingClientActivity"
-            android:parentActivityName=".client.MapClienteActivity"
+            android:name=".ui.client.HistoryBookingClientActivity"
+            android:parentActivityName=".ui.client.MapClienteActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
@@ -97,39 +97,35 @@
             android:resource="@xml/file_paths" />
 
         <activity
-            android:name=".driver.loginDriveActivity"
+            android:name=".ui.client.MapClienteActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".client.MapClienteActivity"
+            android:name=".ui.client.LoginClientActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.driver.MapDriverActivity"
+            android:parentActivityName=".ui.driver.LoginDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.driver.registerDriver.RegistroDriverSegundoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.driver.registerDriver.RegistroDriverPrimerActivity"
+            android:parentActivityName=".ui.driver.LoginDriverActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.driver.LoginDriverActivity"
             android:parentActivityName=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".client.LoginClientActivity"
+            android:name=".ui.driver.NotificationBookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.MapDriverActivity"
-            android:parentActivityName=".driver.OpcionDualDriverActivity"
+            android:name=".ui.driver.MapDriveBookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".driver.registerDriver.RegistroDriverSegundoActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".driver.registerDriver.RegistroDriverPrimerActivity"
-            android:parentActivityName=".driver.OpcionDualDriverActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".driver.OpcionDualDriverActivity"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".driver.NotificationBookingActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".driver.MapDriveBookingActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".client.MapClientBookingActivity"
+            android:name=".ui.client.MapClientBookingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
@@ -138,7 +134,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="pe.com.android.femtaxi"
+            android:authorities="pe.com.android.femtaxi.Provider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

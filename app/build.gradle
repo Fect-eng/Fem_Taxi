@@ -16,7 +16,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
-        buildConfigField "String", "FILES_AUTHORITY", "\"pe.com.android.femtaxi\""
+        buildConfigField "String", "FILES_AUTHORITY", "\"pe.com.android.femtaxi.Provider\""
         buildConfigField "String", "PATH_NAME_APP", "\"femtaxi\""
 
         ndk {
@@ -86,13 +86,13 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.3.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'com.google.android.material:material:1.4.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.5'
     implementation 'androidx.navigation:navigation-ui:2.3.5'
     implementation 'junit:junit:4.13.2'
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     implementation 'org.osmdroid:osmdroid-android:6.1.8'
 
     //diseño
@@ -102,7 +102,7 @@ dependencies {
     //firebase
     implementation 'com.google.firebase:firebase-database:20.0.0'
     implementation 'com.google.firebase:firebase-core:19.0.0'
-    implementation 'com.google.firebase:firebase-firestore:23.0.0'
+    implementation 'com.google.firebase:firebase-firestore:23.0.2'
     implementation platform('com.google.firebase:firebase-bom:25.12.0')
 
     //storage
@@ -113,7 +113,7 @@ dependencies {
 
     //crashlytics
     implementation 'com.google.firebase:firebase-analytics:19.0.0'
-    implementation 'com.google.firebase:firebase-crashlytics:18.0.0'
+    implementation 'com.google.firebase:firebase-crashlytics:18.1.0'
 
     //messaging
     implementation 'com.google.firebase:firebase-messaging:22.0.0'

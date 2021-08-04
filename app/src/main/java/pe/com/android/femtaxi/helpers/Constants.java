@@ -7,15 +7,19 @@ public class Constants {
     //mapbox
     public static final float NAVIGATION_LINE_WIDTH = 6;
     public static final float NAVIGATION_LINE_OPACITY = .8f;
-    public static final String DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID = "DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID";
-    public static final String DRIVING_ROUTE_POLYLINE_SOURCE_ID = "DRIVING_ROUTE_POLYLINE_SOURCE_ID";
-    public static final String DESTINATION_ICON_ID = "DESTINATION_ICON_ID";
     public static final String ICON_ID = "ICON_ID";
     public static final String SOURCE_ID = "SOURCE_ID";
     public static final String LAYER_ID = "LAYER_ID";
     public static final String DESTINATION_SOURCE_ID = "DESTINATION_SOURCE_ID";
     public static final String DESTINATION_SYMBOL_LAYER_ID = "DESTINATION_SYMBOL_LAYER_ID";
     public static final int DRAW_SPEED_MILLISECONDS = 100;
+
+
+    public static final String DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID = "DRIVING_ROUTE_POLYLINE_LINE_LAYER_ID";
+    public static final String DRIVING_ROUTE_POLYLINE_SOURCE_ID = "DRIVING_ROUTE_POLYLINE_SOURCE_ID";
+    public static final String LOCATION_DRIVE_ICON_ID = "LOCATION_DRIVE_ICON_ID";
+    public static final String ORIGIN_ICON_ID = "ORIGIN_ICON_ID";
+    public static final String DESTINATION_ICON_ID = "DESTINATION_ICON_ID";
 
     public class Firebase {
         public class Nodo {

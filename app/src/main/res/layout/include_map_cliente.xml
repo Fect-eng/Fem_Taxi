@@ -12,9 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <fragment
-            android:id="@+id/map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
+        <com.mapbox.mapboxsdk.maps.MapView
+            android:id="@+id/map_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -61,17 +60,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <fragment
+                <ImageView
+                    android:id="@+id/img_search_origin"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_action_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/txt_origin"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black" />
+
+                <TextView
                     android:id="@+id/txt_origin"
-                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:hint="Ingrese su origen"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_search_origin"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toEndOf="@+id/img_search_origin"
+                    app:layout_constraintTop_toTopOf="@+id/img_search_origin" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -93,23 +103,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <fragment
+                <ImageView
+                    android:id="@+id/img_search_destino"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_action_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/txt_destino"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="@color/black" />
+
+                <TextView
                     android:id="@+id/txt_destino"
-                    android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="20dp"
                     android:hint="Ingrese su destino"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/img_search_destino"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toEndOf="@+id/img_search_destino"
+                    app:layout_constraintTop_toTopOf="@+id/img_search_destino" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <ImageView
+        <!--<ImageView
             android:layout_width="79dp"
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
@@ -118,7 +139,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.499" />
+            app:layout_constraintVertical_bias="0.499" />-->
 
         <Button
             android:id="@+id/btn_request_drive"

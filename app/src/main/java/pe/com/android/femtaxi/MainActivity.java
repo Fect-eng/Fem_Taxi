@@ -8,13 +8,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.multidex.MultiDex;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.mapbox.mapboxsdk.Mapbox;
 
-import pe.com.android.femtaxi.client.LoginClientActivity;
-import pe.com.android.femtaxi.client.MapClienteActivity;
-import pe.com.android.femtaxi.driver.MapDriverActivity;
-import pe.com.android.femtaxi.driver.OpcionDualDriverActivity;
+import pe.com.android.femtaxi.ui.client.LoginClientActivity;
+import pe.com.android.femtaxi.ui.client.MapClienteActivity;
+import pe.com.android.femtaxi.ui.driver.MapDriverActivity;
+import pe.com.android.femtaxi.ui.driver.LoginDriverActivity;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
 
@@ -30,11 +29,11 @@ public class MainActivity extends AppCompatActivity {
         MultiDex.install(this);
         btndriverDual = findViewById(R.id.btndriverDual);
         btndriverDual.setOnClickListener((view) -> {
-            goToSelectAuth();
+            moveToLoginDriver();
         });
         btnncliente = findViewById(R.id.btnncliente);
         btnncliente.setOnClickListener((view) -> {
-            goToSelectClient();
+            moveToLoginClient();
         });
         Mapbox.getInstance(this, getString(R.string.access_token));
         FirebaseApp.initializeApp(this);
@@ -61,15 +60,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void goToSelectClient() {
+    private void moveToLoginClient() {
         Intent intent = new Intent(MainActivity.this, LoginClientActivity.class);
         startActivity(intent);
         MainActivity.this.finish();
     }
 
 
-    private void goToSelectAuth() {
-        Intent intent = new Intent(MainActivity.this, OpcionDualDriverActivity.class);
+    private void moveToLoginDriver() {
+        Intent intent = new Intent(MainActivity.this, LoginDriverActivity.class);
         startActivity(intent);
         MainActivity.this.finish();
     }

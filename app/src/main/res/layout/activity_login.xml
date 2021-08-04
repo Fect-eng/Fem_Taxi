@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".driver.loginDriveActivity">
+    tools:context=".ui.driver.LoginDriverActivity">
+
+    <include
+        android:id="@+id/include_toolbar"
+        layout="@layout/action_bar_toolbar" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,22 +21,41 @@
             android:layout_gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.github.florent37.shapeofview.shapes.ArcView
+                android:id="@+id/container_loading"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:elevation="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:shape_arc_height="20dp"
+                app:shape_arc_position="bottom">
 
-                android:layout_width="166dp"
-                android:layout_height="180dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="70dp"
-                app:srcCompat="@drawable/logo" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPrimaryDark" />
+
+                <com.airbnb.lottie.LottieAnimationView
+                    android:id="@+id/animation_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    app:lottie_autoPlay="true"
+                    app:lottie_loop="true"
+                    app:lottie_rawRes="@raw/animation_driverman" />
+
+            </com.github.florent37.shapeofview.shapes.ArcView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="30dp"
                 android:gravity="center"
-                android:text="Elige Opción Conductor"
+                android:text="Elige Opción:"
                 android:textColor="#FFFFFF"
-                android:textSize="31dp"
+                android:textSize="35dp"
                 android:textStyle="bold">
 
             </TextView>
@@ -45,7 +64,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="26dp"
-                android:layout_marginBottom="26dp"
                 android:gravity="top"
                 android:orientation="vertical">
 
@@ -65,13 +83,13 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Ingrese Email"
                         android:textColorHint="@color/overlay">
 
-                        <EditText
-                            android:id="@+id/casillaEmail"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/txtUsuario"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Ingrese Email"
                             android:inputType="text|textEmailAddress"
                             android:textColor="@color/white" />
 
@@ -95,13 +113,13 @@
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:hint="Ingrese Password"
                         android:textColorHint="@color/overlay">
 
-                        <EditText
-                            android:id="@+id/casillaPass"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/txtPassword"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Ingrese Password"
                             android:inputType="text|textPassword"
                             android:textColor="@color/white" />
 
@@ -110,11 +128,11 @@
                 </LinearLayout>
 
                 <Button
-                    android:id="@+id/btnLogin"
+                    android:id="@+id/btn_login"
                     android:layout_width="178dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_margin="20dp"
+                    android:layout_margin="10dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="#155AA3"
                     android:text="Tengo Cuenta"
@@ -122,15 +140,26 @@
                     android:textSize="22dp" />
 
                 <Button
-                    android:id="@+id/registrar"
+                    android:id="@+id/btn_register_driver"
                     android:layout_width="178dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="-80dp"
                     android:background="@drawable/rounded_button"
                     android:backgroundTint="#155AA3"
-                    android:enabled="true"
-                    android:text="Registrarme"
+                    android:text="Registro"
+                    android:textColor="@color/Colorletras"
+                    android:textSize="22dp" />
+
+                <Button
+                    android:id="@+id/btnMapaVer"
+                    android:layout_width="178dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rounded_button"
+                    android:backgroundTint="#155AA3"
+                    android:text="Adm."
                     android:textColor="@color/Colorletras"
                     android:textSize="22dp" />
 
@@ -140,4 +169,4 @@
 
     </androidx.core.widget.NestedScrollView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

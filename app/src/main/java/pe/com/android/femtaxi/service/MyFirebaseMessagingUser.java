@@ -20,7 +20,7 @@ import pe.com.android.femtaxi.R;
 import pe.com.android.femtaxi.broadcast.AcceptReceiver;
 import pe.com.android.femtaxi.broadcast.CancelReceiver;
 import pe.com.android.femtaxi.channel.NotificationHelpers;
-import pe.com.android.femtaxi.driver.NotificationBookingActivity;
+import pe.com.android.femtaxi.ui.driver.NotificationBookingActivity;
 import pe.com.android.femtaxi.helpers.Constants;
 import pe.com.android.femtaxi.helpers.PreferencesManager;
 import pe.com.android.femtaxi.models.ServiceNotification;
